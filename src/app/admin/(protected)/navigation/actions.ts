@@ -25,9 +25,9 @@ function fromForm(formData: FormData) {
     label: String(formData.get("label") ?? "").trim(),
     href: String(formData.get("href") ?? "").trim(),
     location: String(formData.get("location") ?? "navbar") as "navbar" | "footer",
-    group: groupRaw || null,
+    group: groupRaw && groupRaw !== "none" ? groupRaw : null,
     icon: iconRaw || null,
-    parentId: parentIdRaw ? Number(parentIdRaw) : null,
+    parentId: parentIdRaw && parentIdRaw !== "none" ? Number(parentIdRaw) : null,
     order: Number(formData.get("order") ?? 0),
   };
 }

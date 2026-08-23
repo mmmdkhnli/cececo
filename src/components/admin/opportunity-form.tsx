@@ -1,5 +1,10 @@
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { DatePicker } from "@/components/admin/ui/date-picker";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Input } from "@/components/admin/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
+import { Textarea } from "@/components/admin/ui/textarea";
 import type { OpportunityRow } from "@/db/schema";
 
 export function OpportunityForm({
@@ -15,50 +20,51 @@ export function OpportunityForm({
 
   return (
     <form action={action} className="flex max-w-xl flex-col gap-5">
-      <Field label="Title">
-        <input name="title" defaultValue={defaultValues?.title} required className="admin-input" />
-      </Field>
-      <Field label="Slug (URL)">
-        <input name="slug" defaultValue={defaultValues?.slug ?? ""} required className="admin-input" />
-      </Field>
-      <Field label="Short description">
-        <textarea name="excerpt" defaultValue={defaultValues?.excerpt ?? ""} rows={2} required className="admin-input" />
-      </Field>
+      <FormField label="Title">
+        <Input name="title" defaultValue={defaultValues?.title} required />
+      </FormField>
+      <FormField label="Slug (URL)">
+        <Input name="slug" defaultValue={defaultValues?.slug ?? ""} required />
+      </FormField>
+      <FormField label="Short description">
+        <Textarea name="excerpt" defaultValue={defaultValues?.excerpt ?? ""} rows={2} required />
+      </FormField>
       <RichTextEditor name="description" defaultValue={defaultValues?.description} label="Full description" />
       <div className="grid grid-cols-2 gap-4">
-        <Field label="Category">
-          <select name="category" defaultValue={defaultValues?.category ?? "vacancy"} className="admin-input">
-            <option value="internship">Internship</option>
-            <option value="vacancy">Vacancy</option>
-            <option value="young_professional_programme">Young Professional Programme</option>
-            <option value="other">Other</option>
-          </select>
-        </Field>
-        <Field label="Application deadline">
-          <input name="deadline" type="date" defaultValue={deadlineValue} className="admin-input" />
-        </Field>
+        <FormField label="Category">
+          <Select name="category" defaultValue={defaultValues?.category ?? "vacancy"}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="internship">Internship</SelectItem>
+              <SelectItem value="vacancy">Vacancy</SelectItem>
+              <SelectItem value="young_professional_programme">Young Professional Programme</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormField>
+        <FormField label="Application deadline">
+          <DatePicker name="deadline" defaultValue={deadlineValue} />
+        </FormField>
       </div>
-      <Field label="Application link">
-        <input name="applyUrl" defaultValue={defaultValues?.applyUrl} required className="admin-input" />
-      </Field>
-      <Field label="Status">
-        <select name="status" defaultValue={defaultValues?.status ?? "active"} className="admin-input">
-          <option value="active">Active</option>
-          <option value="closed">Closed</option>
-        </select>
-      </Field>
+      <FormField label="Application link">
+        <Input name="applyUrl" defaultValue={defaultValues?.applyUrl} required />
+      </FormField>
+      <FormField label="Status">
+        <Select name="status" defaultValue={defaultValues?.status ?? "active"}>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="closed">Closed</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormField>
       <div className="mt-2">
         <SubmitButton>Save</SubmitButton>
       </div>
     </form>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-small font-semibold text-neutral-darkest">{label}</label>
-      {children}
-    </div>
   );
 }

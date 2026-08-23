@@ -8,31 +8,26 @@ import { ImageUpload } from "@/components/admin/image-upload";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SchemePicker } from "@/components/admin/scheme-picker";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { Card } from "@/components/admin/ui/card";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Input } from "@/components/admin/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
 
 const initialState: UpdateSectionState = {};
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-small font-semibold text-neutral-darkest">{label}</label>
-      {children}
-    </div>
-  );
-}
 
 function FieldBlock({ field, section }: { field: SectionFieldKey; section: SectionRow }) {
   switch (field) {
     case "eyebrow":
       return (
-        <Field label="Eyebrow">
-          <input name="eyebrow" defaultValue={section.eyebrow ?? ""} className="admin-input" />
-        </Field>
+        <FormField label="Eyebrow">
+          <Input name="eyebrow" defaultValue={section.eyebrow ?? ""} />
+        </FormField>
       );
     case "heading":
       return (
-        <Field label="Heading">
-          <input name="heading" defaultValue={section.heading ?? ""} className="admin-input" />
-        </Field>
+        <FormField label="Heading">
+          <Input name="heading" defaultValue={section.heading ?? ""} />
+        </FormField>
       );
     case "subtitle":
       return <RichTextEditor name="subtitle" defaultValue={section.subtitle} label="Subtitle" />;
@@ -42,67 +37,72 @@ function FieldBlock({ field, section }: { field: SectionFieldKey; section: Secti
       return <ImageUpload name="icon" defaultValue={section.icon} label="Icon" />;
     case "imagePosition":
       return (
-        <Field label="Image position">
-          <select name="imagePosition" defaultValue={section.imagePosition ?? "right"} className="admin-input">
-            <option value="left">Left</option>
-            <option value="right">Right</option>
-          </select>
-        </Field>
+        <FormField label="Image position">
+          <Select name="imagePosition" defaultValue={section.imagePosition ?? "right"}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="left">Left</SelectItem>
+              <SelectItem value="right">Right</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormField>
       );
     case "disclaimer":
       return (
-        <Field label="Disclaimer">
-          <input name="disclaimer" defaultValue={section.disclaimer ?? ""} className="admin-input" />
-        </Field>
+        <FormField label="Disclaimer">
+          <Input name="disclaimer" defaultValue={section.disclaimer ?? ""} />
+        </FormField>
       );
     case "ctaPrimary":
       return (
-        <div className="grid grid-cols-2 gap-4 rounded-card border border-neutral-lighter p-4">
-          <p className="col-span-2 text-small font-semibold text-neutral-darkest">Primary button</p>
-          <Field label="Text">
-            <input name="ctaPrimaryLabel" defaultValue={section.ctaPrimaryLabel ?? ""} className="admin-input" />
-          </Field>
-          <Field label="Link">
-            <input name="ctaPrimaryHref" defaultValue={section.ctaPrimaryHref ?? ""} className="admin-input" />
-          </Field>
-        </div>
+        <Card className="grid grid-cols-2 gap-4 p-4">
+          <p className="col-span-2 text-sm font-semibold">Primary button</p>
+          <FormField label="Text">
+            <Input name="ctaPrimaryLabel" defaultValue={section.ctaPrimaryLabel ?? ""} />
+          </FormField>
+          <FormField label="Link">
+            <Input name="ctaPrimaryHref" defaultValue={section.ctaPrimaryHref ?? ""} />
+          </FormField>
+        </Card>
       );
     case "ctaSecondary":
       return (
-        <div className="grid grid-cols-2 gap-4 rounded-card border border-neutral-lighter p-4">
-          <p className="col-span-2 text-small font-semibold text-neutral-darkest">Secondary button</p>
-          <Field label="Text">
-            <input name="ctaSecondaryLabel" defaultValue={section.ctaSecondaryLabel ?? ""} className="admin-input" />
-          </Field>
-          <Field label="Link">
-            <input name="ctaSecondaryHref" defaultValue={section.ctaSecondaryHref ?? ""} className="admin-input" />
-          </Field>
-        </div>
+        <Card className="grid grid-cols-2 gap-4 p-4">
+          <p className="col-span-2 text-sm font-semibold">Secondary button</p>
+          <FormField label="Text">
+            <Input name="ctaSecondaryLabel" defaultValue={section.ctaSecondaryLabel ?? ""} />
+          </FormField>
+          <FormField label="Link">
+            <Input name="ctaSecondaryHref" defaultValue={section.ctaSecondaryHref ?? ""} />
+          </FormField>
+        </Card>
       );
     case "closingCta":
       return (
-        <div className="grid grid-cols-2 gap-4 rounded-card border border-neutral-lighter p-4">
-          <p className="col-span-2 text-small font-semibold text-neutral-darkest">Closing button</p>
-          <Field label="Text">
-            <input name="closingCtaLabel" defaultValue={section.closingCtaLabel ?? ""} className="admin-input" />
-          </Field>
-          <Field label="Link">
-            <input name="closingCtaHref" defaultValue={section.closingCtaHref ?? ""} className="admin-input" />
-          </Field>
-        </div>
+        <Card className="grid grid-cols-2 gap-4 p-4">
+          <p className="col-span-2 text-sm font-semibold">Closing button</p>
+          <FormField label="Text">
+            <Input name="closingCtaLabel" defaultValue={section.closingCtaLabel ?? ""} />
+          </FormField>
+          <FormField label="Link">
+            <Input name="closingCtaHref" defaultValue={section.closingCtaHref ?? ""} />
+          </FormField>
+        </Card>
       );
     case "secondary":
       return (
-        <div className="flex flex-col gap-4 rounded-card border border-neutral-lighter p-4">
-          <p className="text-small font-semibold text-neutral-darkest">Secondary block</p>
-          <Field label="Eyebrow">
-            <input name="secondaryEyebrow" defaultValue={section.secondaryEyebrow ?? ""} className="admin-input" />
-          </Field>
-          <Field label="Heading">
-            <input name="secondaryHeading" defaultValue={section.secondaryHeading ?? ""} className="admin-input" />
-          </Field>
+        <Card className="flex flex-col gap-4 p-4">
+          <p className="text-sm font-semibold">Secondary block</p>
+          <FormField label="Eyebrow">
+            <Input name="secondaryEyebrow" defaultValue={section.secondaryEyebrow ?? ""} />
+          </FormField>
+          <FormField label="Heading">
+            <Input name="secondaryHeading" defaultValue={section.secondaryHeading ?? ""} />
+          </FormField>
           <RichTextEditor name="secondaryBody" defaultValue={section.secondaryBody} label="Text" />
-        </div>
+        </Card>
       );
     default:
       return null;
@@ -116,17 +116,16 @@ export function SectionForm({ section, pageSlug }: { section: SectionRow; pageSl
 
   return (
     <form action={formAction} className="flex max-w-2xl flex-col gap-5">
-      <div className="flex flex-col gap-1.5">
-        <label className="text-small font-semibold text-neutral-darkest">Component</label>
-        <p className="font-mono text-small text-neutral">{section.componentKey}</p>
-      </div>
-      <Field label="Order">
-        <input name="order" type="number" defaultValue={section.order} className="admin-input w-24" />
-      </Field>
+      <FormField label="Component">
+        <p className="font-mono text-sm text-muted-foreground">{section.componentKey}</p>
+      </FormField>
+      <FormField label="Order">
+        <Input name="order" type="number" defaultValue={section.order} className="w-24" />
+      </FormField>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-small font-semibold text-neutral-darkest">Color scheme</label>
-        <p className="text-tiny text-neutral">Choose the section&apos;s background and text color.</p>
+        <p className="text-sm font-semibold">Color scheme</p>
+        <p className="text-xs text-muted-foreground">Choose the section&apos;s background and text color.</p>
         <SchemePicker defaultValue={section.scheme} />
       </div>
 
@@ -135,13 +134,11 @@ export function SectionForm({ section, pageSlug }: { section: SectionRow; pageSl
       ))}
 
       {config.fields.length === 0 && (
-        <p className="text-small text-neutral">
-          This section has no text fields — manage the list below.
-        </p>
+        <p className="text-sm text-muted-foreground">This section has no text fields — manage the list below.</p>
       )}
 
-      {state.error && <p className="text-small text-red-violet">{state.error}</p>}
-      {state.success && <p className="text-small text-mountain-meadow-dark">Saved.</p>}
+      {state.error && <p className="text-sm text-destructive">{state.error}</p>}
+      {state.success && <p className="text-sm text-primary">Saved.</p>}
       <div>
         <SubmitButton>Save</SubmitButton>
       </div>

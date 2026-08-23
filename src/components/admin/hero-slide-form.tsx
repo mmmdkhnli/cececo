@@ -4,6 +4,12 @@ import { useState } from "react";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { Card } from "@/components/admin/ui/card";
+import { Checkbox } from "@/components/admin/ui/checkbox";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Input } from "@/components/admin/ui/input";
+import { Label } from "@/components/admin/ui/label";
+import { Textarea } from "@/components/admin/ui/textarea";
 import type { HeroSlideRow } from "@/db/schema";
 
 export function HeroSlideForm({
@@ -18,52 +24,41 @@ export function HeroSlideForm({
   return (
     <form action={action} className="flex max-w-xl flex-col gap-5">
       <ImageUpload name="backgroundImage" defaultValue={defaultValues?.backgroundImage} label="Background image" />
-      <Field label="Title">
-        <input name="title" defaultValue={defaultValues?.title} required className="admin-input" />
-      </Field>
-      <Field label="Description">
-        <textarea name="description" defaultValue={defaultValues?.description ?? ""} rows={3} className="admin-input" />
-      </Field>
-      <Field label="Order">
-        <input name="order" type="number" defaultValue={defaultValues?.order ?? 0} className="admin-input w-24" />
-      </Field>
+      <FormField label="Title">
+        <Input name="title" defaultValue={defaultValues?.title} required />
+      </FormField>
+      <FormField label="Description">
+        <Textarea name="description" defaultValue={defaultValues?.description ?? ""} rows={3} />
+      </FormField>
+      <FormField label="Order">
+        <Input name="order" type="number" defaultValue={defaultValues?.order ?? 0} className="w-24" />
+      </FormField>
 
-      <label className="flex items-center gap-2 text-small text-neutral-darkest">
-        <input
-          type="checkbox"
+      <Label className="flex items-center gap-2 font-normal">
+        <Checkbox
           name="seeMoreEnabled"
           checked={seeMoreEnabled}
-          onChange={(e) => setSeeMoreEnabled(e.target.checked)}
-          className="size-4"
+          onCheckedChange={(checked) => setSeeMoreEnabled(checked === true)}
         />
         Show the &quot;See more&quot; button (with its own page)
-      </label>
+      </Label>
 
       {seeMoreEnabled && (
-        <div className="flex flex-col gap-4 rounded-card border border-neutral-lighter p-4">
-          <p className="text-small font-semibold text-neutral-darkest">Linked page</p>
-          <Field label="Slug (URL) — /highlights/...">
-            <input name="pageSlug" defaultValue={defaultValues?.pageSlug ?? ""} required={seeMoreEnabled} className="admin-input" />
-          </Field>
-          <Field label="Page title">
-            <input name="pageTitle" defaultValue={defaultValues?.pageTitle ?? ""} className="admin-input" />
-          </Field>
+        <Card className="flex flex-col gap-4 p-4">
+          <p className="text-sm font-semibold">Linked page</p>
+          <FormField label="Slug (URL) — /highlights/...">
+            <Input name="pageSlug" defaultValue={defaultValues?.pageSlug ?? ""} required={seeMoreEnabled} />
+          </FormField>
+          <FormField label="Page title">
+            <Input name="pageTitle" defaultValue={defaultValues?.pageTitle ?? ""} />
+          </FormField>
           <RichTextEditor name="pageBody" defaultValue={defaultValues?.pageBody} label="Page text" />
-        </div>
+        </Card>
       )}
 
       <div className="mt-2">
         <SubmitButton>Save</SubmitButton>
       </div>
     </form>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-small font-semibold text-neutral-darkest">{label}</label>
-      {children}
-    </div>
   );
 }

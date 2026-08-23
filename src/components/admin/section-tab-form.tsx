@@ -5,15 +5,9 @@ import type { TabStyle } from "@/lib/section-field-config";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SubmitButton } from "@/components/admin/submit-button";
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-small font-semibold text-neutral-darkest">{label}</label>
-      {children}
-    </div>
-  );
-}
+import { Card } from "@/components/admin/ui/card";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Input } from "@/components/admin/ui/input";
 
 export function SectionTabForm({
   action,
@@ -30,51 +24,51 @@ export function SectionTabForm({
     <form action={action} className="flex max-w-2xl flex-col gap-5">
       <div className="grid grid-cols-2 gap-4">
         {style === "icon-objective" && (
-          <Field label="Tab label">
-            <input name="tabLabel" defaultValue={defaultValues?.tabLabel ?? ""} className="admin-input" />
-          </Field>
+          <FormField label="Tab label">
+            <Input name="tabLabel" defaultValue={defaultValues?.tabLabel ?? ""} />
+          </FormField>
         )}
-        <Field label="Order">
-          <input name="order" type="number" defaultValue={defaultValues?.order ?? nextOrder} className="admin-input" />
-        </Field>
+        <FormField label="Order">
+          <Input name="order" type="number" defaultValue={defaultValues?.order ?? nextOrder} />
+        </FormField>
       </div>
 
-      <Field label="Title">
-        <input name="title" defaultValue={defaultValues?.title ?? ""} required className="admin-input" />
-      </Field>
+      <FormField label="Title">
+        <Input name="title" defaultValue={defaultValues?.title ?? ""} required />
+      </FormField>
 
       <RichTextEditor name="body" defaultValue={defaultValues?.body} label="Text" />
 
       {style === "icon-objective" && (
         <>
           <ImageUpload name="icon" defaultValue={defaultValues?.icon} label="Icon" />
-          <div className="grid grid-cols-2 gap-4 rounded-card border border-neutral-lighter p-4">
-            <p className="col-span-2 text-small font-semibold text-neutral-darkest">Primary button</p>
-            <Field label="Text">
-              <input name="ctaPrimaryLabel" defaultValue={defaultValues?.ctaPrimaryLabel ?? ""} className="admin-input" />
-            </Field>
-            <Field label="Link">
-              <input name="ctaPrimaryHref" defaultValue={defaultValues?.ctaPrimaryHref ?? ""} className="admin-input" />
-            </Field>
-          </div>
-          <div className="grid grid-cols-2 gap-4 rounded-card border border-neutral-lighter p-4">
-            <p className="col-span-2 text-small font-semibold text-neutral-darkest">Secondary button</p>
-            <Field label="Text">
-              <input name="ctaSecondaryLabel" defaultValue={defaultValues?.ctaSecondaryLabel ?? ""} className="admin-input" />
-            </Field>
-            <Field label="Link">
-              <input name="ctaSecondaryHref" defaultValue={defaultValues?.ctaSecondaryHref ?? ""} className="admin-input" />
-            </Field>
-          </div>
+          <Card className="grid grid-cols-2 gap-4 p-4">
+            <p className="col-span-2 text-sm font-semibold">Primary button</p>
+            <FormField label="Text">
+              <Input name="ctaPrimaryLabel" defaultValue={defaultValues?.ctaPrimaryLabel ?? ""} />
+            </FormField>
+            <FormField label="Link">
+              <Input name="ctaPrimaryHref" defaultValue={defaultValues?.ctaPrimaryHref ?? ""} />
+            </FormField>
+          </Card>
+          <Card className="grid grid-cols-2 gap-4 p-4">
+            <p className="col-span-2 text-sm font-semibold">Secondary button</p>
+            <FormField label="Text">
+              <Input name="ctaSecondaryLabel" defaultValue={defaultValues?.ctaSecondaryLabel ?? ""} />
+            </FormField>
+            <FormField label="Link">
+              <Input name="ctaSecondaryHref" defaultValue={defaultValues?.ctaSecondaryHref ?? ""} />
+            </FormField>
+          </Card>
         </>
       )}
 
       {style === "media-tab" && (
         <>
           <ImageUpload name="image" defaultValue={defaultValues?.image} label="Image" />
-          <Field label="Video URL (if any)">
-            <input name="videoUrl" defaultValue={defaultValues?.videoUrl ?? ""} className="admin-input" />
-          </Field>
+          <FormField label="Video URL (if any)">
+            <Input name="videoUrl" defaultValue={defaultValues?.videoUrl ?? ""} />
+          </FormField>
         </>
       )}
 

@@ -5,35 +5,11 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import { uploadImage } from "@/app/admin/upload-action";
+import { Bold, Eraser, ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, Loader2 } from "lucide-react";
 
-function ToolbarButton({
-  onClick,
-  active,
-  children,
-  label,
-}: {
-  onClick: () => void;
-  active?: boolean;
-  children: React.ReactNode;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      title={label}
-      aria-label={label}
-      onClick={onClick}
-      className={cn(
-        "rounded px-2 py-1 text-small font-semibold transition-colors",
-        active ? "bg-neutral-darkest text-white" : "text-neutral-darkest hover:bg-neutral-lightest",
-      )}
-    >
-      {children}
-    </button>
-  );
-}
+import { uploadImage } from "@/app/admin/upload-action";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Toggle } from "@/components/admin/ui/toggle";
 
 function Toolbar({
   editor,
@@ -46,39 +22,44 @@ function Toolbar({
 }) {
   if (!editor) return null;
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-neutral-lighter p-1.5">
-      <ToolbarButton
-        label="Bold"
-        active={editor.isActive("bold")}
-        onClick={() => editor.chain().focus().toggleBold().run()}
+    <div className="flex flex-wrap items-center gap-1 border-b border-border p-1.5">
+      <Toggle
+        size="sm"
+        aria-label="Bold"
+        pressed={editor.isActive("bold")}
+        onPressedChange={() => editor.chain().focus().toggleBold().run()}
       >
-        B
-      </ToolbarButton>
-      <ToolbarButton
-        label="Italic"
-        active={editor.isActive("italic")}
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        <Bold className="size-4" />
+      </Toggle>
+      <Toggle
+        size="sm"
+        aria-label="Italic"
+        pressed={editor.isActive("italic")}
+        onPressedChange={() => editor.chain().focus().toggleItalic().run()}
       >
-        <span className="italic">I</span>
-      </ToolbarButton>
-      <ToolbarButton
-        label="Bullet list"
-        active={editor.isActive("bulletList")}
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        <Italic className="size-4" />
+      </Toggle>
+      <Toggle
+        size="sm"
+        aria-label="Bullet list"
+        pressed={editor.isActive("bulletList")}
+        onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
       >
-        • List
-      </ToolbarButton>
-      <ToolbarButton
-        label="Numbered list"
-        active={editor.isActive("orderedList")}
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        <List className="size-4" />
+      </Toggle>
+      <Toggle
+        size="sm"
+        aria-label="Numbered list"
+        pressed={editor.isActive("orderedList")}
+        onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
       >
-        1. List
-      </ToolbarButton>
-      <ToolbarButton
-        label="Link"
-        active={editor.isActive("link")}
-        onClick={() => {
+        <ListOrdered className="size-4" />
+      </Toggle>
+      <Toggle
+        size="sm"
+        aria-label="Link"
+        pressed={editor.isActive("link")}
+        onPressedChange={() => {
           const url = window.prompt("Link URL:", editor.getAttributes("link").href ?? "https://");
           if (url === null) return;
           if (url === "") {
@@ -88,14 +69,18 @@ function Toolbar({
           }
         }}
       >
-        Link
-      </ToolbarButton>
-      <ToolbarButton label="Insert image" onClick={onInsertImageClick}>
-        {imagePending ? "Uploading..." : "Image"}
-      </ToolbarButton>
-      <ToolbarButton label="Clear formatting" onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}>
-        Clear
-      </ToolbarButton>
+        <LinkIcon className="size-4" />
+      </Toggle>
+      <Toggle size="sm" aria-label="Insert image" onPressedChange={onInsertImageClick}>
+        {imagePending ? <Loader2 className="size-4 animate-spin" /> : <ImageIcon className="size-4" />}
+      </Toggle>
+      <Toggle
+        size="sm"
+        aria-label="Clear formatting"
+        onPressedChange={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+      >
+        <Eraser className="size-4" />
+      </Toggle>
     </div>
   );
 }
@@ -160,26 +145,23 @@ export function RichTextEditor({
     }
   }
 
-  return (
-    <div className="flex flex-col gap-1.5">
-      {label && <label className="text-small font-semibold text-neutral-darkest">{label}</label>}
-      <div className="rounded-form border border-neutral-lighter bg-white">
-        <Toolbar
-          editor={editor}
-          imagePending={imagePending}
-          onInsertImageClick={() => fileInputRef.current?.click()}
-        />
+  const body = (
+    <>
+      <div className="rounded-lg border border-input">
+        <Toolbar editor={editor} imagePending={imagePending} onInsertImageClick={() => fileInputRef.current?.click()} />
         <EditorContent editor={editor} />
       </div>
       <input
         ref={fileInputRef}
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
-        className="hidden"
+        className="sr-only"
         onChange={handleFileSelected}
       />
-      {imageError && <p className="text-tiny text-red-violet">{imageError}</p>}
+      {imageError && <p className="text-xs text-destructive">{imageError}</p>}
       <input type="hidden" name={name} value={html} />
-    </div>
+    </>
   );
+
+  return label ? <FormField label={label}>{body}</FormField> : <div className="flex flex-col gap-1.5">{body}</div>;
 }

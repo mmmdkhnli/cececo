@@ -2,6 +2,8 @@ import type { SectionBulletRow } from "@/db/schema";
 import { addSectionBullet, updateSectionBullet, deleteSectionBullet } from "@/app/admin/(protected)/pages/actions";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { Card } from "@/components/admin/ui/card";
+import { Input } from "@/components/admin/ui/input";
 
 export function SectionBulletManager({
   sectionId,
@@ -17,40 +19,34 @@ export function SectionBulletManager({
 
   return (
     <div className="flex max-w-2xl flex-col gap-5">
-      <h2 className="text-medium font-semibold text-neutral-darkest">List items</h2>
+      <h2 className="text-lg font-semibold">List items</h2>
 
       <div className="flex flex-col gap-3">
         {bullets.map((bullet) => {
           const updateAction = updateSectionBullet.bind(null, bullet.id, pageSlug);
           return (
-            <div
-              key={bullet.id}
-              className="flex items-center gap-3 rounded-card border border-neutral-lighter p-3"
-            >
+            <Card key={bullet.id} className="flex flex-row items-center gap-3 p-3">
               <form action={updateAction} className="flex flex-1 items-center gap-3">
-                <input name="text" defaultValue={bullet.text} className="admin-input flex-1" />
-                <input name="order" type="number" defaultValue={bullet.order} className="admin-input w-20" />
-                <SubmitButton
-                  pendingText="Saving..."
-                  className="border border-mountain-meadow bg-transparent px-3 py-1.5 text-mountain-meadow-dark hover:bg-mountain-meadow-lightest"
-                >
+                <Input name="text" defaultValue={bullet.text} className="flex-1" />
+                <Input name="order" type="number" defaultValue={bullet.order} className="w-20" />
+                <SubmitButton pendingText="Saving..." variant="outline">
                   Save
                 </SubmitButton>
               </form>
               <DeleteButton action={deleteSectionBullet.bind(null, bullet.id, pageSlug)} />
-            </div>
+            </Card>
           );
         })}
-        {bullets.length === 0 && <p className="text-small text-neutral">No items added yet.</p>}
+        {bullets.length === 0 && <p className="text-sm text-muted-foreground">No items added yet.</p>}
       </div>
 
-      <form action={addAction} className="flex items-center gap-3 rounded-card border border-dashed border-neutral-lighter p-3">
-        <input name="text" placeholder="New item" required className="admin-input flex-1" />
-        <input name="order" type="number" defaultValue={nextOrder} className="admin-input w-20" />
-        <SubmitButton pendingText="Adding..." className="px-4 py-1.5">
-          Add
-        </SubmitButton>
-      </form>
+      <Card className="flex flex-row items-center gap-3 border-dashed p-3">
+        <form action={addAction} className="flex flex-1 items-center gap-3">
+          <Input name="text" placeholder="New item" required className="flex-1" />
+          <Input name="order" type="number" defaultValue={nextOrder} className="w-20" />
+          <SubmitButton pendingText="Adding...">Add</SubmitButton>
+        </form>
+      </Card>
     </div>
   );
 }

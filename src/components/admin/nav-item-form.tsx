@@ -1,4 +1,7 @@
 import { SubmitButton } from "@/components/admin/submit-button";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Input } from "@/components/admin/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
 import type { NavItemRow } from "@/db/schema";
 
 export function NavItemForm({
@@ -12,57 +15,63 @@ export function NavItemForm({
 }) {
   return (
     <form action={action} className="flex max-w-xl flex-col gap-5">
-      <Field label="Label">
-        <input name="label" defaultValue={defaultValues?.label} required className="admin-input" />
-      </Field>
-      <Field label="Link (href)">
-        <input name="href" defaultValue={defaultValues?.href} required className="admin-input" />
-      </Field>
+      <FormField label="Label">
+        <Input name="label" defaultValue={defaultValues?.label} required />
+      </FormField>
+      <FormField label="Link (href)">
+        <Input name="href" defaultValue={defaultValues?.href} required />
+      </FormField>
       <div className="grid grid-cols-2 gap-4">
-        <Field label="Location">
-          <select name="location" defaultValue={defaultValues?.location ?? "navbar"} className="admin-input">
-            <option value="navbar">Navbar</option>
-            <option value="footer">Footer</option>
-          </select>
-        </Field>
-        <Field label="Order">
-          <input name="order" type="number" defaultValue={defaultValues?.order ?? 0} className="admin-input" />
-        </Field>
+        <FormField label="Location">
+          <Select name="location" defaultValue={defaultValues?.location ?? "navbar"}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="navbar">Navbar</SelectItem>
+              <SelectItem value="footer">Footer</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormField>
+        <FormField label="Order">
+          <Input name="order" type="number" defaultValue={defaultValues?.order ?? 0} />
+        </FormField>
       </div>
-      <Field label="Footer group (footer only)">
-        <select name="group" defaultValue={defaultValues?.group ?? ""} className="admin-input">
-          <option value="">—</option>
-          <option value="quick_links">quick_links</option>
-          <option value="connect">connect</option>
-        </select>
-      </Field>
-      <Field label="Icon ('connect' group only: x, linkedin)">
-        <input name="icon" defaultValue={defaultValues?.icon ?? ""} className="admin-input" />
-      </Field>
-      <Field label="Parent menu (for a dropdown sub-link)">
-        <select name="parentId" defaultValue={defaultValues?.parentId ?? ""} className="admin-input">
-          <option value="">— Top-level link —</option>
-          {parentOptions
-            .filter((p) => p.id !== defaultValues?.id)
-            .map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.label}
-              </option>
-            ))}
-        </select>
-      </Field>
+      <FormField label="Footer group (footer only)">
+        <Select name="group" defaultValue={defaultValues?.group ?? "none"}>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">—</SelectItem>
+            <SelectItem value="quick_links">quick_links</SelectItem>
+            <SelectItem value="connect">connect</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormField>
+      <FormField label="Icon ('connect' group only: x, linkedin)">
+        <Input name="icon" defaultValue={defaultValues?.icon ?? ""} />
+      </FormField>
+      <FormField label="Parent menu (for a dropdown sub-link)">
+        <Select name="parentId" defaultValue={defaultValues?.parentId ? String(defaultValues.parentId) : "none"}>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">— Top-level link —</SelectItem>
+            {parentOptions
+              .filter((p) => p.id !== defaultValues?.id)
+              .map((p) => (
+                <SelectItem key={p.id} value={String(p.id)}>
+                  {p.label}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </FormField>
       <div className="mt-2">
         <SubmitButton>Save</SubmitButton>
       </div>
     </form>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-small font-semibold text-neutral-darkest">{label}</label>
-      {children}
-    </div>
   );
 }

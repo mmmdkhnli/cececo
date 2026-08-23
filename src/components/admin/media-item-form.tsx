@@ -1,5 +1,10 @@
 import { ImageUpload } from "@/components/admin/image-upload";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { DatePicker } from "@/components/admin/ui/date-picker";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Input } from "@/components/admin/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
+import { Textarea } from "@/components/admin/ui/textarea";
 import type { MediaItemRow } from "@/db/schema";
 
 function toDateInputValue(value: Date | string | null | undefined) {
@@ -16,99 +21,51 @@ export function MediaItemForm({
 }) {
   return (
     <form action={action} className="flex max-w-xl flex-col gap-5">
-      <Field label="Title">
-        <input
-          name="title"
-          defaultValue={defaultValues?.title}
-          required
-          className="admin-input"
-        />
-      </Field>
-      <Field label="Slug (URL)">
-        <input
-          name="slug"
-          defaultValue={defaultValues?.slug}
-          required
-          className="admin-input"
-        />
-      </Field>
-      <Field label="Type">
-        <select
-          name="type"
-          defaultValue={defaultValues?.type ?? "photo_gallery"}
-          className="admin-input"
-        >
-          <option value="photo_gallery">Photo Gallery</option>
-          <option value="video">Video</option>
-          <option value="press">Press Material</option>
-        </select>
-      </Field>
-      <Field label="Short description (optional)">
-        <textarea
-          name="description"
-          defaultValue={defaultValues?.description ?? ""}
-          rows={2}
-          className="admin-input"
-        />
-      </Field>
-      <ImageUpload
-        name="thumbnail"
-        defaultValue={defaultValues?.thumbnail}
-        label="Thumbnail"
-      />
-      <Field label="Video URL (Video type only)">
-        <input
-          name="videoUrl"
-          defaultValue={defaultValues?.videoUrl ?? ""}
-          className="admin-input"
-        />
-      </Field>
-      <Field label="Event date (optional)">
-        <input
-          name="eventDate"
-          type="date"
-          defaultValue={toDateInputValue(defaultValues?.eventDate)}
-          className="admin-input"
-        />
-      </Field>
-      <Field label="Status">
-        <select
-          name="status"
-          defaultValue={defaultValues?.status ?? "draft"}
-          className="admin-input"
-        >
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-        </select>
-      </Field>
-      <Field label="Order">
-        <input
-          name="order"
-          type="number"
-          defaultValue={defaultValues?.order ?? 0}
-          className="admin-input w-24"
-        />
-      </Field>
+      <FormField label="Title">
+        <Input name="title" defaultValue={defaultValues?.title} required />
+      </FormField>
+      <FormField label="Slug (URL)">
+        <Input name="slug" defaultValue={defaultValues?.slug} required />
+      </FormField>
+      <FormField label="Type">
+        <Select name="type" defaultValue={defaultValues?.type ?? "photo_gallery"}>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="photo_gallery">Photo Gallery</SelectItem>
+            <SelectItem value="video">Video</SelectItem>
+            <SelectItem value="press">Press Material</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormField>
+      <FormField label="Short description (optional)">
+        <Textarea name="description" defaultValue={defaultValues?.description ?? ""} rows={2} />
+      </FormField>
+      <ImageUpload name="thumbnail" defaultValue={defaultValues?.thumbnail} label="Thumbnail" />
+      <FormField label="Video URL (Video type only)">
+        <Input name="videoUrl" defaultValue={defaultValues?.videoUrl ?? ""} />
+      </FormField>
+      <FormField label="Event date (optional)">
+        <DatePicker name="eventDate" defaultValue={toDateInputValue(defaultValues?.eventDate)} />
+      </FormField>
+      <FormField label="Status">
+        <Select name="status" defaultValue={defaultValues?.status ?? "draft"}>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="published">Published</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormField>
+      <FormField label="Order">
+        <Input name="order" type="number" defaultValue={defaultValues?.order ?? 0} className="w-24" />
+      </FormField>
       <div className="mt-2">
         <SubmitButton>Save</SubmitButton>
       </div>
     </form>
-  );
-}
-
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-small font-semibold text-neutral-darkest">
-        {label}
-      </label>
-      {children}
-    </div>
   );
 }

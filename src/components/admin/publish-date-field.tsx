@@ -2,51 +2,33 @@
 
 import { useState } from "react";
 
-function toLocalDateTimeString(date: Date) {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
-    date.getHours(),
-  )}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-}
+import { DateTimePicker } from "@/components/admin/ui/date-picker";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Label } from "@/components/admin/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/admin/ui/radio-group";
 
 export function PublishDateField({ defaultValue }: { defaultValue?: Date | string | null }) {
   const [mode, setMode] = useState<"now" | "manual">(defaultValue ? "manual" : "now");
-  const manualDefault = toLocalDateTimeString(defaultValue ? new Date(defaultValue) : new Date());
+  const manualDefault = (defaultValue ? new Date(defaultValue) : new Date()).toISOString();
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-small font-semibold text-neutral-darkest">Publish date</label>
-      <div className="flex gap-4">
-        <label className="flex items-center gap-1.5 text-small text-neutral-darkest">
-          <input
-            type="radio"
-            name="publishMode"
-            value="now"
-            checked={mode === "now"}
-            onChange={() => setMode("now")}
-          />
+    <FormField label="Publish date">
+      <RadioGroup
+        name="publishMode"
+        value={mode}
+        onValueChange={(v) => setMode(v as "now" | "manual")}
+        className="flex flex-row gap-4"
+      >
+        <Label className="flex items-center gap-1.5 font-normal">
+          <RadioGroupItem value="now" />
           Now
-        </label>
-        <label className="flex items-center gap-1.5 text-small text-neutral-darkest">
-          <input
-            type="radio"
-            name="publishMode"
-            value="manual"
-            checked={mode === "manual"}
-            onChange={() => setMode("manual")}
-          />
+        </Label>
+        <Label className="flex items-center gap-1.5 font-normal">
+          <RadioGroupItem value="manual" />
           Pick manually
-        </label>
-      </div>
-      {mode === "manual" && (
-        <input
-          type="datetime-local"
-          name="publishedAt"
-          step="1"
-          defaultValue={manualDefault}
-          className="admin-input"
-        />
-      )}
-    </div>
+        </Label>
+      </RadioGroup>
+      {mode === "manual" && <DateTimePicker name="publishedAt" defaultValue={manualDefault} />}
+    </FormField>
   );
 }
