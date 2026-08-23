@@ -1,0 +1,112 @@
+import "server-only";
+import { sql, eq, and, desc } from "drizzle-orm";
+import { db } from "@/db";
+import { blogPost, opportunity, project, publication } from "@/db/schema";
+
+export type SearchResultType = "news" | "event" | "work-with-us" | "project" | "publication";
+
+export type SearchResult = {
+  type: SearchResultType;
+  title: string;
+  excerpt: string;
+  href: string;
+  date: Date | null;
+};
+
+function publicationBasePath(category: string) {
+  if (category === "Report") return "/resources/reports";
+  if (category === "Document") return "/resources/documents";
+  return "/resources/publications";
+}
+
+// FULLTEXT indexes (blog_post/opportunity/project/publication) are applied
+// directly via src/db/migrations/manual/0001_search_fulltext_indexes.sql —
+// drizzle-orm's mysql-core has no FULLTEXT index type, so they can't live in
+// schema.ts, but MATCH ... AGAINST still works fine as a raw `sql` condition
+// inside the normal query builder.
+//
+// `limitPerType` is lower for the navbar's live-preview dropdown (a handful
+// per category) than for the full /search results page (default 10).
+export async function searchSite(query: string, limitPerType = 10): Promise<SearchResult[]> {
+  const q = query.trim();
+  if (!q) return [];
+
+  const [newsRows, workRows, projectRows, pubRows] = await Promise.all([
+    db
+      .select()
+      .from(blogPost)
+      .where(
+        and(
+          eq(blogPost.status, "published"),
+          sql`MATCH(${blogPost.title}, ${blogPost.excerpt}, ${blogPost.body}) AGAINST (${q} IN NATURAL LANGUAGE MODE)`,
+        ),
+      )
+      .orderBy(desc(blogPost.publishedAt))
+      .limit(limitPerType * 2), // shared source for both News and Events
+    db
+      .select()
+      .from(opportunity)
+      .where(
+        sql`MATCH(${opportunity.title}, ${opportunity.excerpt}, ${opportunity.description}) AGAINST (${q} IN NATURAL LANGUAGE MODE)`,
+      )
+      .limit(limitPerType),
+    db
+      .select()
+      .from(project)
+      .where(
+        sql`MATCH(${project.title}, ${project.shortDescription}, ${project.aboutBody}) AGAINST (${q} IN NATURAL LANGUAGE MODE)`,
+      )
+      .limit(limitPerType),
+    db
+      .select()
+      .from(publication)
+      .where(
+        and(
+          eq(publication.status, "published"),
+          sql`MATCH(${publication.title}, ${publication.excerpt}, ${publication.body}) AGAINST (${q} IN NATURAL LANGUAGE MODE)`,
+        ),
+      )
+      .limit(limitPerType),
+  ]);
+
+  const results: SearchResult[] = [];
+
+  for (const row of newsRows) {
+    results.push({
+      type: row.isEvent ? "event" : "news",
+      title: row.title,
+      excerpt: row.excerpt,
+      href: `/news/${row.slug}`,
+      date: row.publishedAt,
+    });
+  }
+  for (const row of workRows) {
+    results.push({
+      type: "work-with-us",
+      title: row.title,
+      excerpt: row.excerpt ?? "",
+      href: `/work-with-us/${row.slug}`,
+      date: row.deadline,
+    });
+  }
+  for (const row of projectRows) {
+    results.push({
+      type: "project",
+      title: row.title,
+      excerpt: row.shortDescription,
+      href: `/projects/${row.slug}`,
+      date: null,
+    });
+  }
+  for (const row of pubRows) {
+    results.push({
+      type: "publication",
+      title: row.title,
+      excerpt: row.excerpt,
+      href: `${publicationBasePath(row.category)}/${row.slug}`,
+      date: row.publishedAt,
+    });
+  }
+
+  return results;
+}

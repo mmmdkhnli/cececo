@@ -1,0 +1,12 @@
+ALTER TABLE `member_state` ADD `slug` varchar(200);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `description` text;--> statement-breakpoint
+ALTER TABLE `member_state` ADD `hero_image` varchar(512);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `region` varchar(120);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `capital` varchar(120);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `population` varchar(60);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `area` varchar(60);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `founded` varchar(120);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `time_zone` varchar(60);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `renewable_energy_shares_image` varchar(512);--> statement-breakpoint
+ALTER TABLE `member_state` ADD `by_source_image` varchar(512);--> statement-breakpoint
+ALTER TABLE `member_state` ADD CONSTRAINT `member_state_slug_unique` UNIQUE(`slug`);
