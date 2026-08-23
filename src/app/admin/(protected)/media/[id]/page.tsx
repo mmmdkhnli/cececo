@@ -31,7 +31,7 @@ export default async function EditMediaItemPage({
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="text-h3 font-bold text-neutral-darkest">
+        <h1 className="text-3xl font-bold">
           Edit {item.title}
         </h1>
         <div className="mt-8">

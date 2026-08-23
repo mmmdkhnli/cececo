@@ -1,17 +1,16 @@
 import Link from "next/link";
+import { Button } from "@/components/admin/ui/button";
+import { Card } from "@/components/admin/ui/card";
 
 export default function AdminNotFound() {
   return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center rounded-card border border-neutral-lighter bg-white p-10 text-center">
-      <p className="text-small font-semibold text-mountain-meadow-dark">404</p>
-      <h1 className="mt-2 text-h3 font-bold text-neutral-darkest">Page not found</h1>
-      <p className="mt-2 text-medium text-neutral">The page you&apos;re looking for doesn&apos;t exist or has been deleted.</p>
-      <Link
-        href="/admin"
-        className="mt-6 rounded-button bg-mountain-meadow px-5 py-2.5 font-medium text-white transition-colors hover:bg-mountain-meadow-dark"
-      >
-        Back to dashboard
-      </Link>
-    </div>
+    <Card className="flex min-h-[50vh] flex-col items-center justify-center p-10 text-center">
+      <p className="text-sm font-semibold text-primary">404</p>
+      <h1 className="mt-2 text-3xl font-bold">Page not found</h1>
+      <p className="mt-2 text-muted-foreground">The page you&apos;re looking for doesn&apos;t exist or has been deleted.</p>
+      <Button asChild className="mt-6">
+        <Link href="/admin">Back to dashboard</Link>
+      </Button>
+    </Card>
   );
 }

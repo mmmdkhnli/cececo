@@ -4,7 +4,7 @@ import { createTeamMember } from "../actions";
 export default function NewTeamMemberPage() {
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">New team member</h1>
+      <h1 className="text-3xl font-bold">New team member</h1>
       <div className="mt-8">
         <TeamMemberForm action={createTeamMember} />
       </div>

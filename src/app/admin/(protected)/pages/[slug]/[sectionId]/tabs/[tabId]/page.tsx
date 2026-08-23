@@ -25,10 +25,10 @@ export default async function EditSectionTabPage({
 
   return (
     <div>
-      <Link href={`/admin/pages/${slug}/${id}`} className="text-small text-neutral hover:text-neutral-darkest">
+      <Link href={`/admin/pages/${slug}/${id}`} className="text-sm text-muted-foreground hover:text-foreground">
         ← {row.componentKey}
       </Link>
-      <h1 className="mt-2 mb-8 text-h3 font-bold text-neutral-darkest">Edit tab</h1>
+      <h1 className="mt-2 mb-8 text-3xl font-bold">Edit tab</h1>
       <SectionTabForm key={tab.id} action={action} style={style} defaultValues={tab} nextOrder={tab.order} />
     </div>
   );

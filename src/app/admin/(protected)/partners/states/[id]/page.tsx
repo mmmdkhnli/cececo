@@ -12,7 +12,7 @@ export default async function EditMemberStatePage({ params }: { params: Promise<
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">Edit {row.name}</h1>
+      <h1 className="text-3xl font-bold">Edit {row.name}</h1>
       <div className="mt-8">
         <MemberStateForm key={row.id} action={updateMemberState.bind(null, row.id)} defaultValues={row} />
       </div>

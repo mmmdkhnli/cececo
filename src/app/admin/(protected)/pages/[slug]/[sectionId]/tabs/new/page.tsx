@@ -25,10 +25,10 @@ export default async function NewSectionTabPage({
 
   return (
     <div>
-      <Link href={`/admin/pages/${slug}/${id}`} className="text-small text-neutral hover:text-neutral-darkest">
+      <Link href={`/admin/pages/${slug}/${id}`} className="text-sm text-muted-foreground hover:text-foreground">
         ← {row.componentKey}
       </Link>
-      <h1 className="mt-2 mb-8 text-h3 font-bold text-neutral-darkest">New tab</h1>
+      <h1 className="mt-2 mb-8 text-3xl font-bold">New tab</h1>
       <SectionTabForm action={action} style={style} nextOrder={nextOrder} />
     </div>
   );

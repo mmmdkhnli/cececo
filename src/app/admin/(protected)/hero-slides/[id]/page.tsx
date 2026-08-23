@@ -12,7 +12,7 @@ export default async function EditHeroSlidePage({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">Edit {slide.title}</h1>
+      <h1 className="text-3xl font-bold">Edit {slide.title}</h1>
       <div className="mt-8">
         <HeroSlideForm key={slide.id} action={updateHeroSlide.bind(null, slide.id)} defaultValues={slide} />
       </div>

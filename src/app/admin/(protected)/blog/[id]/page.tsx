@@ -12,7 +12,7 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">Edit {post.title}</h1>
+      <h1 className="text-3xl font-bold">Edit {post.title}</h1>
       <div className="mt-8">
         <BlogPostForm key={post.id} action={updateBlogPost.bind(null, post.id)} defaultValues={post} />
       </div>

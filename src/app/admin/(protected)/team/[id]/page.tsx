@@ -12,7 +12,7 @@ export default async function EditTeamMemberPage({ params }: { params: Promise<{
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">Edit {member.name}</h1>
+      <h1 className="text-3xl font-bold">Edit {member.name}</h1>
       <div className="mt-8">
         <TeamMemberForm key={member.id} action={updateTeamMember.bind(null, member.id)} defaultValues={member} />
       </div>

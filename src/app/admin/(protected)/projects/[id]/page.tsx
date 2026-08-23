@@ -21,7 +21,7 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="text-h3 font-bold text-neutral-darkest">Edit {item.title}</h1>
+        <h1 className="text-3xl font-bold">Edit {item.title}</h1>
         <div className="mt-8">
           <ProjectForm key={item.id} action={updateProject.bind(null, item.id)} defaultValues={item} />
         </div>

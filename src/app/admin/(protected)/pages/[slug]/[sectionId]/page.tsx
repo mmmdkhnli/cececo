@@ -36,10 +36,10 @@ export default async function AdminSectionEditPage({
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <Link href={`/admin/pages/${slug}`} className="text-small text-neutral hover:text-neutral-darkest">
+        <Link href={`/admin/pages/${slug}`} className="text-sm text-muted-foreground hover:text-foreground">
           ← {slug} sections
         </Link>
-        <h1 className="mt-2 text-h3 font-bold text-neutral-darkest">{row.componentKey}</h1>
+        <h1 className="mt-2 text-3xl font-bold">{row.componentKey}</h1>
       </div>
 
       <SectionForm key={row.id} section={row} pageSlug={slug} />

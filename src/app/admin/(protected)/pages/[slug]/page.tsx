@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { page, section } from "@/db/schema";
 import { SECTION_LABELS } from "@/lib/section-field-config";
+import { Badge } from "@/components/admin/ui/badge";
+import { Card } from "@/components/admin/ui/card";
 
 export default async function AdminPageSectionsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -18,37 +20,32 @@ export default async function AdminPageSectionsPage({ params }: { params: Promis
 
   return (
     <div>
-      <Link href="/admin/pages" className="text-small text-neutral hover:text-neutral-darkest">
+      <Link href="/admin/pages" className="text-sm text-muted-foreground hover:text-foreground">
         ← All pages
       </Link>
-      <h1 className="mt-2 text-h3 font-bold text-neutral-darkest">{pageRow.title}</h1>
-      <p className="mt-1 text-medium text-neutral">
+      <h1 className="mt-2 text-3xl font-bold">{pageRow.title}</h1>
+      <p className="mt-1 text-muted-foreground">
         Sections are shown in order — {sections.length} section(s). For Team, Blog, and Partners, use the
         &quot;Content&quot; sections in the left menu; the ones here are each section&apos;s own text, image, and CTA
         fields.
       </p>
 
       {slug === "home" && (
-        <Link
-          href="/admin/hero-slides"
-          className="mt-6 flex items-center justify-between rounded-card border border-mountain-meadow bg-mountain-meadow-lightest p-4 transition-colors hover:border-mountain-meadow-dark"
-        >
-          <p className="font-semibold text-neutral-darkest">Hero</p>
-          <span className="text-small font-medium text-mountain-meadow-darker">Manage →</span>
+        <Link href="/admin/hero-slides">
+          <Card className="mt-6 flex flex-row items-center justify-between border-primary bg-primary/5 p-4 transition-colors hover:border-primary">
+            <p className="font-semibold">Hero</p>
+            <span className="text-sm font-medium text-primary">Manage →</span>
+          </Card>
         </Link>
       )}
 
       <div className="mt-8 flex flex-col gap-3">
         {sections.map((s) => (
-          <Link
-            key={s.id}
-            href={`/admin/pages/${slug}/${s.id}`}
-            className="flex items-center justify-between rounded-card border border-neutral-lighter bg-white p-4 transition-colors hover:border-mountain-meadow"
-          >
-            <p className="font-semibold text-neutral-darkest">{SECTION_LABELS[s.componentKey] ?? s.componentKey}</p>
-            <span className="rounded-badge bg-neutral-lightest px-2 py-1 text-tiny font-semibold text-neutral-dark">
-              {s.scheme}
-            </span>
+          <Link key={s.id} href={`/admin/pages/${slug}/${s.id}`}>
+            <Card className="flex flex-row items-center justify-between p-4 transition-colors hover:border-primary">
+              <p className="font-semibold">{SECTION_LABELS[s.componentKey] ?? s.componentKey}</p>
+              <Badge variant="secondary">{s.scheme}</Badge>
+            </Card>
           </Link>
         ))}
       </div>

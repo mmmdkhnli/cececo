@@ -12,7 +12,7 @@ export default async function EditMiscResourcePage({ params }: { params: Promise
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">Edit {item.title}</h1>
+      <h1 className="text-3xl font-bold">Edit {item.title}</h1>
       <div className="mt-8">
         <MiscResourceForm key={item.id} action={updateMiscResource.bind(null, item.id)} defaultValues={item} />
       </div>

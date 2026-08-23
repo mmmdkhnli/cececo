@@ -1,11 +1,19 @@
 "use client";
 
 import { useRef, useState, useTransition, type ChangeEvent } from "react";
-import { FileText, Loader2, UploadCloud, X } from "lucide-react";
+import { FileTextIcon, UploadCloudIcon, XIcon } from "lucide-react";
 
 import { uploadDocument, deleteDocument } from "@/app/admin/upload-action";
-import { Button } from "@/components/admin/ui/button";
-import { Card } from "@/components/admin/ui/card";
+import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+  AttachmentTrigger,
+} from "@/components/admin/ui/attachment";
 import { FormField } from "@/components/admin/ui/form-field";
 
 function formatSize(bytes: number) {
@@ -65,6 +73,9 @@ export function DocumentUpload({
     });
   }
 
+  const filename = url ? decodeURIComponent(url.split("/").pop() ?? "") : "";
+  const state = error ? "error" : isPending ? "uploading" : url ? "done" : "idle";
+
   const body = (
     <div className="flex flex-col gap-2">
       <input type="hidden" name={name} value={url} />
@@ -77,33 +88,24 @@ export function DocumentUpload({
         disabled={isPending}
         onChange={handleFileChange}
       />
-      {url ? (
-        <Card className="flex items-center gap-3 p-3">
-          <FileText className="size-5 shrink-0 text-muted-foreground" />
-          <span className="min-w-0 flex-1 truncate text-sm font-medium">{url.split("/").pop()}</span>
-          {sizeBytes > 0 && (
-            <span className="shrink-0 text-xs text-muted-foreground">{formatSize(sizeBytes)}</span>
-          )}
-          <Button type="button" variant="ghost" size="icon" onClick={handleRemove} disabled={isPending}>
-            <X className="size-4" />
-          </Button>
-        </Card>
-      ) : (
-        <Card
-          onClick={() => inputRef.current?.click()}
-          className="flex cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed border-border p-6 text-center transition-colors hover:border-primary"
-        >
-          {isPending ? (
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-          ) : (
-            <UploadCloud className="size-6 text-muted-foreground" />
-          )}
-          <p className="text-sm text-muted-foreground">
-            {isPending ? "Uploading..." : "Click to upload a PDF, DOC, or DOCX"}
-          </p>
-        </Card>
-      )}
-      {error && <p className="text-xs text-destructive">{error}</p>}
+      <Attachment state={state} className="w-full min-w-0">
+        <AttachmentMedia>{url ? <FileTextIcon /> : <UploadCloudIcon />}</AttachmentMedia>
+        <AttachmentContent>
+          <AttachmentTitle>{filename || "Click to upload a PDF, DOC, or DOCX"}</AttachmentTitle>
+          <AttachmentDescription>
+            {error ?? (isPending ? "Uploading..." : sizeBytes > 0 ? formatSize(sizeBytes) : url ? "Uploaded" : "No file selected")}
+          </AttachmentDescription>
+        </AttachmentContent>
+        {url ? (
+          <AttachmentActions>
+            <AttachmentAction type="button" aria-label={`Remove ${filename}`} onClick={handleRemove} disabled={isPending}>
+              <XIcon />
+            </AttachmentAction>
+          </AttachmentActions>
+        ) : (
+          <AttachmentTrigger aria-label="Upload document" onClick={() => inputRef.current?.click()} disabled={isPending} />
+        )}
+      </Attachment>
     </div>
   );
 

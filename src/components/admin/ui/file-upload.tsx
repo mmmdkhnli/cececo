@@ -1,11 +1,18 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { Loader2, UploadCloud, X } from "lucide-react";
+import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 
-import { Button } from "@/components/admin/ui/button";
-import { Card } from "@/components/admin/ui/card";
-import { cn } from "@/lib/utils";
+import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+  AttachmentTrigger,
+} from "@/components/admin/ui/attachment";
 
 type UploadResult = { url?: string; error?: string };
 type DeleteResult = { error?: string };
@@ -28,7 +35,6 @@ export function FileUpload({
   const [url, setUrl] = useState(defaultValue ?? "");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleFiles(files: FileList | null) {
@@ -59,6 +65,9 @@ export function FileUpload({
     });
   }
 
+  const filename = url ? decodeURIComponent(url.split("/").pop() ?? "") : "";
+  const state = error ? "error" : isPending ? "uploading" : url ? "done" : "idle";
+
   return (
     <div className="flex flex-col gap-2">
       <input type="hidden" name={name} value={url} />
@@ -70,51 +79,47 @@ export function FileUpload({
         disabled={isPending}
         onChange={(e) => handleFiles(e.target.files)}
       />
-      {url ? (
-        <Card className="flex items-center gap-3 p-3">
-          {preview === "image" && (
-            <img
-              src={url}
-              alt=""
-              className="h-16 w-auto max-w-24 rounded-md border border-border object-contain p-1"
-            />
-          )}
-          <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
-            {url.split("/").pop()}
-          </span>
-          <Button type="button" variant="ghost" size="icon" onClick={handleRemove} disabled={isPending}>
-            <X className="size-4" />
-          </Button>
-        </Card>
-      ) : (
-        <Card
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDragOver(true);
-          }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setDragOver(false);
-            handleFiles(e.dataTransfer.files);
-          }}
-          onClick={() => inputRef.current?.click()}
-          className={cn(
-            "flex cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed p-6 text-center transition-colors",
-            dragOver ? "border-primary bg-accent" : "border-border",
-          )}
-        >
-          {isPending ? (
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-          ) : (
-            <UploadCloud className="size-6 text-muted-foreground" />
-          )}
-          <p className="text-sm text-muted-foreground">
-            {isPending ? "Uploading..." : "Click or drag a file to upload"}
-          </p>
-        </Card>
-      )}
-      {error && <p className="text-xs text-destructive">{error}</p>}
+      <Attachment
+        state={state}
+        className="w-full min-w-0"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          handleFiles(e.dataTransfer.files);
+        }}
+      >
+        {url && preview === "image" ? (
+          <AttachmentMedia variant="image">
+            <img src={url} alt="" />
+          </AttachmentMedia>
+        ) : (
+          <AttachmentMedia>{url ? <FileIcon /> : <UploadCloudIcon />}</AttachmentMedia>
+        )}
+        <AttachmentContent>
+          <AttachmentTitle>{filename || "Click or drag a file to upload"}</AttachmentTitle>
+          <AttachmentDescription>
+            {error ?? (isPending ? "Uploading..." : url ? "Uploaded" : "No file selected")}
+          </AttachmentDescription>
+        </AttachmentContent>
+        {url ? (
+          <AttachmentActions>
+            <AttachmentAction
+              type="button"
+              aria-label={`Remove ${filename}`}
+              onClick={handleRemove}
+              disabled={isPending}
+            >
+              <XIcon />
+            </AttachmentAction>
+          </AttachmentActions>
+        ) : (
+          <AttachmentTrigger
+            aria-label="Upload file"
+            onClick={() => inputRef.current?.click()}
+            disabled={isPending}
+          />
+        )}
+      </Attachment>
     </div>
   );
 }

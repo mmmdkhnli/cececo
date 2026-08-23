@@ -1,19 +1,21 @@
 import Link from "next/link";
+import { DarkRoot } from "@/components/admin/dark-root";
+import { Button } from "@/components/admin/ui/button";
+import { Card } from "@/components/admin/ui/card";
 
 export default function AdminSegmentNotFound() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-lightest px-6">
-      <div className="w-full max-w-md rounded-card border border-neutral-lighter bg-white p-8 text-center">
-        <p className="text-small font-semibold text-mountain-meadow-dark">404</p>
-        <h1 className="mt-2 text-h4 font-bold text-neutral-darkest">Page not found</h1>
-        <p className="mt-2 text-small text-neutral">The admin page you&apos;re looking for doesn&apos;t exist.</p>
-        <Link
-          href="/admin"
-          className="mt-6 inline-block rounded-button bg-mountain-meadow px-5 py-2.5 font-medium text-white transition-colors hover:bg-mountain-meadow-dark"
-        >
-          Back to dashboard
-        </Link>
+    <DarkRoot>
+      <div className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
+        <Card className="w-full max-w-md p-8 text-center">
+          <p className="text-sm font-semibold text-primary">404</p>
+          <h1 className="mt-2 text-2xl font-bold">Page not found</h1>
+          <p className="mt-2 text-sm text-muted-foreground">The admin page you&apos;re looking for doesn&apos;t exist.</p>
+          <Button asChild className="mt-6">
+            <Link href="/admin">Back to dashboard</Link>
+          </Button>
+        </Card>
       </div>
-    </div>
+    </DarkRoot>
   );
 }

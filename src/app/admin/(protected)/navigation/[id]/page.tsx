@@ -18,7 +18,7 @@ export default async function EditNavItemPage({ params }: { params: Promise<{ id
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">Edit {row.label}</h1>
+      <h1 className="text-3xl font-bold">Edit {row.label}</h1>
       <div className="mt-8">
         <NavItemForm key={row.id} action={updateNavItem.bind(null, row.id)} defaultValues={row} parentOptions={parentOptions} />
       </div>

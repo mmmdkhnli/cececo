@@ -13,7 +13,7 @@ export default async function NewNavItemPage() {
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">New link</h1>
+      <h1 className="text-3xl font-bold">New link</h1>
       <div className="mt-8">
         <NavItemForm action={createNavItem} parentOptions={parentOptions} />
       </div>

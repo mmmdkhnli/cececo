@@ -4,6 +4,7 @@ import * as React from "react"
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { useDarkPortalContainer } from "@/components/admin/dark-root"
 import { Button } from "@/components/admin/ui/button"
 
 function AlertDialog({
@@ -51,8 +52,9 @@ function AlertDialogContent({
 }: React.ComponentProps<typeof AlertDialogPrimitive.Content> & {
   size?: "default" | "sm"
 }) {
+  const container = useDarkPortalContainer()
   return (
-    <AlertDialogPortal>
+    <AlertDialogPortal container={container ?? undefined}>
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
