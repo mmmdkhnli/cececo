@@ -12,7 +12,7 @@ export function MediaDetail({ item }: { item: MediaItemWithGallery }) {
       <div className="container max-w-4xl">
         <h1 className="mb-3 text-h1 font-bold">{item.title}</h1>
         {item.eventDate && (
-          <p className="mb-8 text-medium text-neutral">
+          <p className="mb-8 text-medium text-scheme-text-muted">
             {new Date(item.eventDate).toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
@@ -21,7 +21,7 @@ export function MediaDetail({ item }: { item: MediaItemWithGallery }) {
           </p>
         )}
         {item.description && (
-          <p className="mb-10 text-medium text-neutral">{item.description}</p>
+          <p className="mb-10 text-medium text-scheme-text-muted">{item.description}</p>
         )}
 
         {item.type === "video" && item.videoUrl && (

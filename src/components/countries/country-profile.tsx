@@ -37,7 +37,7 @@ export function CountryProfile({ country }: { country: MemberStateRow }) {
               />
               <h1 className="mb-5 text-h1 font-bold">{country.name}</h1>
               {country.description && (
-                <p className="text-medium text-neutral">
+                <p className="text-medium text-scheme-text-muted">
                   {country.description}
                 </p>
               )}
@@ -65,11 +65,11 @@ export function CountryProfile({ country }: { country: MemberStateRow }) {
                     className="flex flex-col items-center gap-3 text-center"
                   >
                     <div className="flex size-12 items-center justify-center rounded-full bg-mountain-meadow-lightest">
-                      <Icon className="size-5 text-mountain-meadow-dark" />
+                      <Icon className="size-5 text-scheme-accent" />
                     </div>
                     <div>
-                      <p className="text-tiny text-neutral">{label}</p>
-                      <p className="text-small font-bold text-neutral-darkest">
+                      <p className="text-tiny text-scheme-text-muted">{label}</p>
+                      <p className="text-small font-bold text-scheme-text">
                         {String(country[key])}
                       </p>
                     </div>

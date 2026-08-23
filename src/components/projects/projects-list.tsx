@@ -38,7 +38,7 @@ export function ProjectsList({ projects }: { projects: ProjectRow[] }) {
             className={`rounded-button px-4 py-2 text-small font-medium transition-colors ${
               filter === f
                 ? "bg-mountain-meadow text-white"
-                : "border border-scheme-border text-scheme-text hover:bg-neutral-lightest"
+                : "border border-scheme-border text-scheme-text hover:bg-scheme-hover"
             }`}
           >
             {f === "All" ? "All Projects" : f}
@@ -47,7 +47,7 @@ export function ProjectsList({ projects }: { projects: ProjectRow[] }) {
       </div>
 
       {visible.length === 0 ? (
-        <p className="text-center text-medium text-neutral">No projects in this category yet.</p>
+        <p className="text-center text-medium text-scheme-text-muted">No projects in this category yet.</p>
       ) : (
         <div className="flex flex-col gap-6">
           {visible.map((item) => {
@@ -64,14 +64,14 @@ export function ProjectsList({ projects }: { projects: ProjectRow[] }) {
                 <div className="flex flex-1 flex-col gap-3">
                   <div className="flex flex-wrap items-center gap-3">
                     <Badge>{STATUS_LABEL[item.status]}</Badge>
-                    {period && <p className="text-small text-neutral">{period}</p>}
+                    {period && <p className="text-small text-scheme-text-muted">{period}</p>}
                     {item.applicationsOpen && item.applicationDeadline && (
-                      <p className="text-small text-neutral">
+                      <p className="text-small text-scheme-text-muted">
                         Application deadline: {new Date(item.applicationDeadline).toLocaleDateString("en-US")}
                       </p>
                     )}
                   </div>
-                  <h2 className="text-h4 font-bold">{item.title}</h2>
+                  <h2 className="text-h4 font-bold text-scheme-text">{item.title}</h2>
                   <p>{item.shortDescription}</p>
                   <div className="flex flex-wrap items-center gap-4">
                     <Button

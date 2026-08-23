@@ -32,7 +32,7 @@ export function ResourceDetail({ item }: { item: PublicationRow }) {
         <div className="mb-6 flex items-center gap-4">
           <Badge>{item.category}</Badge>
           {item.publishedAt && (
-            <p className="text-small text-neutral">
+            <p className="text-small text-scheme-text-muted">
               {new Date(item.publishedAt).toLocaleDateString("en-US")}
             </p>
           )}
@@ -41,7 +41,7 @@ export function ResourceDetail({ item }: { item: PublicationRow }) {
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_320px]">
           <div>
-            <p className="text-medium text-neutral">{item.excerpt}</p>
+            <p className="text-medium text-scheme-text-muted">{item.excerpt}</p>
             {item.body && (
               <div className="mt-8">
                 <h2 className="mb-3 text-h5 font-bold">
@@ -61,13 +61,13 @@ export function ResourceDetail({ item }: { item: PublicationRow }) {
             {item.fileUrl && (
               <Card className="p-5">
                 <div className="mb-4 flex items-center gap-3">
-                  <Description className="size-6 shrink-0 text-mountain-meadow-dark" />
+                  <Description className="size-6 shrink-0 text-scheme-accent" />
                   <div className="min-w-0">
-                    <p className="truncate text-small font-semibold text-neutral-darkest">
+                    <p className="truncate text-small font-semibold text-scheme-text">
                       {item.fileUrl.split("/").pop()}
                     </p>
                     {formatSize(item.fileSizeBytes) && (
-                      <p className="text-tiny text-neutral">
+                      <p className="text-tiny text-scheme-text-muted">
                         {formatSize(item.fileSizeBytes)}
                       </p>
                     )}
@@ -101,7 +101,7 @@ export function ResourceDetail({ item }: { item: PublicationRow }) {
 
             {metadata.length > 0 && (
               <Card className="p-5">
-                <h3 className="mb-4 text-small font-bold text-neutral-darkest">
+                <h3 className="mb-4 text-small font-bold text-scheme-text">
                   Details
                 </h3>
                 <dl className="flex flex-col gap-3">
@@ -110,8 +110,8 @@ export function ResourceDetail({ item }: { item: PublicationRow }) {
                       key={key}
                       className="flex items-center justify-between gap-3 text-small"
                     >
-                      <dt className="text-neutral">{METADATA_LABEL[key]}</dt>
-                      <dd className="font-medium text-neutral-darkest">
+                      <dt className="text-scheme-text-muted">{METADATA_LABEL[key]}</dt>
+                      <dd className="font-medium text-scheme-text">
                         {value}
                       </dd>
                     </div>

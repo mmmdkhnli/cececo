@@ -48,11 +48,11 @@ function PartnerCard({ partner }: { partner: PartnerRow }) {
         )}
       </div>
       <div className="flex flex-col gap-1">
-        <h3 className="text-medium font-bold text-neutral-darkest">
+        <h3 className="text-medium font-bold text-scheme-text">
           {partner.name}
         </h3>
         {partner.statusLabel && (
-          <p className="text-small font-semibold text-mountain-meadow-dark">
+          <p className="text-small font-semibold text-scheme-accent">
             {partner.statusLabel}
           </p>
         )}
@@ -63,7 +63,7 @@ function PartnerCard({ partner }: { partner: PartnerRow }) {
         )}
       </div>
       {partner.description && (
-        <p className="text-small text-neutral">{partner.description}</p>
+        <p className="text-small text-scheme-text-muted">{partner.description}</p>
       )}
       <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-2">
         {partner.viewMoreUrl && (
@@ -98,8 +98,8 @@ function CategoryGroup({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-3">
-        <Icon className="size-6 text-mountain-meadow-dark" />
-        <h3 className="text-h5 font-bold text-neutral-darkest">
+        <Icon className="size-6 text-scheme-accent" />
+        <h3 className="text-h5 font-bold text-scheme-text">
           {CATEGORY_LABEL[category]}
         </h3>
       </div>
@@ -146,7 +146,7 @@ export function PartnersGrid({
               className={`rounded-button px-4 py-2 text-small font-medium transition-colors ${
                 filter === f
                   ? "bg-mountain-meadow text-white"
-                  : "border border-scheme-border text-scheme-text hover:bg-neutral-lightest"
+                  : "border border-scheme-border text-scheme-text hover:bg-scheme-hover"
               }`}
             >
               {f}
@@ -155,7 +155,7 @@ export function PartnersGrid({
         </div>
 
         {partners.length === 0 ? (
-          <p className="text-center text-medium text-neutral">
+          <p className="text-center text-medium text-scheme-text-muted">
             No partners added yet.
           </p>
         ) : activeCategory ? (
@@ -179,11 +179,11 @@ export function PartnersGrid({
         )}
 
         <Card className="mt-16 flex flex-col items-center gap-4 p-8 text-center md:mt-20">
-          <Mail className="size-8 text-mountain-meadow-dark" />
-          <h3 className="text-h5 font-bold text-neutral-darkest">
+          <Mail className="size-8 text-scheme-accent" />
+          <h3 className="text-h5 font-bold text-scheme-text">
             Interested in partnering with CECECO?
           </h3>
-          <p className="max-w-md text-medium text-neutral">
+          <p className="max-w-md text-medium text-scheme-text-muted">
             We are always open to new partnerships for a cleaner and sustainable
             future.
           </p>

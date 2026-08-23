@@ -40,7 +40,7 @@ export function WriteUsForm() {
       <Button type="submit" disabled={pending} className="mt-2">
         {pending ? "Sending..." : "Send Message"}
       </Button>
-      {state.status === "success" && <p className="text-small text-mountain-meadow-dark">{state.message}</p>}
+      {state.status === "success" && <p className="text-small text-scheme-accent">{state.message}</p>}
       {state.status === "error" && <p className="text-small text-red-violet">{state.message}</p>}
     </form>
   );

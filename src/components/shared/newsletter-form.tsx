@@ -51,7 +51,7 @@ export function NewsletterForm({
         </Button>
       </form>
       {state.status === "success" && (
-        <p className="text-small text-mountain-meadow-dark">{state.message}</p>
+        <p className="text-small text-scheme-accent">{state.message}</p>
       )}
       {state.status === "error" && <p className="text-small text-red-violet">{state.message}</p>}
     </div>

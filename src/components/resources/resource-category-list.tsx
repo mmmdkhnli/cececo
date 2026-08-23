@@ -35,20 +35,20 @@ export function ResourceCategoryList({
   return (
     <div>
       <div className="mb-8 flex items-center gap-3 rounded-button border border-scheme-border px-4 py-2.5">
-        <Search className="size-5 shrink-0 text-neutral" />
+        <Search className="size-5 shrink-0 text-scheme-text-muted" />
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search..."
-          className="w-full bg-transparent text-medium text-scheme-text placeholder:text-neutral focus-visible:outline-none"
+          className="w-full bg-transparent text-medium text-scheme-text placeholder:text-scheme-text-muted focus-visible:outline-none"
         />
       </div>
 
       {items.length === 0 ? (
-        <p className="text-center text-medium text-neutral">{emptyMessage}</p>
+        <p className="text-center text-medium text-scheme-text-muted">{emptyMessage}</p>
       ) : visible.length === 0 ? (
-        <p className="text-center text-medium text-neutral">
+        <p className="text-center text-medium text-scheme-text-muted">
           No results found for &quot;{query.trim()}&quot;.
         </p>
       ) : (
@@ -57,13 +57,13 @@ export function ResourceCategoryList({
             <Link
               key={item.id}
               href={`${basePath}/${item.slug}`}
-              className="flex flex-col gap-3 p-5 transition-colors hover:bg-neutral-lightest sm:flex-row sm:items-center sm:justify-between md:p-6"
+              className="flex flex-col gap-3 p-5 transition-colors hover:bg-scheme-hover sm:flex-row sm:items-center sm:justify-between md:p-6"
             >
               <div className="flex flex-col gap-2">
                 <div className="flex flex-wrap items-center gap-3">
                   <Badge>{item.category}</Badge>
                   {item.publishedAt && (
-                    <p className="text-small text-neutral">
+                    <p className="text-small text-scheme-text-muted">
                       {new Date(item.publishedAt).toLocaleDateString("en-US")}
                     </p>
                   )}
@@ -71,9 +71,9 @@ export function ResourceCategoryList({
                 <h2 className="text-medium font-bold text-scheme-text">
                   {item.title}
                 </h2>
-                <p className="text-small text-neutral">{item.excerpt}</p>
+                <p className="text-small text-scheme-text-muted">{item.excerpt}</p>
               </div>
-              <div className="flex shrink-0 items-center gap-3 text-small text-neutral sm:flex-col sm:items-end sm:gap-1">
+              <div className="flex shrink-0 items-center gap-3 text-small text-scheme-text-muted sm:flex-col sm:items-end sm:gap-1">
                 {(item.fileFormat || formatSize(item.fileSizeBytes)) && (
                   <p className="font-semibold text-scheme-text">
                     {[item.fileFormat, formatSize(item.fileSizeBytes)]
@@ -81,7 +81,7 @@ export function ResourceCategoryList({
                       .join(" · ")}
                   </p>
                 )}
-                <p className="font-semibold text-mountain-meadow-dark">
+                <p className="font-semibold text-scheme-accent">
                   View Details →
                 </p>
               </div>

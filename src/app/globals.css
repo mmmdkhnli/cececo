@@ -424,6 +424,9 @@
   --color-scheme-background: var(--color-mountain-meadow-dark);
   --color-scheme-foreground: var(--color-mountain-meadow);
   --color-scheme-text: var(--color-white);
+  --color-scheme-text-muted: var(--color-white-60);
+  --color-scheme-accent: var(--color-white);
+  --color-scheme-hover: var(--color-white-15);
   --color-scheme-border: var(--color-white-20);
 
   background-color: var(--color-scheme-background);
@@ -434,6 +437,9 @@
   --color-scheme-background: var(--color-white);
   --color-scheme-foreground: var(--color-neutral-lightest);
   --color-scheme-text: var(--color-neutral-darkest);
+  --color-scheme-text-muted: var(--color-neutral);
+  --color-scheme-accent: var(--color-mountain-meadow-dark);
+  --color-scheme-hover: var(--color-neutral-lightest);
   --color-scheme-border: var(--color-neutral-darkest-15);
   --color-scheme-btn-text: var(--color-white);
 
@@ -449,6 +455,9 @@
   --color-scheme-background: var(--color-regal-blue-light);
   --color-scheme-foreground: var(--color-regal-blue);
   --color-scheme-text: var(--color-white);
+  --color-scheme-text-muted: var(--color-white-60);
+  --color-scheme-accent: var(--color-white);
+  --color-scheme-hover: var(--color-white-15);
   --color-scheme-border: var(--color-white-20);
   --color-scheme-btn-text: var(--color-white);
 
@@ -464,6 +473,9 @@
   --color-scheme-background: var(--color-mountain-meadow-darker);
   --color-scheme-foreground: var(--color-mountain-meadow-darkest);
   --color-scheme-text: var(--color-white);
+  --color-scheme-text-muted: var(--color-white-60);
+  --color-scheme-accent: var(--color-mountain-meadow-light);
+  --color-scheme-hover: var(--color-white-15);
   --color-scheme-border: var(--color-white-20);
   --color-scheme-btn-text: var(--color-white);
 
@@ -479,6 +491,9 @@
   --color-scheme-background: var(--color-neutral-lightest);
   --color-scheme-foreground: var(--color-white);
   --color-scheme-text: var(--color-neutral-darkest);
+  --color-scheme-text-muted: var(--color-neutral);
+  --color-scheme-accent: var(--color-mountain-meadow-dark);
+  --color-scheme-hover: var(--color-neutral-lightest);
   --color-scheme-border: var(--color-neutral-darkest-15);
   --color-scheme-btn-text: var(--color-white);
 
@@ -494,6 +509,9 @@
   --color-scheme-background: var(--color-neutral-darkest);
   --color-scheme-foreground: var(--color-neutral-darker);
   --color-scheme-text: var(--color-white);
+  --color-scheme-text-muted: var(--color-white-60);
+  --color-scheme-accent: var(--color-mountain-meadow);
+  --color-scheme-hover: var(--color-white-15);
   --color-scheme-border: var(--color-white-20);
   --color-scheme-btn-text: var(--color-white);
 
@@ -509,6 +527,9 @@
   --color-scheme-background: var(--color-neutral-darker);
   --color-scheme-foreground: var(--color-neutral-darkest);
   --color-scheme-text: var(--color-white);
+  --color-scheme-text-muted: var(--color-white-60);
+  --color-scheme-accent: var(--color-mountain-meadow);
+  --color-scheme-hover: var(--color-white-15);
   --color-scheme-border: var(--color-white-20);
   --color-scheme-btn-text: var(--color-white);
 
@@ -535,8 +556,17 @@
 @utility text-scheme-text {
   color: var(--color-scheme-text);
 }
+@utility text-scheme-text-muted {
+  color: var(--color-scheme-text-muted);
+}
+@utility text-scheme-accent {
+  color: var(--color-scheme-accent);
+}
 @utility text-scheme-btn-text {
   color: var(--color-scheme-btn-text);
+}
+@utility bg-scheme-hover {
+  background-color: var(--color-scheme-hover);
 }
 @utility border-scheme-border {
   border-color: var(--color-scheme-border);

@@ -40,7 +40,7 @@ export function CountriesCarousel({
               type="button"
               aria-label="Previous"
               onClick={() => scrollByCard(-1)}
-              className="flex size-10 items-center justify-center rounded-button border border-scheme-border hover:bg-neutral-lightest"
+              className="flex size-10 items-center justify-center rounded-button border border-scheme-border hover:bg-scheme-hover"
             >
               <ChevronLeft className="size-5" />
             </button>
@@ -48,7 +48,7 @@ export function CountriesCarousel({
               type="button"
               aria-label="Next"
               onClick={() => scrollByCard(1)}
-              className="flex size-10 items-center justify-center rounded-button border border-scheme-border hover:bg-neutral-lightest"
+              className="flex size-10 items-center justify-center rounded-button border border-scheme-border hover:bg-scheme-hover"
             >
               <ChevronRight className="size-5" />
             </button>
@@ -66,17 +66,17 @@ export function CountriesCarousel({
                 alt={`${country.name} flag`}
                 className="mb-5 aspect-video w-full rounded-image object-cover"
               />
-              <h3 className="mb-2 text-medium font-bold text-neutral-darkest">
+              <h3 className="mb-2 text-medium font-bold text-scheme-text">
                 {country.name}
               </h3>
               {country.description && (
-                <p className="mb-5 line-clamp-3 text-small text-neutral">
+                <p className="mb-5 line-clamp-3 text-small text-scheme-text-muted">
                   {country.description}
                 </p>
               )}
               <Link
                 href={`/countries/${country.slug}`}
-                className="text-small font-semibold text-mountain-meadow-dark hover:underline"
+                className="text-small font-semibold text-scheme-accent hover:underline"
               >
                 See More →
               </Link>

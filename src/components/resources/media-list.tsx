@@ -44,7 +44,7 @@ export function MediaList({ items }: { items: MediaItemRow[] }) {
               className={`rounded-button px-4 py-2 text-small font-medium transition-colors ${
                 filter === f
                   ? "bg-mountain-meadow text-white"
-                  : "border border-scheme-border text-scheme-text hover:bg-neutral-lightest"
+                  : "border border-scheme-border text-scheme-text hover:bg-scheme-hover"
               }`}
             >
               {f}
@@ -52,21 +52,21 @@ export function MediaList({ items }: { items: MediaItemRow[] }) {
           ))}
         </div>
         <div className="flex items-center gap-3 rounded-button border border-scheme-border px-4 py-2.5 sm:w-64">
-          <Search className="size-4 shrink-0 text-neutral" />
+          <Search className="size-4 shrink-0 text-scheme-text-muted" />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search media..."
-            className="w-full bg-transparent text-small text-scheme-text placeholder:text-neutral focus-visible:outline-none"
+            className="w-full bg-transparent text-small text-scheme-text placeholder:text-scheme-text-muted focus-visible:outline-none"
           />
         </div>
       </div>
 
       {items.length === 0 ? (
-        <p className="text-center text-medium text-neutral">No media yet.</p>
+        <p className="text-center text-medium text-scheme-text-muted">No media yet.</p>
       ) : visible.length === 0 ? (
-        <p className="text-center text-medium text-neutral">
+        <p className="text-center text-medium text-scheme-text-muted">
           No results found.
         </p>
       ) : (
@@ -90,11 +90,11 @@ export function MediaList({ items }: { items: MediaItemRow[] }) {
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col gap-1 p-5">
-                  <h2 className="text-medium font-bold text-neutral-darkest">
+                  <h2 className="text-medium font-bold text-scheme-text">
                     {item.title}
                   </h2>
                   {item.eventDate && (
-                    <p className="text-small text-neutral">
+                    <p className="text-small text-scheme-text-muted">
                       {new Date(item.eventDate).toLocaleDateString("en-US", {
                         month: "long",
                         year: "numeric",
