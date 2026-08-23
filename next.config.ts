@@ -21,11 +21,17 @@ const nextConfig: NextConfig = {
   // the request's Origin against a *separate* allowlist for CSRF
   // protection — without the port included here, LAN POSTs get rejected
   // even though GETs are fine. 213.136.92.177 is the production VPS
-  // (behind nginx on :80, so no port suffix) — add the real domain here
-  // too once one is pointed at it.
+  // (behind nginx on :80, so no port suffix); mmmdkhnli.site is the real
+  // domain now pointed at it (both bare and www, since either can end up
+  // as the Origin depending on which one a visitor typed/clicked).
   experimental: {
     serverActions: {
-      allowedOrigins: ['192.168.1.65:3000', '213.136.92.177'],
+      allowedOrigins: [
+        '192.168.1.65:3000',
+        '213.136.92.177',
+        'mmmdkhnli.site',
+        'www.mmmdkhnli.site',
+      ],
       // Next.js defaults Server Action request bodies to 1MB — well under
       // the 8MB image cap upload-action.ts itself enforces. Anything over
       // 1MB (i.e. most real phone photos) got silently rejected by the
