@@ -3,6 +3,8 @@
 import { useActionState } from "react";
 import { login, type LoginState } from "@/app/admin/login/actions";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { FormField } from "@/components/admin/ui/form-field";
+import { Input } from "@/components/admin/ui/input";
 
 const initialState: LoginState = {};
 
@@ -11,34 +13,14 @@ export function LoginForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-small font-semibold text-neutral-darkest">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          autoComplete="username"
-          className="rounded-form border border-neutral-lighter px-3 py-2 text-neutral-darkest outline-none focus-visible:border-mountain-meadow"
-        />
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-small font-semibold text-neutral-darkest">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          className="rounded-form border border-neutral-lighter px-3 py-2 text-neutral-darkest outline-none focus-visible:border-mountain-meadow"
-        />
-      </div>
-      {state.error && <p className="text-small text-red-violet">{state.error}</p>}
-      <SubmitButton pendingText="Signing in..." className="mt-2">
+      <FormField label="Email" htmlFor="email">
+        <Input id="email" name="email" type="email" required autoComplete="username" />
+      </FormField>
+      <FormField label="Password" htmlFor="password">
+        <Input id="password" name="password" type="password" required autoComplete="current-password" />
+      </FormField>
+      {state.error && <p className="text-sm text-destructive">{state.error}</p>}
+      <SubmitButton pendingText="Signing in..." className="mt-2 w-full">
         Sign in
       </SubmitButton>
     </form>

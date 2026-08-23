@@ -1,28 +1,27 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+
+import { Button, type buttonVariants } from "@/components/admin/ui/button";
+import type { VariantProps } from "class-variance-authority";
 
 export function SubmitButton({
   children,
   pendingText = "Saving...",
   className,
+  variant,
 }: {
   children: React.ReactNode;
   pendingText?: string;
   className?: string;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
 }) {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={cn(
-        "rounded-button bg-mountain-meadow px-5 py-2.5 font-medium text-white transition-colors hover:bg-mountain-meadow-dark disabled:cursor-not-allowed disabled:opacity-50",
-        className,
-      )}
-    >
+    <Button type="submit" disabled={pending} className={className} variant={variant}>
+      {pending && <Loader2 className="size-4 animate-spin" />}
       {pending ? pendingText : children}
-    </button>
+    </Button>
   );
 }

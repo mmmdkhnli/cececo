@@ -2,10 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { KeyboardArrowDown } from "relume-icons";
+import { ChevronDown, LayoutDashboard, LogOut } from "lucide-react";
+
 import { logout } from "@/app/admin/login/actions";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/admin/ui/collapsible";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/admin/ui/sidebar";
 
 type NavItem = { href: string; label: string; exact?: boolean };
 type NavGroup = { key: string; label: string; items: NavItem[] };
@@ -23,10 +36,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/admin/pages/our-work", label: "Our Work" },
       { href: "/admin/pages/partners", label: "Partners" },
       { href: "/admin/pages/vision-and-mission", label: "Vision and Mission" },
-      {
-        href: "/admin/pages/signatory-countries",
-        label: "Signatory Countries",
-      },
+      { href: "/admin/pages/signatory-countries", label: "Signatory Countries" },
       { href: "/admin/pages/privacy-policy", label: "Privacy Policy" },
       { href: "/admin/pages/terms-of-service", label: "Terms of Service" },
       { href: "/admin/pages/cookie-settings", label: "Cookie Settings" },
@@ -72,21 +82,6 @@ function isItemActive(pathname: string, item: NavItem) {
   return item.exact ? pathname === item.href : pathname.startsWith(item.href);
 }
 
-function NavLink({ item, active }: { item: NavItem; active: boolean }) {
-  return (
-    <Link
-      href={item.href}
-      className={`rounded-button px-3 py-2 text-small font-medium transition-colors ${
-        active
-          ? "bg-mountain-meadow-lightest text-mountain-meadow-darker"
-          : "text-neutral-dark hover:bg-neutral-lightest"
-      }`}
-    >
-      {item.label}
-    </Link>
-  );
-}
-
 export function AdminSidebar({
   email,
   name,
@@ -98,85 +93,77 @@ export function AdminSidebar({
 }) {
   const pathname = usePathname();
 
-  const [openKeys, setOpenKeys] = useState<Set<string>>(
-    () =>
-      new Set(
-        NAV_GROUPS.filter((g) =>
-          g.items.some((i) => isItemActive(pathname, i)),
-        ).map((g) => g.key),
-      ),
-  );
-
-  function toggleGroup(key: string) {
-    setOpenKeys((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  }
-
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 flex h-screen w-64 flex-none flex-col border-r border-neutral-lighter bg-white">
-      <div className="flex-none border-b border-neutral-lighter p-6">
-        <img src={logoDark} alt="CECECO" className="h-7 w-auto" />
-        <p className="mt-2 text-tiny font-semibold tracking-wide text-neutral uppercase">
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="border-b border-sidebar-border p-4">
+        <img
+          src={logoDark}
+          alt="CECECO"
+          className="h-7 w-auto group-data-[collapsible=icon]:hidden"
+        />
+        <p className="mt-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase group-data-[collapsible=icon]:hidden">
           Admin panel
         </p>
-      </div>
-      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
-        <NavLink item={ROOT_ITEM} active={isItemActive(pathname, ROOT_ITEM)} />
+      </SidebarHeader>
+
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isItemActive(pathname, ROOT_ITEM)} tooltip={ROOT_ITEM.label}>
+                  <Link href={ROOT_ITEM.href}>
+                    <LayoutDashboard />
+                    <span>{ROOT_ITEM.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         {NAV_GROUPS.map((group) => {
-          const open = openKeys.has(group.key);
-          const groupActive = group.items.some((i) =>
-            isItemActive(pathname, i),
-          );
+          const groupActive = group.items.some((i) => isItemActive(pathname, i));
           return (
-            <div key={group.key} className="mt-1 flex flex-col gap-1">
-              <button
-                type="button"
-                onClick={() => toggleGroup(group.key)}
-                className={`flex items-center justify-between rounded-button px-3 py-2 text-small font-semibold transition-colors ${
-                  groupActive
-                    ? "text-mountain-meadow-darker"
-                    : "text-neutral-darkest hover:bg-neutral-lightest"
-                }`}
-              >
-                {group.label}
-                <KeyboardArrowDown
-                  className={`size-4 text-neutral transition-transform ${open ? "rotate-180" : ""}`}
-                />
-              </button>
-              {open && (
-                <div className="flex flex-col gap-1 border-l border-neutral-lighter pl-3">
-                  {group.items.map((item) => (
-                    <NavLink
-                      key={item.href}
-                      item={item}
-                      active={isItemActive(pathname, item)}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <Collapsible key={group.key} defaultOpen={groupActive} className="group/collapsible">
+              <SidebarGroup>
+                <SidebarGroupLabel asChild>
+                  <CollapsibleTrigger className="flex w-full items-center justify-between">
+                    {group.label}
+                    <ChevronDown className="size-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                  </CollapsibleTrigger>
+                </SidebarGroupLabel>
+                <CollapsibleContent>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {group.items.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                          <SidebarMenuButton asChild isActive={isItemActive(pathname, item)} tooltip={item.label}>
+                            <Link href={item.href}>
+                              <span>{item.label}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </CollapsibleContent>
+              </SidebarGroup>
+            </Collapsible>
           );
         })}
-      </nav>
-      <div className="flex-none border-t border-neutral-lighter p-4">
-        <p className="truncate text-small font-semibold text-neutral-darkest">
-          {name || "Admin"}
-        </p>
-        <p className="truncate text-tiny text-neutral">{email}</p>
+      </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-border p-4">
+        <p className="truncate text-sm font-semibold group-data-[collapsible=icon]:hidden">{name || "Admin"}</p>
+        <p className="truncate text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">{email}</p>
         <form action={logout} className="mt-3">
-          <SubmitButton
-            pendingText="Signing out..."
-            className="w-full border border-neutral-lighter bg-transparent text-neutral-darkest hover:bg-neutral-lightest"
-          >
-            Sign out
+          <SubmitButton pendingText="Signing out..." variant="outline" className="w-full">
+            <LogOut className="size-4" />
+            <span className="group-data-[collapsible=icon]:hidden">Sign out</span>
           </SubmitButton>
         </form>
-      </div>
-    </aside>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
