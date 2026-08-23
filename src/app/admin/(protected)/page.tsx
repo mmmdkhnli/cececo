@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { count } from "drizzle-orm";
 import type { MySqlTable } from "drizzle-orm/mysql-core";
 import { db } from "@/db";
 import { page, teamMember, blogPost, heroSlide, partner, memberState, contactMethod, subscriber } from "@/db/schema";
+import { Card, CardContent } from "@/components/admin/ui/card";
 
 async function getCount(table: MySqlTable) {
   const [row] = await db.select({ value: count() }).from(table);
@@ -33,18 +35,18 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className="text-h3 font-bold text-neutral-darkest">Dashboard</h1>
-      <p className="mt-1 text-medium text-neutral">Manage the CECECO site&apos;s content from here.</p>
+      <h1 className="text-3xl font-bold">Dashboard</h1>
+      <p className="mt-1 text-muted-foreground">Manage the CECECO site&apos;s content from here.</p>
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {stats.map((stat) => (
-          <a
-            key={stat.label}
-            href={stat.href}
-            className="rounded-card border border-neutral-lighter bg-white p-5 transition-colors hover:border-mountain-meadow"
-          >
-            <p className="text-h3 font-bold text-neutral-darkest">{stat.value}</p>
-            <p className="text-small text-neutral">{stat.label}</p>
-          </a>
+          <Link key={stat.label} href={stat.href}>
+            <Card className="transition-colors hover:border-primary">
+              <CardContent>
+                <p className="text-3xl font-bold">{stat.value}</p>
+                <p className="text-sm text-muted-foreground">{stat.label}</p>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>

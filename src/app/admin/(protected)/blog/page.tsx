@@ -3,6 +3,10 @@ import { desc } from "drizzle-orm";
 import { db } from "@/db";
 import { blogPost } from "@/db/schema";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { AdminPageHeader } from "@/components/admin/ui/page-header";
+import { Badge } from "@/components/admin/ui/badge";
+import { Button } from "@/components/admin/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/admin/ui/table";
 import { deleteBlogPost } from "./actions";
 
 export default async function AdminBlogPage() {
@@ -10,64 +14,47 @@ export default async function AdminBlogPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-h3 font-bold text-neutral-darkest">Blog</h1>
-          <p className="mt-1 text-medium text-neutral">The &quot;Latest Insights&quot; section on the Home page.</p>
-        </div>
-        <Link
-          href="/admin/blog/new"
-          className="rounded-button bg-mountain-meadow px-4 py-2.5 font-medium text-white hover:bg-mountain-meadow-dark"
-        >
-          + New post
-        </Link>
-      </div>
+      <AdminPageHeader
+        title="Blog"
+        description='The "Latest Insights" section on the Home page.'
+        newHref="/admin/blog/new"
+        newLabel="New post"
+      />
 
-      <div className="mt-8 overflow-x-auto rounded-card border border-neutral-lighter bg-white">
-        <table className="w-full text-left text-small">
-          <thead>
-            <tr className="border-b border-neutral-lighter text-neutral">
-              <th className="px-4 py-3 font-semibold">Title</th>
-              <th className="px-4 py-3 font-semibold">Category</th>
-              <th className="px-4 py-3 font-semibold">Status</th>
-              <th className="px-4 py-3 font-semibold">Date</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
+      <div className="mt-8 overflow-x-auto rounded-lg border border-border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {posts.map((post) => (
-              <tr key={post.id} className="border-b border-neutral-lighter last:border-0">
-                <td className="px-4 py-3 font-medium text-neutral-darkest">{post.title}</td>
-                <td className="px-4 py-3 text-neutral-dark">{post.category}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={
-                      post.status === "published"
-                        ? "rounded-badge bg-mountain-meadow-lightest px-2 py-0.5 text-tiny font-semibold text-mountain-meadow-darker"
-                        : "rounded-badge bg-neutral-lightest px-2 py-0.5 text-tiny font-semibold text-neutral-dark"
-                    }
-                  >
-                    {post.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-neutral-dark">
+              <TableRow key={post.id}>
+                <TableCell className="font-medium">{post.title}</TableCell>
+                <TableCell className="text-muted-foreground">{post.category}</TableCell>
+                <TableCell>
+                  <Badge variant={post.status === "published" ? "default" : "secondary"}>{post.status}</Badge>
+                </TableCell>
+                <TableCell className="text-muted-foreground">
                   {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("en-US") : "—"}
-                </td>
-                <td className="px-4 py-3">
+                </TableCell>
+                <TableCell>
                   <div className="flex justify-end gap-2">
-                    <Link
-                      href={`/admin/blog/${post.id}`}
-                      className="rounded-button border border-neutral-lighter px-3 py-1.5 font-medium text-neutral-darkest hover:bg-neutral-lightest"
-                    >
-                      Edit
-                    </Link>
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/admin/blog/${post.id}`}>Edit</Link>
+                    </Button>
                     <DeleteButton action={deleteBlogPost.bind(null, post.id)} />
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

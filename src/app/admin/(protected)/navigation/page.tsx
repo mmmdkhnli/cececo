@@ -3,6 +3,9 @@ import { asc } from "drizzle-orm";
 import { db } from "@/db";
 import { navItem } from "@/db/schema";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { AdminPageHeader } from "@/components/admin/ui/page-header";
+import { Button } from "@/components/admin/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/admin/ui/table";
 import { deleteNavItem } from "./actions";
 
 export default async function AdminNavigationPage() {
@@ -11,54 +14,45 @@ export default async function AdminNavigationPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-h3 font-bold text-neutral-darkest">Navigation</h1>
-          <p className="mt-1 text-medium text-neutral">Navbar and footer links.</p>
-        </div>
-        <Link
-          href="/admin/navigation/new"
-          className="rounded-button bg-mountain-meadow px-4 py-2.5 font-medium text-white hover:bg-mountain-meadow-dark"
-        >
-          + New link
-        </Link>
-      </div>
+      <AdminPageHeader
+        title="Navigation"
+        description="Navbar and footer links."
+        newHref="/admin/navigation/new"
+        newLabel="New link"
+      />
 
-      <div className="mt-8 overflow-x-auto rounded-card border border-neutral-lighter bg-white">
-        <table className="w-full text-left text-small">
-          <thead>
-            <tr className="border-b border-neutral-lighter text-neutral">
-              <th className="px-4 py-3 font-semibold">Label</th>
-              <th className="px-4 py-3 font-semibold">Href</th>
-              <th className="px-4 py-3 font-semibold">Location</th>
-              <th className="px-4 py-3 font-semibold">Group / Parent</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
+      <div className="mt-8 overflow-x-auto rounded-lg border border-border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Label</TableHead>
+              <TableHead>Href</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Group / Parent</TableHead>
+              <TableHead />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {items.map((item) => (
-              <tr key={item.id} className="border-b border-neutral-lighter last:border-0">
-                <td className="px-4 py-3 font-medium text-neutral-darkest">{item.label}</td>
-                <td className="px-4 py-3 text-neutral-dark">{item.href}</td>
-                <td className="px-4 py-3 text-neutral-dark">{item.location}</td>
-                <td className="px-4 py-3 text-neutral-dark">
+              <TableRow key={item.id}>
+                <TableCell className="font-medium">{item.label}</TableCell>
+                <TableCell className="text-muted-foreground">{item.href}</TableCell>
+                <TableCell className="text-muted-foreground">{item.location}</TableCell>
+                <TableCell className="text-muted-foreground">
                   {item.parentId ? `↳ ${byId.get(item.parentId)?.label ?? item.parentId}` : (item.group ?? "—")}
-                </td>
-                <td className="px-4 py-3">
+                </TableCell>
+                <TableCell>
                   <div className="flex justify-end gap-2">
-                    <Link
-                      href={`/admin/navigation/${item.id}`}
-                      className="rounded-button border border-neutral-lighter px-3 py-1.5 font-medium text-neutral-darkest hover:bg-neutral-lightest"
-                    >
-                      Edit
-                    </Link>
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/admin/navigation/${item.id}`}>Edit</Link>
+                    </Button>
                     <DeleteButton action={deleteNavItem.bind(null, item.id)} />
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
