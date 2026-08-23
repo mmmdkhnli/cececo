@@ -116,9 +116,6 @@ export function RichTextEditor({
 
   const editor = useEditor({
     extensions: [
-      // StarterKit bundles its own Link extension in this TipTap version —
-      // disable it so the explicit, differently-configured one below is the
-      // only one registered (having both throws a "duplicate extension" warning).
       StarterKit.configure({ link: false }),
       Link.configure({ openOnClick: false, autolink: true }),
       Image.configure({ HTMLAttributes: { class: "rounded-image" } }),
@@ -133,11 +130,6 @@ export function RichTextEditor({
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),
   });
 
-  // Defense-in-depth for callers that don't key this component by record id
-  // (every current admin form does — see e.g. blog/[id]/page.tsx — which
-  // remounts this on record change and makes this effect a no-op there).
-  // Keeps the hidden field in sync if defaultValue still arrives/changes
-  // after mount for some caller that isn't keyed that way.
   useEffect(() => {
     if (editor && defaultValue !== undefined && editor.getHTML() !== defaultValue) {
       editor.commands.setContent(defaultValue ?? "");
@@ -149,7 +141,7 @@ export function RichTextEditor({
 
   async function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    e.target.value = ""; // allow picking the same file again later
+    e.target.value = "";
     if (!file || !editor) return;
     setImageError(null);
     setImagePending(true);

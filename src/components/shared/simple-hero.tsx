@@ -1,6 +1,3 @@
-// Lightweight hero banner for pages that aren't backed by the section CMS
-// (News, Resources) — same visual language as PageHero without needing a
-// SectionRow.
 export function SimpleHero({
   title,
   subtitle,

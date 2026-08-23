@@ -1,8 +1,5 @@
 import type { SchemeKey } from "@/db/schema";
 
-// Human-readable description of each `.scheme-N` utility (see globals.css)
-// so the admin can pick a look by what it actually renders as, instead of
-// a bare "scheme-3" string.
 export const SCHEME_META: Record<
   SchemeKey,
   { label: string; hint: string; background: string; foreground: string; text: string }

@@ -402,10 +402,6 @@
   --animate-tabs: tabs 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Responsive step for the type scale: `@theme` can only hold custom
-   properties/`@keyframes`, so the >=lg override lives here instead of
-   nested inside it. Utilities generated from the tokens above still pick
-   up this overridden value since they resolve through var(--text-h1) etc. */
 @layer theme {
   @media (min-width: 992px) {
     * {
@@ -524,16 +520,6 @@
   }
 }
 
-/* The .scheme-N rules above only set --color-scheme-* as custom properties
-   and apply them to the section carrying the class. Every component
-   (Card, Button, Badge, Input, icons, the navbar) then references
-   bg-scheme-background / text-scheme-text / border-scheme-border /
-   text-scheme-btn-text as if they were ordinary Tailwind utilities —
-   but Tailwind only auto-generates utilities for tokens declared in
-   @theme, not for custom properties set inside a plain rule. Without
-   these, every one of those classes silently resolved to no color at
-   all. Declaring them explicitly here is what actually wires the
-   inherited --color-scheme-* value to a real CSS property. */
 @utility bg-scheme-background {
   background-color: var(--color-scheme-background);
 }
@@ -596,7 +582,6 @@
   }
 }
 
-/* Shared field styling for /admin forms. */
 @utility admin-input {
   width: 100%;
   border-radius: var(--radius-form);
@@ -612,11 +597,6 @@
   }
 }
 
-/* Renders admin rich-text-editor HTML output on the public site. Text color
-   is deliberately left to inherit from the surrounding scheme (so it still
-   works on dark/colored section backgrounds) — this only restores the
-   structural browser defaults Tailwind's preflight strips (list bullets/
-   numbers, link underline, spacing between paragraphs). */
 @utility rich-text {
   & p:not(:last-child) {
     margin-bottom: 1em;

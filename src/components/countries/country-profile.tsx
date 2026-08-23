@@ -8,10 +8,6 @@ import {
 } from "relume-icons";
 import type { MemberStateRow } from "@/db/schema";
 
-// Structure is fixed across every country (spec §7: "Sabit qalan elementlər")
-// — only the data + the 4 uploaded images (flag/hero/renewable-shares/by-
-// source) differ per country. Renewable Energy Shares and By Source are
-// static uploaded images, not dynamic charts (spec §3–4, stated twice).
 const KEY_FACTS: {
   key: keyof MemberStateRow;
   label: string;

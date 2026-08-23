@@ -32,8 +32,6 @@ export function MemberStatesGrid({
                 <p className="text-small font-semibold">{state.name}</p>
               </Card>
             );
-            // Only published Country Profiles (slug set) are clickable — a
-            // signatory state without one yet just renders as a static card.
             return state.slug ? (
               <Link key={state.id} href={`/countries/${state.slug}`}>
                 {card}

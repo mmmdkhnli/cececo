@@ -1,10 +1,6 @@
 import { RichText } from "@/components/shared/rich-text";
 import type { SectionRow } from "@/db/schema";
 
-// Left-aligned, wide reading column for long-form legal text (Privacy
-// Policy, Terms of Service, Cookie Settings) — ContentBlock's centered
-// max-w-lg layout is meant for short mission statements, not multi-section
-// prose.
 export function LegalContent({
   section,
   scheme,

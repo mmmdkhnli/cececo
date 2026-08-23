@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { searchSite } from "@/db/queries/search";
 
-// Backs the navbar's live-preview search dropdown (SearchToggle) — a
-// smaller, faster sibling of the full /search results page, which calls
-// searchSite() directly since it's a Server Component.
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q") ?? "";

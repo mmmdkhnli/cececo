@@ -1,7 +1,6 @@
 import { RichText } from "@/components/shared/rich-text";
 import type { SectionRow } from "@/db/schema";
 
-// Shared hero used as-is by About, Our Work, Partners, and Team pages.
 export function PageHero({ section, scheme }: { section: SectionRow; scheme: string }) {
   return (
     <section className={`relative px-[5%] py-20 md:py-24 lg:py-28 ${scheme} btn-dark badge-alt alternate logo-alt`}>

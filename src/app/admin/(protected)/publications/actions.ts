@@ -35,8 +35,6 @@ function fromForm(formData: FormData) {
 
 function revalidatePublicationPages() {
   revalidatePath("/admin/publications");
-  // The 3 site routes all read from this same table, filtered by category —
-  // any of the 3 could be showing the row being edited/deleted.
   revalidatePath("/resources/publications");
   revalidatePath("/resources/publications/[slug]", "page");
   revalidatePath("/resources/reports");

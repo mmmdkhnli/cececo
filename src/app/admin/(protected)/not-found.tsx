@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-// Renders inside the protected admin layout (sidebar stays visible), for
-// notFound() calls or bad IDs within authenticated admin sub-routes.
 export default function AdminNotFound() {
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center rounded-card border border-neutral-lighter bg-white p-10 text-center">

@@ -12,11 +12,6 @@ function formatSize(bytes: number | null) {
   return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
-// Shared by /resources/publications, /resources/reports, /resources/documents
-// — same `publication` table, same list layout, only the category filter and
-// basePath differ per route. Deliberately NOT a blog/news-style card grid
-// (cover image + "Read more") — the point here is finding and opening a
-// document, not reading an article (Əmr 4 §1-3, stated repeatedly).
 export function ResourceCategoryList({
   items,
   basePath,

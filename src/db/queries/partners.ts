@@ -11,9 +11,6 @@ export async function getSignatoryStates() {
     .orderBy(asc(memberState.order));
 }
 
-// Countries with a published profile page (slug set) — feeds the homepage
-// "CECECO Countries" carousel. A signatory state without a slug yet still
-// shows in the plain About flag grid, just without a "See More" link.
 export async function getPublishedCountries() {
   return db
     .select()

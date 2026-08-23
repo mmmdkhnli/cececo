@@ -23,8 +23,6 @@ function revalidateForPage(pageSlug: string) {
   revalidatePath(`/${pageSlug === "home" ? "" : pageSlug}`);
 }
 
-// --- Section (scalar fields) --------------------------------------------
-
 export type UpdateSectionState = { error?: string; success?: boolean };
 
 export async function updateSection(
@@ -68,8 +66,6 @@ export async function updateSection(
   return { success: true };
 }
 
-// --- Images (ParallaxGallery) --------------------------------------------
-
 export async function addSectionImage(sectionId: number, pageSlug: string, formData: FormData) {
   await requireAdmin();
   const url = str(formData, "url");
@@ -90,8 +86,6 @@ export async function deleteSectionImage(id: number, pageSlug: string) {
   if (existing) await deleteUploadedFile(existing.url);
   revalidateForPage(pageSlug);
 }
-
-// --- Bullets (OutcomeFeature) ---------------------------------------------
 
 export async function addSectionBullet(sectionId: number, pageSlug: string, formData: FormData) {
   await requireAdmin();
@@ -115,8 +109,6 @@ export async function deleteSectionBullet(id: number, pageSlug: string) {
   await db.delete(sectionBullet).where(eq(sectionBullet.id, id));
   revalidateForPage(pageSlug);
 }
-
-// --- Tabs (FeatureTabsMedia / ObjectivesTabs) ------------------------------
 
 function tabFromForm(formData: FormData) {
   return {

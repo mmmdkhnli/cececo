@@ -21,8 +21,6 @@ function revalidatePartnersPages() {
   revalidatePath("/countries/[slug]", "page");
 }
 
-// --- Partners ---------------------------------------------------------
-
 function partnerFromForm(formData: FormData) {
   return {
     name: String(formData.get("name") ?? "").trim(),
@@ -63,8 +61,6 @@ export async function deletePartner(id: number) {
   if (existing) await deleteUploadedFile(existing.logoImage);
   revalidatePartnersPages();
 }
-
-// --- Member states ------------------------------------------------------
 
 function memberStateFromForm(formData: FormData) {
   return {

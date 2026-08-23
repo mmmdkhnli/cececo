@@ -3,10 +3,6 @@ import { Navbar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
 import { Button } from "@/components/ui/button";
 
-// Catches genuinely unmatched URLs (no route segment matched at all), which
-// is why Navbar/Footer are rendered directly here instead of relying on the
-// (site) route group's layout — that layout only wraps requests that
-// resolved to a page inside it.
 export default function NotFound() {
   return (
     <>

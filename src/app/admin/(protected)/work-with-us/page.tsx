@@ -10,7 +10,6 @@ const CATEGORY_LABEL: Record<string, string> = {
   vacancy: "Vacancy",
   young_professional_programme: "Young Professional Programme",
   other: "Other",
-  // Legacy values, kept for rows that may still use them.
   job: "Job",
   grant: "Grant",
   tender: "Tender",

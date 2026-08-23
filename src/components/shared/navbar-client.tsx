@@ -9,31 +9,14 @@ import { KeyboardArrowDown } from "relume-icons";
 import { SearchToggle } from "@/components/shared/search-toggle";
 import type { NavLink } from "@/db/queries/site";
 
-// Same glass treatment as the header Card, reused so the mobile panel reads
-// as one continuous surface hanging off the header instead of a mismatched
-// second layer.
 const GLASS_PANEL = "border border-white-15 bg-neutral-darkest/18 backdrop-blur-xl";
-
-// Dropdown/accordion panels (mobile menu + desktop hover dropdown) need to be
-// much more opaque than GLASS_PANEL — at /18 the page content behind them
-// visibly bled through and overlapped the menu labels, reading as broken
-// rather than "glassy". Still blurred for a frosted look, just solid enough
-// that nothing behind it is legible.
 const DROPDOWN_PANEL = "border border-white-15 bg-neutral-darkest/95 backdrop-blur-xl";
 
 function useNavbarState() {
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Which mobile accordion (by nav_item id) is open, if any — was a single
-  // shared boolean before, which only worked by accident when Resources was
-  // the only dropdown. With multiple dropdowns (About/Projects/News/
-  // Resources) that shared boolean meant opening a second one silently
-  // toggled the first one's state instead.
   const [openMobileDropdownId, setOpenMobileDropdownId] = useState<number | null>(null);
-  // initializeWithValue: false so this matches the server render (no
-  // viewport to measure there) — the mobile panel's presence in the DOM
-  // depends on this, so a mismatch here would be a real hydration bug.
   const isMobile = useMediaQuery("(max-width: 991px)", { initializeWithValue: false });
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
@@ -56,10 +39,6 @@ function useNavbarState() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Locking body scroll while the mobile menu is open avoids the page
-  // scrolling behind a `position: fixed` blurred panel — without this the
-  // browser has to keep recompositing the backdrop-filter on every scroll
-  // frame while it's open, which reads as a freeze on real phones.
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.body.style.overflow = isMobileMenuOpen && isMobile ? "hidden" : "";
@@ -68,8 +47,6 @@ function useNavbarState() {
     };
   }, [isMobileMenuOpen, isMobile]);
 
-  // Collapse whichever accordion is open whenever the panel itself closes,
-  // so it doesn't reopen already-expanded next time.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting one panel's UI state in response to another closing, not derivable during render
     if (!isMobileMenuOpen) setOpenMobileDropdownId(null);
@@ -94,23 +71,10 @@ export function NavbarClient({ links, logo }: { links: NavLink[]; logo: string }
       <Card
         className={`relative flex min-h-16 w-full items-center justify-between gap-4 overflow-visible rounded-none shadow-lg shadow-neutral-darkest/10 px-5 md:min-h-18 md:px-8 lg:w-auto lg:px-6 lg:rounded-card ${GLASS_PANEL}`}
       >
-        {/* shrink-0: without it, flexbox squeezes this flex item narrower as
-            the row runs out of space near the lg breakpoint (nav links +
-            search + logo don't all fit) — since the <img> has a fixed
-            height (h-8/h-9) and only its width is free to shrink, that
-            squeeze visibly distorts/squishes the logo instead of something
-            else giving way. */}
         <Link href="/" className="shrink-0">
           <img src={logo} alt="CECECO" className="h-8 w-auto md:h-9" />
         </Link>
 
-        {/* Desktop inline nav — plain, always in the DOM, just hidden below lg.
-            The extra left margin makes up for the width "Home" used to add
-            now that it's gone (the logo already links to "/"), so the
-            header doesn't visibly shrink. Kept modest (lg:ml-8, not the
-            original lg:ml-16) — logo/search/nav padding were all trimmed
-            slightly together so nothing overflows the Card's right edge in
-            the ~992-1150px range, where logo+nav+search barely fit at all. */}
         <nav className="hidden items-center lg:ml-8 lg:flex">
           {links.map((link) =>
             link.children.length > 0 ? (
@@ -123,7 +87,6 @@ export function NavbarClient({ links, logo }: { links: NavLink[]; logo: string }
           )}
         </nav>
 
-        {/* Mobile panel — full Card width, only exists in the DOM on mobile while open */}
         <AnimatePresence>
           {nav.isMobile && nav.isMobileMenuOpen && (
             <motion.div
@@ -212,8 +175,6 @@ export function NavbarClient({ links, logo }: { links: NavLink[]; logo: string }
   );
 }
 
-// Desktop-only hover dropdown for "Resources" — independent from the mobile
-// accordion above, so it doesn't need to be responsive-aware itself.
 function DesktopDropdown({ dropdown }: { dropdown: NavLink }) {
   const [open, setOpen] = useState(false);
   return (

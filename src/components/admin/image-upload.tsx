@@ -22,8 +22,6 @@ export function ImageUpload({
     setError(null);
     const fd = new FormData();
     fd.set("file", file);
-    // Lets the server delete the file this one replaces, if any — an
-    // upload swap should never leave an orphaned file behind.
     if (url) fd.set("previousUrl", url);
     startTransition(async () => {
       const result = await uploadImage(fd);
@@ -44,7 +42,7 @@ export function ImageUpload({
       const result = await deleteImage(removedUrl);
       if (result.error) {
         setError(result.error);
-        setUrl(removedUrl); // deletion failed — put it back
+        setUrl(removedUrl);
       }
     });
   }

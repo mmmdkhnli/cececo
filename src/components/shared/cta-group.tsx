@@ -18,11 +18,6 @@ function resolve(slot: CtaSlot | undefined, fallbackVariant: ButtonVariant): Res
   return { label: slot.label, href: slot.href, variant: slot.variant ?? fallbackVariant };
 }
 
-// Every ported section pairs a filled/secondary button with a "link" style
-// button carrying a trailing chevron — factored out once instead of
-// duplicated per component. Reads straight off `section`'s flat
-// cta{Primary,Secondary}{Label,Href} columns; a slot renders nothing unless
-// both its label and href are set.
 export function CtaGroup({
   primary,
   secondary,

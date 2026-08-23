@@ -1,8 +1,6 @@
 import { RichText } from "@/components/shared/rich-text";
 import type { SectionRow } from "@/db/schema";
 
-// Generic eyebrow + heading + rich text + image block, reusable by any page
-// that just needs a simple content section (e.g. Vision and Mission).
 export function ContentBlock({ section, scheme }: { section: SectionRow; scheme: string }) {
   return (
     <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme}`}>

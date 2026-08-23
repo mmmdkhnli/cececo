@@ -21,8 +21,6 @@ import {
   miscResource,
 } from "../schema";
 
-// Old flat body/title strings become the rich-text subtitle/body columns —
-// wrap them in a single <p> so they render through RichText exactly as before.
 function p(text: string) {
   return `<p>${text}</p>`;
 }
@@ -37,7 +35,6 @@ async function main() {
   const pool = mysql.createPool({ uri: process.env.DATABASE_URL });
   const db = drizzle(pool, { schema, mode: "default" });
 
-  // Re-seeding one page must not wipe out pages seeded in earlier runs.
   async function resetPage(slug: string) {
     const [existing] = await db
       .select({ id: page.id })
@@ -61,11 +58,6 @@ async function main() {
 
   console.log("Seeding nav_item (navbar + footer)...");
   await db.delete(navItem);
-  // Final target tree — CECECO_Website_Navigation_and_Structure_FINAL_v2.docx,
-  // see docs/architecture/02-new-architecture.md § 1 for the full rationale
-  // and docs/architecture/03-migration-plan.md Faza 6 for how this was
-  // applied to the live DB (additive UPDATE/INSERT, never a mass reinsert).
-  // "Home" is deliberately not a nav item — the logo already links to "/".
   const [about] = await db
     .insert(navItem)
     .values({ label: "About", href: "#", location: "navbar", order: 1 })
@@ -1095,10 +1087,6 @@ async function main() {
   console.log(
     "Seeding legal pages (privacy-policy, terms-of-service, cookie-settings)...",
   );
-  // Full content deliberately kept identical to the live DB rows (created
-  // directly, not via this seed script — see docs/architecture/
-  // 06-feedback-round2-migration-plan.md Faza C) so this stays a faithful
-  // reference rather than drifting into a shorter placeholder.
   function h(text: string) {
     return `<p><strong>${text}</strong></p>`;
   }

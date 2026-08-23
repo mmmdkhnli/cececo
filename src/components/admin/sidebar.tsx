@@ -12,9 +12,6 @@ type NavGroup = { key: string; label: string; items: NavItem[] };
 
 const ROOT_ITEM: NavItem = { href: "/admin", label: "Dashboard", exact: true };
 
-// "Home page" links straight to the Home page's own section editor, which
-// now also surfaces Hero slides from there — Hero isn't its own sidebar
-// destination anymore, it's presented as part of managing the home page.
 const NAV_GROUPS: NavGroup[] = [
   {
     key: "pages",
@@ -101,8 +98,6 @@ export function AdminSidebar({
 }) {
   const pathname = usePathname();
 
-  // A group starts open if the current page is inside it, so a direct link
-  // (e.g. bookmarking /admin/blog) doesn't land on a collapsed submenu.
   const [openKeys, setOpenKeys] = useState<Set<string>>(
     () =>
       new Set(

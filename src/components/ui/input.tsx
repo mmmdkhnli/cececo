@@ -32,12 +32,6 @@ function Input({
         data-slot="input"
         className={cn(
           "flex size-full align-middle transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
-          // Both variants read scheme-text/scheme-border instead of a fixed
-          // light- or dark-mode color — each of the 7 admin-selectable
-          // schemes already defines the correct-contrast value for its own
-          // background, so this is what actually stays legible regardless
-          // of which scheme ends up applied (a hardcoded "always white"
-          // color went invisible the moment a light scheme was picked).
           variant === "primary" &&
             "border-b border-scheme-border bg-transparent text-scheme-text placeholder:text-scheme-text placeholder:opacity-60",
           variant === "secondary" &&

@@ -2,10 +2,6 @@
 
 import { useEffect } from "react";
 
-// global-error replaces the root layout entirely when it fires, so it can't
-// use Tailwind (globals.css never reaches this document) — every style here
-// has to be inline. This only fires when the root layout itself crashes,
-// which is rare since RootLayout does no data fetching.
 export default function GlobalError({
   error,
   retry,

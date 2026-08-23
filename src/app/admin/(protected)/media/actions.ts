@@ -75,8 +75,6 @@ export async function deleteMediaItem(id: number) {
   revalidateMediaPages();
 }
 
-// --- Gallery images (type="photo_gallery") ---------------------------------
-
 export async function addGalleryImage(mediaItemId: number, formData: FormData) {
   await requireAdmin();
   const image = str(formData, "image");

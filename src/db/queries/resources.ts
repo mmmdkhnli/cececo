@@ -20,8 +20,6 @@ export async function getPublishedPublications() {
     .orderBy(desc(publication.publishedAt));
 }
 
-// Resources dropdown taxonomy: Publications / Reports / Documents each list
-// the same `publication` table filtered by its `category` value.
 export async function getPublishedPublicationsByCategory(category: string) {
   return db
     .select()

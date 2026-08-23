@@ -19,14 +19,6 @@ function publicationBasePath(category: string) {
   return "/resources/publications";
 }
 
-// FULLTEXT indexes (blog_post/opportunity/project/publication) are applied
-// directly via src/db/migrations/manual/0001_search_fulltext_indexes.sql —
-// drizzle-orm's mysql-core has no FULLTEXT index type, so they can't live in
-// schema.ts, but MATCH ... AGAINST still works fine as a raw `sql` condition
-// inside the normal query builder.
-//
-// `limitPerType` is lower for the navbar's live-preview dropdown (a handful
-// per category) than for the full /search results page (default 10).
 export async function searchSite(query: string, limitPerType = 10): Promise<SearchResult[]> {
   const q = query.trim();
   if (!q) return [];
@@ -42,7 +34,7 @@ export async function searchSite(query: string, limitPerType = 10): Promise<Sear
         ),
       )
       .orderBy(desc(blogPost.publishedAt))
-      .limit(limitPerType * 2), // shared source for both News and Events
+      .limit(limitPerType * 2),
     db
       .select()
       .from(opportunity)

@@ -1,8 +1,6 @@
 import { SCHEME_VALUES, type SchemeKey } from "@/db/schema";
 import { SCHEME_META } from "@/lib/scheme-meta";
 
-// Native radios + peer-checked styling — no client JS needed for the
-// selection highlight to work.
 export function SchemePicker({ defaultValue }: { defaultValue: SchemeKey }) {
   return (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">

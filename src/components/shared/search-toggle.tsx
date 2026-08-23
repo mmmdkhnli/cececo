@@ -18,10 +18,6 @@ const TYPE_LABEL: Record<SearchResultType, string> = {
 
 const DEBOUNCE_MS = 250;
 
-// Command-palette style live search — a contained modal near the top of the
-// viewport (not a full-screen takeover), with debounced as-you-type results
-// grouped by type and full keyboard navigation. Backed by /api/search, a
-// lighter sibling of /search's own full-results query (searchSite()).
 export function SearchToggle() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -30,8 +26,6 @@ export function SearchToggle() {
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  // Portal target (document.body) doesn't exist during SSR — gate the
-  // portal on client mount instead of rendering it unconditionally.
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- classic client-only-mount guard; "has document.body become available" isn't derivable from render, it's an external-environment fact
@@ -44,7 +38,6 @@ export function SearchToggle() {
     setQuery("");
     setResults([]);
     setActiveIndex(-1);
-    // Focus after the modal has mounted/animated in.
     const id = requestAnimationFrame(() => inputRef.current?.focus());
     return () => cancelAnimationFrame(id);
   }, [open]);
@@ -52,8 +45,6 @@ export function SearchToggle() {
   useEffect(() => {
     const q = query.trim();
     if (!q) {
-      // No setResults([]) needed here — the render below checks the empty
-      // query first, so stale results from a previous search never show.
       // eslint-disable-next-line react-hooks/set-state-in-effect -- unsticking loading when a pending debounce gets cancelled by clearing the input, not derivable from render
       setLoading(false);
       return;
@@ -67,18 +58,12 @@ export function SearchToggle() {
         .then((res) => res.json())
         .then((data) => setResults(data.results ?? []))
         .catch((err) => {
-          // A newer keystroke aborted this request — the effect that
-          // superseded it already owns `loading`/`results`, so do nothing.
           if ((err as Error).name !== "AbortError") throw err;
         })
         .finally(() => {
           if (!controller.signal.aborted) setLoading(false);
         });
     }, DEBOUNCE_MS);
-    // Cancels both the not-yet-fired debounce timer AND an in-flight
-    // request from the previous keystroke — without the abort, a slow
-    // response for an earlier, now-stale query could resolve after a
-    // faster one for the current query and silently overwrite it.
     return () => {
       clearTimeout(timeout);
       controller.abort();
@@ -127,26 +112,11 @@ export function SearchToggle() {
         <Search className="size-5 text-scheme-text" />
       </button>
 
-      {/* Portaled to document.body (unconditionally, once mounted — NOT
-          gated by `open`): the navbar's glass Card (GLASS_PANEL) uses
-          backdrop-blur-xl, and backdrop-filter on an ancestor creates a new
-          containing block for `fixed` descendants, so without the portal
-          these fixed layers were sized/positioned relative to that Card
-          instead of the viewport. AnimatePresence must live INSIDE the
-          portaled tree, not wrap the createPortal(...) call itself — it
-          clones its children via React.isValidElement/cloneElement to
-          inject exit-animation props, and a ReactPortal object doesn't
-          satisfy isValidElement, so wrapping it from the outside caused
-          AnimatePresence to silently drop it and render nothing. */}
       {mounted &&
         createPortal(
           <AnimatePresence>
             {open && (
               <>
-                {/* Backdrop sits ABOVE the navbar's z-999 (fixed, own
-                    stacking context) so the whole viewport — navbar
-                    included — dims uniformly while search is open; the
-                    modal panel below stacks higher still, on top of both. */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

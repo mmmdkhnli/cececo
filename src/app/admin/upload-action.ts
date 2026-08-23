@@ -41,8 +41,6 @@ export async function uploadImage(
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(path.join(uploadsDir, filename), buffer);
 
-  // Replacing an existing upload — the old file is no longer referenced by
-  // anything once this action returns, so it can go immediately.
   const previousUrl = formData.get("previousUrl");
   if (typeof previousUrl === "string" && previousUrl) {
     await deleteUploadedFile(previousUrl);
@@ -60,9 +58,6 @@ export async function deleteImage(url: string): Promise<{ error?: string }> {
   return {};
 }
 
-// Publications/Reports/Documents (Əmr 4 §1-3) — separate from uploadImage
-// since PDFs/Word docs are a different type+size class (fileSizeBytes is
-// returned so the admin form can auto-fill it, not have the admin type it).
 const DOCUMENT_ALLOWED_TYPES = [
   "application/pdf",
   "application/msword",

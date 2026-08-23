@@ -19,8 +19,6 @@ export async function subscribeToNewsletter(
   try {
     await db.insert(subscriber).values({ email });
   } catch (err) {
-    // Already subscribed (unique email constraint) — treat as success rather
-    // than surfacing a confusing error for a perfectly valid resubmission.
     if ((err as { code?: string })?.code !== "ER_DUP_ENTRY") {
       console.error("Newsletter subscribe failed:", err);
       return { status: "error", message: "Something went wrong. Please try again in a moment." };

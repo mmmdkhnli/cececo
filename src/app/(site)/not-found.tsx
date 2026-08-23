@@ -1,9 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-// Handles notFound() calls thrown by dynamic site routes (news/[slug],
-// resources/publications/[slug], highlights/[slug]) — Navbar/Footer are
-// already provided by (site)/layout.tsx, so only the content goes here.
 export default function SiteNotFound() {
   return (
     <main className="scheme-1 flex min-h-[60vh] items-center justify-center px-[5%] py-24">

@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-// Sits outside the (protected) and login segments, so it can't assume the
-// sidebar layout — catches unmatched /admin/* paths that aren't under either.
 export default function AdminSegmentNotFound() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-neutral-lightest px-6">

@@ -32,8 +32,6 @@ function fromForm(formData: FormData) {
     periodStart: periodStartRaw ? new Date(periodStartRaw) : null,
     periodEnd: periodEndRaw ? new Date(periodEndRaw) : null,
     applicationsOpen,
-    // Conditional fields only make sense while applications are open — keep
-    // them cleared otherwise, same as HeroSlideForm's seeMoreEnabled fields.
     applicationDeadline: applicationsOpen && applicationDeadlineRaw ? new Date(applicationDeadlineRaw) : null,
     whoCanApply: applicationsOpen ? str(formData, "whoCanApply") : null,
     howToApplyBody: applicationsOpen ? str(formData, "howToApplyBody") : null,
@@ -71,8 +69,6 @@ export async function deleteProject(id: number) {
   if (existing) await deleteUploadedFile(existing.coverImage);
   revalidateProjectPages();
 }
-
-// --- Objectives (Project Detail's "Objectives" list) -----------------------
 
 export async function addProjectObjective(projectId: number, formData: FormData) {
   await requireAdmin();
