@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/db/queries/pages";
 import { PageHero } from "@/components/shared/page-hero";
 import { LegalContent } from "@/components/shared/legal-content";
@@ -10,16 +11,7 @@ export const metadata = {
 export default async function TermsOfServicePage() {
   const data = await getPageBySlug("terms-of-service");
 
-  if (!data) {
-    return (
-      <main className="px-[5%] py-28 text-center">
-        <p>
-          Terms of Service page not found in the database yet — run{" "}
-          <code>npm run db:seed</code> after <code>npm run db:push</code>.
-        </p>
-      </main>
-    );
-  }
+  if (!data) notFound();
 
   return (
     <main>

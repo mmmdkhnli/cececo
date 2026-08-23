@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/db/queries/pages";
 import { getHeroSlides } from "@/db/queries/hero";
 import { getPublishedBlogPosts } from "@/db/queries/blog";
@@ -19,16 +20,7 @@ export default async function HomePage() {
     getPublishedCountries(),
   ]);
 
-  if (!data) {
-    return (
-      <main className="px-[5%] py-28 text-center">
-        <p>
-          Home page not found in the database yet — run{" "}
-          <code>npm run db:seed</code> after <code>npm run db:push</code>.
-        </p>
-      </main>
-    );
-  }
+  if (!data) notFound();
 
   return (
     <main>

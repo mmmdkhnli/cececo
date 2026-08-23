@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/db/queries/pages";
 import { getSignatoryStates } from "@/db/queries/partners";
 
@@ -12,16 +13,7 @@ export const metadata = {
 export default async function SignatoryCountriesPage() {
   const [data, states] = await Promise.all([getPageBySlug("signatory-countries"), getSignatoryStates()]);
 
-  if (!data) {
-    return (
-      <main className="px-[5%] py-28 text-center">
-        <p>
-          Signatory Countries page not found in the database yet — run <code>npm run db:seed</code> after{" "}
-          <code>npm run db:push</code>.
-        </p>
-      </main>
-    );
-  }
+  if (!data) notFound();
 
   return (
     <main>

@@ -986,6 +986,43 @@ async function main() {
     }
   }
 
+  console.log("Seeding signatory-countries page + sections...");
+  await resetPage("signatory-countries");
+
+  const [signatoryPage] = await db
+    .insert(page)
+    .values({
+      slug: "signatory-countries",
+      title: "Signatory Countries",
+      status: "published",
+    })
+    .$returningId();
+
+  await db.insert(section).values([
+    {
+      pageId: signatoryPage.id,
+      componentKey: "page-hero",
+      scheme: "scheme-1",
+      order: 1,
+      heading: "Signatory Countries",
+      subtitle: p(
+        "The founding signatory states driving CECECO's mandate across the ECO region.",
+      ),
+      backgroundImage: "/images/about-2-0-header-section.png",
+    },
+    {
+      pageId: signatoryPage.id,
+      componentKey: "member-states-grid",
+      scheme: "scheme-2",
+      order: 2,
+      eyebrow: "Signatories",
+      heading: "CECECO Signatory States",
+      subtitle: p(
+        "The founding signatory states driving CECECO's mandate across the region.",
+      ),
+    },
+  ]);
+
   console.log("Seeding partners page + sections...");
   await resetPage("partners");
 

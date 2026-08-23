@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/db/queries/pages";
 
 import { PageHero } from "@/components/shared/page-hero";
@@ -13,16 +14,7 @@ export const metadata = {
 export default async function OurWorkPage() {
   const data = await getPageBySlug("our-work");
 
-  if (!data) {
-    return (
-      <main className="px-[5%] py-28 text-center">
-        <p>
-          Our Work page not found in the database yet — run <code>npm run db:seed</code> after{" "}
-          <code>npm run db:push</code>.
-        </p>
-      </main>
-    );
-  }
+  if (!data) notFound();
 
   return (
     <main>
