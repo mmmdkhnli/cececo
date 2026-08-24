@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboardIcon,
   FileTextIcon,
@@ -17,7 +19,7 @@ import { useAdminTheme } from "@/components/admin/dark-root";
 import { NavMain, type NavMainItem } from "@/components/admin/nav-main";
 import { NavSecondary } from "@/components/admin/nav-secondary";
 import { NavUser } from "@/components/admin/nav-user";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/admin/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar } from "@/components/admin/ui/sidebar";
 
 export const NAV_MAIN: NavMainItem[] = [
   { title: "Dashboard", url: "/admin", exact: true, icon: <LayoutDashboardIcon /> },
@@ -82,7 +84,13 @@ export function AppSidebar({
   logoDark: string;
 } & React.ComponentProps<typeof Sidebar>) {
   const { theme } = useAdminTheme();
+  const { setOpenMobile } = useSidebar();
+  const pathname = usePathname();
   const logo = theme === "dark" ? logoDark : logoLight;
+
+  useEffect(() => {
+    setOpenMobile(false);
+  }, [pathname, setOpenMobile]);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
