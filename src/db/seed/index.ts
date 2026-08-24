@@ -593,20 +593,9 @@ async function main() {
   await db.insert(section).values([
     {
       pageId: homePage.id,
-      componentKey: "countries-carousel",
-      scheme: "scheme-1",
-      order: 1,
-      eyebrow: "CECECO Countries",
-      heading: "Explore Our Signatory Countries",
-      subtitle: p(
-        "Discover the clean energy landscape across each of CECECO's founding member states.",
-      ),
-    },
-    {
-      pageId: homePage.id,
       componentKey: "blog-list",
       scheme: "scheme-4",
-      order: 2,
+      order: 1,
       eyebrow: "News",
       heading: "Latest Insights and Updates",
       subtitle: p("Explore our latest thoughts on clean energy initiatives."),
@@ -617,7 +606,7 @@ async function main() {
       pageId: homePage.id,
       componentKey: "contact-methods",
       scheme: "scheme-2",
-      order: 3,
+      order: 2,
       eyebrow: "Connect",
       heading: "Get in touch",
       subtitle: p("We're here to discuss partnerships and opportunities."),
@@ -626,7 +615,7 @@ async function main() {
       pageId: homePage.id,
       componentKey: "newsletter-cta",
       scheme: "scheme-3",
-      order: 4,
+      order: 3,
       heading: "Stay informed on CECECO",
       subtitle: p(
         "Receive updates on regional initiatives, policy developments, news and events, and partnership opportunities.",

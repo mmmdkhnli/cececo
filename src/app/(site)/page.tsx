@@ -3,21 +3,18 @@ import { getPageBySlug } from "@/db/queries/pages";
 import { getHeroSlides } from "@/db/queries/hero";
 import { getPublishedBlogPosts } from "@/db/queries/blog";
 import { getContactMethods } from "@/db/queries/contact";
-import { getPublishedCountries } from "@/db/queries/partners";
 
 import { HeroCarousel } from "@/components/home/hero-carousel";
 import { BlogList } from "@/components/home/blog-list";
 import { ContactMethods } from "@/components/home/contact-methods";
 import { NewsletterCta } from "@/components/home/newsletter-cta";
-import { CountriesCarousel } from "@/components/home/countries-carousel";
 
 export default async function HomePage() {
-  const [data, slides, posts, methods, countries] = await Promise.all([
+  const [data, slides, posts, methods] = await Promise.all([
     getPageBySlug("home"),
     getHeroSlides(),
     getPublishedBlogPosts(3),
     getContactMethods(),
-    getPublishedCountries(),
   ]);
 
   if (!data) notFound();
@@ -27,15 +24,6 @@ export default async function HomePage() {
       <HeroCarousel slides={slides} />
       {data.sections.map((s) => {
         switch (s.componentKey) {
-          case "countries-carousel":
-            return (
-              <CountriesCarousel
-                key={s.id}
-                scheme={s.scheme}
-                section={s}
-                countries={countries}
-              />
-            );
           case "blog-list":
             return (
               <BlogList

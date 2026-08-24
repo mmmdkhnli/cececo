@@ -1,10 +1,13 @@
 import Link from "next/link";
-import { LinkedinLogo, XLogo } from "relume-icons";
+import { FacebookLogo, InstagramLogo, LinkedinLogo, XLogo, YoutubeLogo } from "relume-icons";
 import { getFooterGroups, getSiteSettings } from "@/db/queries/site";
 
 const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   x: XLogo,
   linkedin: LinkedinLogo,
+  facebook: FacebookLogo,
+  instagram: InstagramLogo,
+  youtube: YoutubeLogo,
 };
 
 export async function Footer() {

@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, eq, isNotNull } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { memberState, partner } from "@/db/schema";
 
@@ -8,14 +8,6 @@ export async function getSignatoryStates() {
     .select()
     .from(memberState)
     .where(eq(memberState.isSignatory, true))
-    .orderBy(asc(memberState.order));
-}
-
-export async function getPublishedCountries() {
-  return db
-    .select()
-    .from(memberState)
-    .where(and(eq(memberState.isSignatory, true), isNotNull(memberState.slug)))
     .orderBy(asc(memberState.order));
 }
 

@@ -49,7 +49,7 @@ export function NavItemForm({
           </SelectContent>
         </Select>
       </FormField>
-      <FormField label="Icon ('connect' group only: x, linkedin)">
+      <FormField label="Icon ('connect' group only: x, linkedin, facebook, instagram, youtube)">
         <Input name="icon" defaultValue={defaultValues?.icon ?? ""} />
       </FormField>
       <FormField label="Parent menu (for a dropdown sub-link)">
