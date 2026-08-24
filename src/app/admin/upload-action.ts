@@ -5,6 +5,7 @@ import path from "path";
 import { randomUUID } from "crypto";
 import { getSession } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
+import { MAX_IMAGE_SIZE_BYTES, MAX_DOCUMENT_SIZE_BYTES, formatFileSize } from "@/lib/upload-limits";
 
 const ALLOWED_TYPES = [
   "image/png",
@@ -13,7 +14,6 @@ const ALLOWED_TYPES = [
   "image/svg+xml",
   "image/gif",
 ];
-const MAX_SIZE_BYTES = 8 * 1024 * 1024;
 
 export async function uploadImage(
   formData: FormData,
@@ -30,8 +30,10 @@ export async function uploadImage(
   if (!ALLOWED_TYPES.includes(file.type)) {
     return { error: "Only PNG, JPEG, WEBP, GIF, or SVG is allowed." };
   }
-  if (file.size > MAX_SIZE_BYTES) {
-    return { error: "File cannot be larger than 8MB." };
+  if (file.size > MAX_IMAGE_SIZE_BYTES) {
+    return {
+      error: `File is ${formatFileSize(file.size)} — maximum allowed size is ${formatFileSize(MAX_IMAGE_SIZE_BYTES)}.`,
+    };
   }
 
   const ext = path.extname(file.name) || `.${file.type.split("/")[1]}`;
@@ -63,7 +65,6 @@ const DOCUMENT_ALLOWED_TYPES = [
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
-const DOCUMENT_MAX_SIZE_BYTES = 20 * 1024 * 1024;
 
 export async function uploadDocument(
   formData: FormData,
@@ -80,8 +81,10 @@ export async function uploadDocument(
   if (!DOCUMENT_ALLOWED_TYPES.includes(file.type)) {
     return { error: "Only PDF, DOC, or DOCX is allowed." };
   }
-  if (file.size > DOCUMENT_MAX_SIZE_BYTES) {
-    return { error: "File cannot be larger than 20MB." };
+  if (file.size > MAX_DOCUMENT_SIZE_BYTES) {
+    return {
+      error: `File is ${formatFileSize(file.size)} — maximum allowed size is ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}.`,
+    };
   }
 
   const ext = path.extname(file.name) || ".pdf";

@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { Bold, Eraser, ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, Loader2 } from "lucide-react";
 
 import { uploadImage } from "@/app/admin/upload-action";
+import { MAX_IMAGE_SIZE_BYTES, formatFileSize, UPLOAD_NETWORK_ERROR } from "@/lib/upload-limits";
 import { FormField } from "@/components/admin/ui/form-field";
 import { Toggle } from "@/components/admin/ui/toggle";
 
@@ -103,7 +104,7 @@ export function RichTextEditor({
     extensions: [
       StarterKit.configure({ link: false }),
       Link.configure({ openOnClick: false, autolink: true }),
-      Image.configure({ HTMLAttributes: { class: "rounded-image" } }),
+      Image.configure({ HTMLAttributes: { class: "rounded-image w-full h-auto" } }),
     ],
     content: defaultValue ?? "",
     immediatelyRender: false,
@@ -129,6 +130,10 @@ export function RichTextEditor({
     e.target.value = "";
     if (!file || !editor) return;
     setImageError(null);
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setImageError(`File is ${formatFileSize(file.size)} — maximum allowed size is ${formatFileSize(MAX_IMAGE_SIZE_BYTES)}.`);
+      return;
+    }
     setImagePending(true);
     const fd = new FormData();
     fd.set("file", file);
@@ -140,6 +145,8 @@ export function RichTextEditor({
         editor.chain().focus().setImage({ src: result.url }).run();
         setHtml(editor.getHTML());
       }
+    } catch {
+      setImageError(UPLOAD_NETWORK_ERROR);
     } finally {
       setImagePending(false);
     }

@@ -4,6 +4,7 @@ import { useRef, useState, useTransition, type ChangeEvent } from "react";
 import { FileTextIcon, UploadCloudIcon, XIcon } from "lucide-react";
 
 import { uploadDocument, deleteDocument } from "@/app/admin/upload-action";
+import { MAX_DOCUMENT_SIZE_BYTES, formatFileSize, UPLOAD_NETWORK_ERROR } from "@/lib/upload-limits";
 import {
   Attachment,
   AttachmentAction,
@@ -15,11 +16,6 @@ import {
   AttachmentTrigger,
 } from "@/components/admin/ui/attachment";
 import { FormField } from "@/components/admin/ui/form-field";
-
-function formatSize(bytes: number) {
-  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-}
 
 export function DocumentUpload({
   name,
@@ -44,16 +40,24 @@ export function DocumentUpload({
     const file = e.target.files?.[0];
     if (!file) return;
     setError(null);
+    if (file.size > MAX_DOCUMENT_SIZE_BYTES) {
+      setError(`File is ${formatFileSize(file.size)} — maximum allowed size is ${formatFileSize(MAX_DOCUMENT_SIZE_BYTES)}.`);
+      return;
+    }
     const fd = new FormData();
     fd.set("file", file);
     if (url) fd.set("previousUrl", url);
     startTransition(async () => {
-      const result = await uploadDocument(fd);
-      if (result.error) {
-        setError(result.error);
-      } else if (result.url) {
-        setUrl(result.url);
-        setSizeBytes(result.sizeBytes ?? 0);
+      try {
+        const result = await uploadDocument(fd);
+        if (result.error) {
+          setError(result.error);
+        } else if (result.url) {
+          setUrl(result.url);
+          setSizeBytes(result.sizeBytes ?? 0);
+        }
+      } catch {
+        setError(UPLOAD_NETWORK_ERROR);
       }
     });
   }
@@ -65,9 +69,14 @@ export function DocumentUpload({
     setUrl("");
     setSizeBytes(0);
     startTransition(async () => {
-      const result = await deleteDocument(removedUrl);
-      if (result.error) {
-        setError(result.error);
+      try {
+        const result = await deleteDocument(removedUrl);
+        if (result.error) {
+          setError(result.error);
+          setUrl(removedUrl);
+        }
+      } catch {
+        setError(UPLOAD_NETWORK_ERROR);
         setUrl(removedUrl);
       }
     });
@@ -93,7 +102,7 @@ export function DocumentUpload({
         <AttachmentContent>
           <AttachmentTitle>{filename || "Click to upload a PDF, DOC, or DOCX"}</AttachmentTitle>
           <AttachmentDescription>
-            {error ?? (isPending ? "Uploading..." : sizeBytes > 0 ? formatSize(sizeBytes) : url ? "Uploaded" : "No file selected")}
+            {error ?? (isPending ? "Uploading..." : sizeBytes > 0 ? formatFileSize(sizeBytes) : url ? "Uploaded" : "No file selected")}
           </AttachmentDescription>
         </AttachmentContent>
         {url ? (

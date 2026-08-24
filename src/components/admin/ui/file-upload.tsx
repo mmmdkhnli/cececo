@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 
+import { MAX_IMAGE_SIZE_BYTES, formatFileSize, UPLOAD_NETWORK_ERROR } from "@/lib/upload-limits";
 import {
   Attachment,
   AttachmentAction,
@@ -41,13 +42,21 @@ export function FileUpload({
     const file = files?.[0];
     if (!file) return;
     setError(null);
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setError(`File is ${formatFileSize(file.size)} — maximum allowed size is ${formatFileSize(MAX_IMAGE_SIZE_BYTES)}.`);
+      return;
+    }
     const fd = new FormData();
     fd.set("file", file);
     if (url) fd.set("previousUrl", url);
     startTransition(async () => {
-      const result = await uploadAction(fd);
-      if (result.error) setError(result.error);
-      else if (result.url) setUrl(result.url);
+      try {
+        const result = await uploadAction(fd);
+        if (result.error) setError(result.error);
+        else if (result.url) setUrl(result.url);
+      } catch {
+        setError(UPLOAD_NETWORK_ERROR);
+      }
     });
   }
 
@@ -57,9 +66,14 @@ export function FileUpload({
     const removedUrl = url;
     setUrl("");
     startTransition(async () => {
-      const result = await deleteAction(removedUrl);
-      if (result.error) {
-        setError(result.error);
+      try {
+        const result = await deleteAction(removedUrl);
+        if (result.error) {
+          setError(result.error);
+          setUrl(removedUrl);
+        }
+      } catch {
+        setError(UPLOAD_NETWORK_ERROR);
         setUrl(removedUrl);
       }
     });

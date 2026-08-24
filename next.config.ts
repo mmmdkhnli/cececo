@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
         'mmmdkhnli.site',
         'www.mmmdkhnli.site',
       ],
-      bodySizeLimit: '10mb',
+      bodySizeLimit: '35mb',
     },
   },
 };
