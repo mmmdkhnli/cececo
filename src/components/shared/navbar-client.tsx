@@ -9,7 +9,7 @@ import { KeyboardArrowDown } from "relume-icons";
 import { SearchToggle } from "@/components/shared/search-toggle";
 import type { NavLink } from "@/db/queries/site";
 
-const GLASS_PANEL = "border border-white-15 bg-neutral-darkest/18 backdrop-blur-xl";
+const GLASS_PANEL = "border border-white-15 bg-white/10 backdrop-blur-2xl";
 const DROPDOWN_PANEL = "border border-white-15 bg-neutral-darkest/95 backdrop-blur-xl";
 
 function useNavbarState() {
