@@ -9,7 +9,6 @@ import { Checkbox } from "@/components/admin/ui/checkbox";
 import { FormField } from "@/components/admin/ui/form-field";
 import { Input } from "@/components/admin/ui/input";
 import { Label } from "@/components/admin/ui/label";
-import { Textarea } from "@/components/admin/ui/textarea";
 import type { HeroSlideRow } from "@/db/schema";
 
 export function HeroSlideForm({
@@ -24,12 +23,13 @@ export function HeroSlideForm({
   return (
     <form action={action} className="flex max-w-xl flex-col gap-5">
       <ImageUpload name="backgroundImage" defaultValue={defaultValues?.backgroundImage} label="Background image" />
-      <FormField label="Title">
-        <Input name="title" defaultValue={defaultValues?.title} required />
-      </FormField>
-      <FormField label="Description">
-        <Textarea name="description" defaultValue={defaultValues?.description ?? ""} rows={3} />
-      </FormField>
+      <RichTextEditor name="title" defaultValue={defaultValues?.title} label="Title" allowImage={false} />
+      <RichTextEditor
+        name="description"
+        defaultValue={defaultValues?.description}
+        label="Description"
+        allowImage={false}
+      />
       <FormField label="Order">
         <Input name="order" type="number" defaultValue={defaultValues?.order ?? 0} className="w-24" />
       </FormField>

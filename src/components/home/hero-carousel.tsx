@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { RichText } from "@/components/shared/rich-text";
 import type { HeroSlideRow } from "@/db/schema";
 
 const AUTOPLAY_MS = 6000;
@@ -21,7 +22,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlideRow[] }) {
   const slide = slides[index];
 
   return (
-    <section className="relative h-[70vh] min-h-[520px] overflow-hidden lg:h-screen">
+    <section className="relative h-dvh min-h-[520px] overflow-hidden">
       {slides.map((s, i) => (
         <div
           key={s.id}
@@ -38,10 +39,13 @@ export function HeroCarousel({ slides }: { slides: HeroSlideRow[] }) {
       ))}
 
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-[5%] text-center">
-        <h1 className="mb-5 max-w-3xl text-h1 font-bold text-white md:mb-6">{slide.title}</h1>
-        {slide.description && (
-          <p className="max-w-2xl text-medium text-white">{slide.description}</p>
-        )}
+        <RichText
+          html={slide.title}
+          role="heading"
+          aria-level={1}
+          className="hero-rich-text mb-5 max-w-3xl text-h1 font-bold text-white md:mb-6"
+        />
+        <RichText html={slide.description} className="hero-rich-text max-w-2xl text-medium text-white" />
         {slide.seeMoreEnabled && slide.pageSlug && (
           <div className="mt-8">
             <Button asChild variant="alternate">

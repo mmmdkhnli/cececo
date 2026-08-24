@@ -1,0 +1,1 @@
+ALTER TABLE `hero_slide` MODIFY COLUMN `title` text NOT NULL;

@@ -10,16 +10,21 @@ import { Bold, Eraser, ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, L
 import { uploadImage } from "@/app/admin/upload-action";
 import { MAX_IMAGE_SIZE_BYTES, formatFileSize, UPLOAD_NETWORK_ERROR } from "@/lib/upload-limits";
 import { FormField } from "@/components/admin/ui/form-field";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
 import { Toggle } from "@/components/admin/ui/toggle";
+
+const HEADING_LEVELS = [1, 2, 3, 4, 5, 6] as const;
 
 function Toolbar({
   editor,
   onInsertImageClick,
   imagePending,
+  allowImage,
 }: {
   editor: Editor | null;
   onInsertImageClick: () => void;
   imagePending: boolean;
+  allowImage: boolean;
 }) {
   if (!editor) return null;
   return (
@@ -40,6 +45,28 @@ function Toolbar({
       >
         <Italic className="size-4" />
       </Toggle>
+      <Select
+        value={String(HEADING_LEVELS.find((level) => editor.isActive("heading", { level })) ?? "paragraph")}
+        onValueChange={(value) => {
+          if (value === "paragraph") {
+            editor.chain().focus().setParagraph().run();
+          } else {
+            editor.chain().focus().toggleHeading({ level: Number(value) as (typeof HEADING_LEVELS)[number] }).run();
+          }
+        }}
+      >
+        <SelectTrigger size="sm" className="w-36">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="paragraph">Paragraph</SelectItem>
+          {HEADING_LEVELS.map((level) => (
+            <SelectItem key={level} value={String(level)}>
+              Heading {level}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       <Toggle
         size="sm"
         aria-label="Bullet list"
@@ -72,9 +99,11 @@ function Toolbar({
       >
         <LinkIcon className="size-4" />
       </Toggle>
-      <Toggle size="sm" aria-label="Insert image" onPressedChange={onInsertImageClick}>
-        {imagePending ? <Loader2 className="size-4 animate-spin" /> : <ImageIcon className="size-4" />}
-      </Toggle>
+      {allowImage && (
+        <Toggle size="sm" aria-label="Insert image" onPressedChange={onInsertImageClick}>
+          {imagePending ? <Loader2 className="size-4 animate-spin" /> : <ImageIcon className="size-4" />}
+        </Toggle>
+      )}
       <Toggle
         size="sm"
         aria-label="Clear formatting"
@@ -90,10 +119,12 @@ export function RichTextEditor({
   name,
   defaultValue,
   label,
+  allowImage = true,
 }: {
   name: string;
   defaultValue?: string | null;
   label?: string;
+  allowImage?: boolean;
 }) {
   const [html, setHtml] = useState(defaultValue ?? "");
   const [imagePending, setImagePending] = useState(false);
@@ -102,15 +133,18 @@ export function RichTextEditor({
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ link: false }),
+      StarterKit.configure({
+        link: false,
+        heading: { levels: [1, 2, 3, 4, 5, 6] },
+      }),
       Link.configure({ openOnClick: false, autolink: true }),
-      Image.configure({ HTMLAttributes: { class: "rounded-image w-full h-auto" } }),
+      ...(allowImage ? [Image.configure({ HTMLAttributes: { class: "rounded-image w-full h-auto" } })] : []),
     ],
     content: defaultValue ?? "",
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: "prose prose-sm max-w-none min-h-[120px] px-3 py-2 focus:outline-none",
+        class: "prose prose-sm rich-text-editor max-w-none min-h-[120px] px-3 py-2 focus:outline-none",
       },
     },
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),
@@ -155,16 +189,23 @@ export function RichTextEditor({
   const body = (
     <>
       <div className="rounded-lg border border-input">
-        <Toolbar editor={editor} imagePending={imagePending} onInsertImageClick={() => fileInputRef.current?.click()} />
+        <Toolbar
+          editor={editor}
+          imagePending={imagePending}
+          allowImage={allowImage}
+          onInsertImageClick={() => fileInputRef.current?.click()}
+        />
         <EditorContent editor={editor} />
       </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
-        className="sr-only"
-        onChange={handleFileSelected}
-      />
+      {allowImage && (
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+          className="sr-only"
+          onChange={handleFileSelected}
+        />
+      )}
       {imageError && <p className="text-xs text-destructive">{imageError}</p>}
       <input type="hidden" name={name} value={html} />
     </>

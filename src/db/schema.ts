@@ -162,7 +162,7 @@ export const heroSlide = mysqlTable(
     id: int("id").primaryKey().autoincrement(),
     order: int("order").notNull().default(0),
     backgroundImage: varchar("background_image", { length: 512 }).notNull(),
-    title: varchar("title", { length: 255 }).notNull(),
+    title: text("title").notNull(),
     description: text("description"),
     seeMoreEnabled: boolean("see_more_enabled").notNull().default(false),
     pageSlug: varchar("page_slug", { length: 200 }).unique(),

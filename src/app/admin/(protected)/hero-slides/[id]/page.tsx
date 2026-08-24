@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { heroSlide } from "@/db/schema";
 import { HeroSlideForm } from "@/components/admin/hero-slide-form";
+import { stripHtml } from "@/lib/utils";
 import { updateHeroSlide } from "../actions";
 
 export default async function EditHeroSlidePage({ params }: { params: Promise<{ id: string }> }) {
@@ -12,7 +13,7 @@ export default async function EditHeroSlidePage({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">Edit {slide.title}</h1>
+      <h1 className="text-3xl font-bold">Edit {stripHtml(slide.title)}</h1>
       <div className="mt-8">
         <HeroSlideForm key={slide.id} action={updateHeroSlide.bind(null, slide.id)} defaultValues={slide} />
       </div>

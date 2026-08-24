@@ -6,6 +6,7 @@ import { DeleteButton } from "@/components/admin/delete-button";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { Button } from "@/components/admin/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/admin/ui/table";
+import { stripHtml } from "@/lib/utils";
 import { deleteHeroSlide } from "./actions";
 
 export default async function AdminHeroSlidesPage() {
@@ -39,7 +40,7 @@ export default async function AdminHeroSlidesPage() {
                     <img src={slide.backgroundImage} alt="" className="h-10 w-16 rounded object-cover" />
                   )}
                 </TableCell>
-                <TableCell className="font-medium">{slide.title}</TableCell>
+                <TableCell className="font-medium">{stripHtml(slide.title)}</TableCell>
                 <TableCell className="text-muted-foreground">{slide.order}</TableCell>
                 <TableCell className="text-muted-foreground">{slide.seeMoreEnabled ? "Yes" : "—"}</TableCell>
                 <TableCell>

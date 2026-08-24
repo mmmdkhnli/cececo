@@ -628,9 +628,75 @@
   }
 }
 
+@utility rich-text-editor {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--muted-foreground);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-kbd: var(--foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
 @utility rich-text {
   & p:not(:last-child) {
     margin-bottom: 1em;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    margin-top: 1.25em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+  }
+  & h1:first-child,
+  & h2:first-child,
+  & h3:first-child,
+  & h4:first-child,
+  & h5:first-child,
+  & h6:first-child {
+    margin-top: 0;
+  }
+  & h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    letter-spacing: var(--text-h1--letter-spacing);
+  }
+  & h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--text-h2--letter-spacing);
+  }
+  & h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    letter-spacing: var(--text-h3--letter-spacing);
+  }
+  & h4 {
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+    letter-spacing: var(--text-h4--letter-spacing);
+  }
+  & h5 {
+    font-size: var(--text-h5);
+    line-height: var(--text-h5--line-height);
+    letter-spacing: var(--text-h5--letter-spacing);
+  }
+  & h6 {
+    font-size: var(--text-h6);
+    line-height: var(--text-h6--line-height);
+    letter-spacing: var(--text-h6--letter-spacing);
   }
   & ul {
     list-style: disc;
@@ -657,6 +723,16 @@
     height: auto;
     border-radius: var(--radius-image);
     margin: 1.5em 0;
+  }
+}
+
+@utility hero-rich-text {
+  & :is(h1, h2, h3, h4, h5, h6, p) {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  & :is(h1, h2, h3, h4, h5, h6, p):not(:last-child) {
+    margin-bottom: 0.3em !important;
   }
 }
 
