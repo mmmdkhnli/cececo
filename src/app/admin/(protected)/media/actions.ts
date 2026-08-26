@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { mediaItem, mediaGalleryImage, type MediaType } from "@/db/schema";
 import { getSession } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
+import { resolveSlug } from "@/lib/slug";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -17,10 +18,16 @@ function str(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim() || null;
 }
 
+const SLUG_TARGET = {
+  table: mediaItem,
+  slugColumn: mediaItem.slug,
+  idColumn: mediaItem.id,
+  fallback: "media",
+};
+
 function fromForm(formData: FormData) {
   const eventDateRaw = str(formData, "eventDate");
   return {
-    slug: String(formData.get("slug") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
     type: String(formData.get("type") ?? "photo_gallery") as MediaType,
     description: str(formData, "description"),
@@ -41,16 +48,25 @@ function revalidateMediaPages() {
 
 export async function createMediaItem(formData: FormData) {
   await requireAdmin();
-  await db.insert(mediaItem).values(fromForm(formData));
+  const values = fromForm(formData);
+  const slug = await resolveSlug({ ...SLUG_TARGET, source: values.title });
+  await db.insert(mediaItem).values({ ...values, slug });
   revalidateMediaPages();
   redirect("/admin/media");
 }
 
 export async function updateMediaItem(id: number, formData: FormData) {
   await requireAdmin();
+  const values = fromForm(formData);
+  const [existing] = await db.select().from(mediaItem).where(eq(mediaItem.id, id));
+  const slug = await resolveSlug({
+    ...SLUG_TARGET,
+    source: values.title,
+    current: existing ? { id, slug: existing.slug, source: existing.title } : null,
+  });
   await db
     .update(mediaItem)
-    .set(fromForm(formData))
+    .set({ ...values, slug })
     .where(eq(mediaItem.id, id));
   revalidateMediaPages();
   redirect("/admin/media");

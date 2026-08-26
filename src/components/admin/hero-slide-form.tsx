@@ -46,12 +46,16 @@ export function HeroSlideForm({
       {seeMoreEnabled && (
         <Card className="flex flex-col gap-4 p-4">
           <p className="text-sm font-semibold">Linked page</p>
-          <FormField label="Slug (URL) — /highlights/...">
-            <Input name="pageSlug" defaultValue={defaultValues?.pageSlug ?? ""} required={seeMoreEnabled} />
-          </FormField>
           <FormField label="Page title">
             <Input name="pageTitle" defaultValue={defaultValues?.pageTitle ?? ""} />
           </FormField>
+          <p className="-mt-2 text-xs text-muted-foreground">
+            The address is generated from the page title, or from the slide title when this is left empty
+            {defaultValues?.pageSlug ? (
+              <> — currently <code>/highlights/{defaultValues.pageSlug}</code></>
+            ) : null}
+            .
+          </p>
           <RichTextEditor name="pageBody" defaultValue={defaultValues?.pageBody} label="Page text" />
         </Card>
       )}

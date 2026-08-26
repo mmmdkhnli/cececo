@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { project, projectObjective } from "@/db/schema";
 import { getSession } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
+import { resolveSlug } from "@/lib/slug";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -17,6 +18,13 @@ function str(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim() || null;
 }
 
+const SLUG_TARGET = {
+  table: project,
+  slugColumn: project.slug,
+  idColumn: project.id,
+  fallback: "project",
+};
+
 function fromForm(formData: FormData) {
   const periodStartRaw = str(formData, "periodStart");
   const periodEndRaw = str(formData, "periodEnd");
@@ -24,7 +32,6 @@ function fromForm(formData: FormData) {
   const applicationDeadlineRaw = str(formData, "applicationDeadline");
 
   return {
-    slug: String(formData.get("slug") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
     shortDescription: String(formData.get("shortDescription") ?? "").trim(),
     coverImage: String(formData.get("coverImage") ?? "").trim(),
@@ -50,14 +57,23 @@ function revalidateProjectPages() {
 
 export async function createProject(formData: FormData) {
   await requireAdmin();
-  await db.insert(project).values(fromForm(formData));
+  const values = fromForm(formData);
+  const slug = await resolveSlug({ ...SLUG_TARGET, source: values.title });
+  await db.insert(project).values({ ...values, slug });
   revalidateProjectPages();
   redirect("/admin/projects");
 }
 
 export async function updateProject(id: number, formData: FormData) {
   await requireAdmin();
-  await db.update(project).set(fromForm(formData)).where(eq(project.id, id));
+  const values = fromForm(formData);
+  const [existing] = await db.select().from(project).where(eq(project.id, id));
+  const slug = await resolveSlug({
+    ...SLUG_TARGET,
+    source: values.title,
+    current: existing ? { id, slug: existing.slug, source: existing.title } : null,
+  });
+  await db.update(project).set({ ...values, slug }).where(eq(project.id, id));
   revalidateProjectPages();
   redirect("/admin/projects");
 }

@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { memberState, partner, type PartnerCategory } from "@/db/schema";
 import { getSession } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
+import { resolveSlug } from "@/lib/slug";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -62,13 +63,36 @@ export async function deletePartner(id: number) {
   revalidatePartnersPages();
 }
 
+const MEMBER_STATE_SLUG_TARGET = {
+  table: memberState,
+  slugColumn: memberState.slug,
+  idColumn: memberState.id,
+  fallback: "country",
+};
+
+/**
+ * The slug both addresses and gates the /countries page: no slug means the country only shows up in
+ * the flag list. So the checkbox decides whether there is one, and the name decides what it is.
+ */
+async function memberStateSlug(
+  name: string,
+  formData: FormData,
+  existing?: { id: number; slug: string | null; name: string } | null,
+) {
+  if (formData.get("profilePublished") !== "on") return null;
+  return resolveSlug({
+    ...MEMBER_STATE_SLUG_TARGET,
+    source: name,
+    current: existing ? { id: existing.id, slug: existing.slug, source: existing.name } : null,
+  });
+}
+
 function memberStateFromForm(formData: FormData) {
   return {
     name: String(formData.get("name") ?? "").trim(),
     flagImage: String(formData.get("flagImage") ?? "").trim(),
     isSignatory: formData.get("isSignatory") === "on",
     order: Number(formData.get("order") ?? 0),
-    slug: String(formData.get("slug") ?? "").trim() || null,
     description: String(formData.get("description") ?? "").trim() || null,
     heroImage: String(formData.get("heroImage") ?? "").trim() || null,
     region: String(formData.get("region") ?? "").trim() || null,
@@ -85,16 +109,21 @@ function memberStateFromForm(formData: FormData) {
 
 export async function createMemberState(formData: FormData) {
   await requireAdmin();
-  await db.insert(memberState).values(memberStateFromForm(formData));
+  const values = memberStateFromForm(formData);
+  const slug = await memberStateSlug(values.name, formData);
+  await db.insert(memberState).values({ ...values, slug });
   revalidatePartnersPages();
   redirect("/admin/partners");
 }
 
 export async function updateMemberState(id: number, formData: FormData) {
   await requireAdmin();
+  const values = memberStateFromForm(formData);
+  const [existing] = await db.select().from(memberState).where(eq(memberState.id, id));
+  const slug = await memberStateSlug(values.name, formData, existing ?? null);
   await db
     .update(memberState)
-    .set(memberStateFromForm(formData))
+    .set({ ...values, slug })
     .where(eq(memberState.id, id));
   revalidatePartnersPages();
   redirect("/admin/partners");

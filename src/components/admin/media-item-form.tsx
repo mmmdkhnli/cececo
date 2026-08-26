@@ -24,9 +24,13 @@ export function MediaItemForm({
       <FormField label="Title">
         <Input name="title" defaultValue={defaultValues?.title} required />
       </FormField>
-      <FormField label="Slug (URL)">
-        <Input name="slug" defaultValue={defaultValues?.slug} required />
-      </FormField>
+      <p className="-mt-3 text-xs text-muted-foreground">
+        The page address is generated from the title
+        {defaultValues?.slug ? (
+          <> — currently <code>/resources/media/{defaultValues.slug}</code></>
+        ) : null}
+        .
+      </p>
       <FormField label="Type">
         <Select name="type" defaultValue={defaultValues?.type ?? "photo_gallery"}>
           <SelectTrigger className="w-full">

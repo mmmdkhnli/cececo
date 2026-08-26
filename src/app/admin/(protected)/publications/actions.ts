@@ -8,15 +8,22 @@ import { publication } from "@/db/schema";
 import { getSession } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
 import { resolvePublishedAt } from "@/lib/publish-date";
+import { resolveSlug } from "@/lib/slug";
 
 async function requireAdmin() {
   const session = await getSession();
   if (!session.userId) redirect("/admin/login");
 }
 
+const SLUG_TARGET = {
+  table: publication,
+  slugColumn: publication.slug,
+  idColumn: publication.id,
+  fallback: "publication",
+};
+
 function fromForm(formData: FormData) {
   return {
-    slug: String(formData.get("slug") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
     excerpt: String(formData.get("excerpt") ?? "").trim(),
     body: String(formData.get("body") ?? "").trim() || null,
@@ -46,16 +53,25 @@ function revalidatePublicationPages() {
 
 export async function createPublication(formData: FormData) {
   await requireAdmin();
-  await db.insert(publication).values(fromForm(formData));
+  const values = fromForm(formData);
+  const slug = await resolveSlug({ ...SLUG_TARGET, source: values.title });
+  await db.insert(publication).values({ ...values, slug });
   revalidatePublicationPages();
   redirect("/admin/publications");
 }
 
 export async function updatePublication(id: number, formData: FormData) {
   await requireAdmin();
+  const values = fromForm(formData);
+  const [existing] = await db.select().from(publication).where(eq(publication.id, id));
+  const slug = await resolveSlug({
+    ...SLUG_TARGET,
+    source: values.title,
+    current: existing ? { id, slug: existing.slug, source: existing.title } : null,
+  });
   await db
     .update(publication)
-    .set(fromForm(formData))
+    .set({ ...values, slug })
     .where(eq(publication.id, id));
   revalidatePublicationPages();
   redirect("/admin/publications");

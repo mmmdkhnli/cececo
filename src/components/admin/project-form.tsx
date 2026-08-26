@@ -32,9 +32,10 @@ export function ProjectForm({
       <FormField label="Title">
         <Input name="title" defaultValue={defaultValues?.title} required />
       </FormField>
-      <FormField label="Slug (URL)">
-        <Input name="slug" defaultValue={defaultValues?.slug} required />
-      </FormField>
+      <p className="-mt-3 text-xs text-muted-foreground">
+        The page address is generated from the title
+        {defaultValues?.slug ? <> — currently <code>/projects/{defaultValues.slug}</code></> : null}.
+      </p>
       <FormField label="Short description (shown on the card)">
         <Textarea name="shortDescription" defaultValue={defaultValues?.shortDescription} rows={2} required />
       </FormField>

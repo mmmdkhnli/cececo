@@ -9,6 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/admin/ui/textarea";
 import type { PublicationRow } from "@/db/schema";
 
+const CATEGORY_PATHS: Record<string, string> = {
+  Publication: "/resources/publications",
+  Report: "/resources/reports",
+  Document: "/resources/documents",
+};
+
 export function PublicationForm({
   action,
   defaultValues,
@@ -21,9 +27,19 @@ export function PublicationForm({
       <FormField label="Title">
         <Input name="title" defaultValue={defaultValues?.title} required />
       </FormField>
-      <FormField label="Slug (URL)">
-        <Input name="slug" defaultValue={defaultValues?.slug} required />
-      </FormField>
+      <p className="-mt-3 text-xs text-muted-foreground">
+        The page address is generated from the title
+        {defaultValues?.slug ? (
+          <>
+            {" "}
+            — currently{" "}
+            <code>
+              {CATEGORY_PATHS[defaultValues.category] ?? "/resources/publications"}/{defaultValues.slug}
+            </code>
+          </>
+        ) : null}
+        .
+      </p>
       <FormField label="Short description">
         <Textarea name="excerpt" defaultValue={defaultValues?.excerpt} rows={2} required />
       </FormField>

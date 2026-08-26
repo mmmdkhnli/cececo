@@ -6,16 +6,23 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { opportunity } from "@/db/schema";
 import { getSession } from "@/lib/session";
+import { resolveSlug } from "@/lib/slug";
 
 async function requireAdmin() {
   const session = await getSession();
   if (!session.userId) redirect("/admin/login");
 }
 
+const SLUG_TARGET = {
+  table: opportunity,
+  slugColumn: opportunity.slug,
+  idColumn: opportunity.id,
+  fallback: "opportunity",
+};
+
 function fromForm(formData: FormData) {
   const deadlineRaw = String(formData.get("deadline") ?? "").trim();
   return {
-    slug: String(formData.get("slug") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
     excerpt: String(formData.get("excerpt") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim(),
@@ -37,14 +44,23 @@ function revalidateWorkWithUsPages() {
 
 export async function createOpportunity(formData: FormData) {
   await requireAdmin();
-  await db.insert(opportunity).values(fromForm(formData));
+  const values = fromForm(formData);
+  const slug = await resolveSlug({ ...SLUG_TARGET, source: values.title });
+  await db.insert(opportunity).values({ ...values, slug });
   revalidateWorkWithUsPages();
   redirect("/admin/work-with-us");
 }
 
 export async function updateOpportunity(id: number, formData: FormData) {
   await requireAdmin();
-  await db.update(opportunity).set(fromForm(formData)).where(eq(opportunity.id, id));
+  const values = fromForm(formData);
+  const [existing] = await db.select().from(opportunity).where(eq(opportunity.id, id));
+  const slug = await resolveSlug({
+    ...SLUG_TARGET,
+    source: values.title,
+    current: existing ? { id, slug: existing.slug, source: existing.title } : null,
+  });
+  await db.update(opportunity).set({ ...values, slug }).where(eq(opportunity.id, id));
   revalidateWorkWithUsPages();
   redirect("/admin/work-with-us");
 }

@@ -31,14 +31,18 @@ export function MemberStateForm({
       <div className="mt-4 border-t border-border pt-5">
         <h2 className="mb-1 text-lg font-bold">Country Profile page</h2>
         <p className="mb-5 text-sm text-muted-foreground">
-          These fields create the <code>/countries/[slug]</code> page. If slug is left empty, the page
-          won&apos;t be published (it will only appear in the flag list).
+          These fields fill the <code>/countries/...</code> page, whose address is generated from the
+          country name. While it stays unpublished the country only appears in the flag list.
         </p>
 
         <div className="flex flex-col gap-5">
-          <FormField label="Slug (URL, optional — e.g. kazakhstan)">
-            <Input name="slug" defaultValue={defaultValues?.slug ?? ""} />
-          </FormField>
+          <Label className="flex items-center gap-2 font-normal">
+            <Checkbox name="profilePublished" defaultChecked={Boolean(defaultValues?.slug)} />
+            Publish the country profile page
+            {defaultValues?.slug ? (
+              <code className="text-xs text-muted-foreground">/countries/{defaultValues.slug}</code>
+            ) : null}
+          </Label>
           <FormField label="Description (optional)">
             <Textarea name="description" defaultValue={defaultValues?.description ?? ""} rows={4} />
           </FormField>
