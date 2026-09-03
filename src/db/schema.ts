@@ -168,6 +168,8 @@ export const heroSlide = mysqlTable(
     pageSlug: varchar("page_slug", { length: 200 }).unique(),
     pageTitle: varchar("page_title", { length: 255 }),
     pageBody: text("page_body"),
+    linkedHref: varchar("linked_href", { length: 512 }),
+    linkedLabel: varchar("linked_label", { length: 255 }),
     ...timestamps,
   },
   (t) => [index("hero_slide_order_idx").on(t.order)],

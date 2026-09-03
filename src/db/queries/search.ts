@@ -2,16 +2,9 @@ import "server-only";
 import { sql, eq, and, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { blogPost, opportunity, project, publication } from "@/db/schema";
+import type { SearchResult } from "@/lib/search-types";
 
-export type SearchResultType = "news" | "event" | "work-with-us" | "project" | "publication";
-
-export type SearchResult = {
-  type: SearchResultType;
-  title: string;
-  excerpt: string;
-  href: string;
-  date: Date | null;
-};
+export { SEARCH_TYPE_LABEL, type SearchResultType, type SearchResult } from "@/lib/search-types";
 
 function publicationBasePath(category: string) {
   if (category === "Report") return "/resources/reports";

@@ -6,15 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Close, Search } from "relume-icons";
-import type { SearchResult, SearchResultType } from "@/db/queries/search";
-
-const TYPE_LABEL: Record<SearchResultType, string> = {
-  news: "News",
-  event: "Events",
-  "work-with-us": "Work With Us",
-  project: "Projects",
-  publication: "Publications",
-};
+import { SEARCH_TYPE_LABEL, type SearchResult } from "@/lib/search-types";
 
 const DEBOUNCE_MS = 250;
 
@@ -187,7 +179,7 @@ export function SearchToggle() {
                               }`}
                             >
                               <span className="w-fit rounded-badge bg-mountain-meadow-lightest px-2 py-0.5 text-tiny font-semibold text-mountain-meadow-darker">
-                                {TYPE_LABEL[item.type]}
+                                {SEARCH_TYPE_LABEL[item.type]}
                               </span>
                               <p className="font-semibold text-neutral-darkest">
                                 {item.title}

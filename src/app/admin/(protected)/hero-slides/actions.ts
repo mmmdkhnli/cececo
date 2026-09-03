@@ -23,21 +23,29 @@ const SLUG_TARGET = {
 
 function fromForm(formData: FormData) {
   const seeMoreEnabled = formData.get("seeMoreEnabled") === "on";
+  const isLink = seeMoreEnabled && formData.get("seeMoreMode") === "link";
+  const isCustom = seeMoreEnabled && !isLink;
   return {
     backgroundImage: String(formData.get("backgroundImage") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),
     seeMoreEnabled,
-    pageTitle: seeMoreEnabled ? String(formData.get("pageTitle") ?? "").trim() || null : null,
-    pageBody: seeMoreEnabled ? String(formData.get("pageBody") ?? "").trim() || null : null,
+    pageTitle: isCustom ? String(formData.get("pageTitle") ?? "").trim() || null : null,
+    pageBody: isCustom ? String(formData.get("pageBody") ?? "").trim() || null : null,
+    linkedHref: isLink ? String(formData.get("linkedHref") ?? "").trim() || null : null,
+    linkedLabel: isLink ? String(formData.get("linkedLabel") ?? "").trim() || null : null,
   };
 }
 
-/** The linked /highlights page is addressed by its own title, falling back to the slide title. */
+/**
+ * "See more" targets either a linked existing page (linkedHref, picked from site search) or a
+ * standalone /highlights page generated from this slide (addressed by its own title, falling back
+ * to the slide title). Switching modes clears whichever fields the other mode owns.
+ */
 async function withPageSlug(formData: FormData, existing?: HeroSlideRow | null) {
   const values = fromForm(formData);
-  if (!values.seeMoreEnabled) return { ...values, pageSlug: null };
+  if (!values.seeMoreEnabled || values.linkedHref) return { ...values, pageSlug: null };
 
   const pageSlug = await resolveSlug({
     ...SLUG_TARGET,

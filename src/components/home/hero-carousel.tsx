@@ -20,6 +20,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlideRow[] }) {
 
   if (count === 0) return null;
   const slide = slides[index];
+  const seeMoreHref = slide.linkedHref || (slide.pageSlug ? `/highlights/${slide.pageSlug}` : null);
 
   return (
     <section className="relative h-dvh min-h-[520px] overflow-hidden">
@@ -46,10 +47,10 @@ export function HeroCarousel({ slides }: { slides: HeroSlideRow[] }) {
           className="hero-rich-text mb-5 max-w-3xl text-h1 font-bold text-white md:mb-6"
         />
         <RichText html={slide.description} className="hero-rich-text max-w-2xl text-medium text-white" />
-        {slide.seeMoreEnabled && slide.pageSlug && (
+        {slide.seeMoreEnabled && seeMoreHref && (
           <div className="mt-8">
             <Button asChild variant="alternate">
-              <Link href={`/highlights/${slide.pageSlug}`}>See more</Link>
+              <Link href={seeMoreHref}>See more</Link>
             </Button>
           </div>
         )}

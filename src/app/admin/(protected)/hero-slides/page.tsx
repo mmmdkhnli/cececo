@@ -42,7 +42,13 @@ export default async function AdminHeroSlidesPage() {
                 </TableCell>
                 <TableCell className="font-medium">{stripHtml(slide.title)}</TableCell>
                 <TableCell className="text-muted-foreground">{slide.order}</TableCell>
-                <TableCell className="text-muted-foreground">{slide.seeMoreEnabled ? "Yes" : "—"}</TableCell>
+                <TableCell className="text-muted-foreground">
+                  {slide.seeMoreEnabled
+                    ? slide.linkedHref
+                      ? `Link → ${slide.linkedLabel ?? slide.linkedHref}`
+                      : "New page"
+                    : "—"}
+                </TableCell>
                 <TableCell>
                   <div className="flex justify-end gap-2">
                     <Button asChild variant="outline" size="sm">

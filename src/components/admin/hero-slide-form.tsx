@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ImageUpload } from "@/components/admin/image-upload";
+import { LinkedContentPicker } from "@/components/admin/linked-content-picker";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { Card } from "@/components/admin/ui/card";
@@ -9,6 +10,7 @@ import { Checkbox } from "@/components/admin/ui/checkbox";
 import { FormField } from "@/components/admin/ui/form-field";
 import { Input } from "@/components/admin/ui/input";
 import { Label } from "@/components/admin/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/admin/ui/radio-group";
 import type { HeroSlideRow } from "@/db/schema";
 
 export function HeroSlideForm({
@@ -19,6 +21,7 @@ export function HeroSlideForm({
   defaultValues?: HeroSlideRow;
 }) {
   const [seeMoreEnabled, setSeeMoreEnabled] = useState(defaultValues?.seeMoreEnabled ?? false);
+  const [seeMoreMode, setSeeMoreMode] = useState(defaultValues?.linkedHref ? "link" : "custom");
 
   return (
     <form action={action} className="flex max-w-xl flex-col gap-5">
@@ -40,23 +43,42 @@ export function HeroSlideForm({
           checked={seeMoreEnabled}
           onCheckedChange={(checked) => setSeeMoreEnabled(checked === true)}
         />
-        Show the &quot;See more&quot; button (with its own page)
+        Show the &quot;See more&quot; button
       </Label>
 
       {seeMoreEnabled && (
         <Card className="flex flex-col gap-4 p-4">
-          <p className="text-sm font-semibold">Linked page</p>
-          <FormField label="Page title">
-            <Input name="pageTitle" defaultValue={defaultValues?.pageTitle ?? ""} />
-          </FormField>
-          <p className="-mt-2 text-xs text-muted-foreground">
-            The address is generated from the page title, or from the slide title when this is left empty
-            {defaultValues?.pageSlug ? (
-              <> — currently <code>/highlights/{defaultValues.pageSlug}</code></>
-            ) : null}
-            .
-          </p>
-          <RichTextEditor name="pageBody" defaultValue={defaultValues?.pageBody} label="Page text" />
+          <RadioGroup
+            name="seeMoreMode"
+            value={seeMoreMode}
+            onValueChange={setSeeMoreMode}
+            className="grid-flow-col justify-start gap-6"
+          >
+            <Label className="flex items-center gap-2 font-normal">
+              <RadioGroupItem value="custom" /> Create a new highlight page
+            </Label>
+            <Label className="flex items-center gap-2 font-normal">
+              <RadioGroupItem value="link" /> Link to existing content
+            </Label>
+          </RadioGroup>
+
+          {seeMoreMode === "link" ? (
+            <LinkedContentPicker defaultHref={defaultValues?.linkedHref} defaultLabel={defaultValues?.linkedLabel} />
+          ) : (
+            <>
+              <FormField label="Page title">
+                <Input name="pageTitle" defaultValue={defaultValues?.pageTitle ?? ""} />
+              </FormField>
+              <p className="-mt-2 text-xs text-muted-foreground">
+                The address is generated from the page title, or from the slide title when this is left empty
+                {defaultValues?.pageSlug ? (
+                  <> — currently <code>/highlights/{defaultValues.pageSlug}</code></>
+                ) : null}
+                .
+              </p>
+              <RichTextEditor name="pageBody" defaultValue={defaultValues?.pageBody} label="Page text" />
+            </>
+          )}
         </Card>
       )}
 

@@ -50,6 +50,13 @@
       "when": 1787571796243,
       "tag": "0006_steady_the_hand",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1788429741126,
+      "tag": "0007_cuddly_professor_monster",
+      "breakpoints": true
     }
   ]
 }
