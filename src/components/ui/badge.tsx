@@ -8,8 +8,11 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
+        // Colours follow the surrounding scheme, so a badge stays legible on both light and dark
+        // sections. `badge-alt` remains an explicit override for surfaces that are dark regardless
+        // of their scheme — the hero banners, which sit on a darkened background image.
         default:
-          "bg-neutral-darkest-5 text-neutral-darkest backdrop-blur-[10px] badge-alt:border-white-10 badge-alt:bg-white-10 badge-alt:text-white",
+          "bg-scheme-hover text-scheme-text backdrop-blur-[10px] badge-alt:border-white-10 badge-alt:bg-white-10 badge-alt:text-white",
         outline: "border border-scheme-border text-scheme-text",
       },
     },

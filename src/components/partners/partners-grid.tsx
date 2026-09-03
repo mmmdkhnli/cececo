@@ -128,7 +128,7 @@ export function PartnersGrid({
 
   return (
     <section
-      className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} badge-alt logo-alt`}
+      className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} logo-alt`}
     >
       <div className="container">
         <div className="mb-10 max-w-lg md:mb-12">

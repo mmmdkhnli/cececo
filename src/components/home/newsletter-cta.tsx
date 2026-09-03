@@ -4,7 +4,7 @@ import type { SectionRow } from "@/db/schema";
 
 export function NewsletterCta({ section, scheme }: { section: SectionRow; scheme: string }) {
   return (
-    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} badge-alt alternate logo-alt`}>
+    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} alternate logo-alt`}>
       <div className="container max-w-lg text-center">
         <div>
           <h2 className="mb-5 text-h2 font-bold md:mb-6">{section.heading}</h2>

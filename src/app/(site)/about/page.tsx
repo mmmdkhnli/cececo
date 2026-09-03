@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/db/queries/pages";
 
 import { PageHero } from "@/components/shared/page-hero";
+import { RichContent } from "@/components/shared/rich-content";
 import { Origin } from "@/components/about/origin";
 import { Purpose } from "@/components/about/purpose";
 import { ObjectivesTabs } from "@/components/about/objectives-tabs";
@@ -23,6 +24,8 @@ export default async function AboutPage() {
         switch (s.componentKey) {
           case "page-hero":
             return <PageHero key={s.id} scheme={s.scheme} section={s} />;
+          case "rich-content":
+            return <RichContent key={s.id} scheme={s.scheme} section={s} />;
           case "origin":
             return <Origin key={s.id} scheme={s.scheme} section={s} />;
           case "purpose":

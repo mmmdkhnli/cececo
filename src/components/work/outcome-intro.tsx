@@ -5,7 +5,7 @@ import type { SectionRow } from "@/db/schema";
 
 export function OutcomeIntro({ section, scheme }: { section: SectionRow; scheme: string }) {
   return (
-    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} badge-alt`}>
+    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme}`}>
       <div className="container">
         <div className="mb-12 md:mb-18 lg:mb-20">
           <div className="mx-auto max-w-lg text-center">

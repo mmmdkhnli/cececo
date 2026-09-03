@@ -83,6 +83,9 @@ export const SECTION_FIELD_CONFIG: Record<string, SectionFieldConfig> = {
     fields: ["eyebrow", "heading", "subtitle", "backgroundImage"],
   },
   "legal-content": { fields: ["subtitle"] },
+  "rich-content": {
+    fields: ["eyebrow", "heading", "subtitle", "backgroundImage"],
+  },
 };
 
 export type TabStyle = "icon-objective" | "media-tab";
@@ -107,4 +110,5 @@ export const SECTION_LABELS: Record<string, string> = {
   "partners-grid": "Partners",
   "content-block": "Content block",
   "legal-content": "Legal text",
+  "rich-content": "Rich content",
 };

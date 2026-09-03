@@ -13,7 +13,7 @@ export function OutcomeFeature({
 }) {
   const imageFirst = section.imagePosition === "left";
   return (
-    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} badge-alt`}>
+    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme}`}>
       <div className="container">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-x-20">
           <div className={imageFirst ? "order-2 md:order-1" : ""}>

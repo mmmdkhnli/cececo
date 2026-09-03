@@ -4,8 +4,23 @@ import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
+import TextAlign from "@tiptap/extension-text-align";
 import { useEffect, useRef, useState } from "react";
-import { Bold, Eraser, GalleryHorizontal, ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, Loader2 } from "lucide-react";
+import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  Eraser,
+  GalleryHorizontal,
+  ImageIcon,
+  Italic,
+  Link as LinkIcon,
+  List,
+  ListOrdered,
+  Loader2,
+} from "lucide-react";
 
 import { uploadImage } from "@/app/admin/upload-action";
 import { MAX_IMAGE_SIZE_BYTES, formatFileSize, UPLOAD_NETWORK_ERROR } from "@/lib/upload-limits";
@@ -68,6 +83,24 @@ function Toolbar({
           ))}
         </SelectContent>
       </Select>
+      {(
+        [
+          ["left", AlignLeft, "Align left"],
+          ["center", AlignCenter, "Align center"],
+          ["right", AlignRight, "Align right"],
+          ["justify", AlignJustify, "Justify"],
+        ] as const
+      ).map(([align, Icon, label]) => (
+        <Toggle
+          key={align}
+          size="sm"
+          aria-label={label}
+          pressed={editor.isActive({ textAlign: align })}
+          onPressedChange={() => editor.chain().focus().setTextAlign(align).run()}
+        >
+          <Icon className="size-4" />
+        </Toggle>
+      ))}
       <Toggle
         size="sm"
         aria-label="Bullet list"
@@ -148,6 +181,12 @@ export function RichTextEditor({
         heading: { levels: [1, 2, 3, 4, 5, 6] },
       }),
       Link.configure({ openOnClick: false, autolink: true }),
+      // `defaultAlignment: "inherit"` is deliberate: text with no alignment of its own emits no
+      // style and keeps inheriting from the section (unchanged from before), while every toolbar
+      // button — including "left" — writes an explicit style that overrides the section's own
+      // alignment. With Tiptap's default of "left" the left button would emit nothing and stay
+      // centred inside centred sections.
+      TextAlign.configure({ types: ["heading", "paragraph"], defaultAlignment: "inherit" }),
       ...(allowImage ? [Image.configure({ HTMLAttributes: { class: "rounded-image w-full h-auto" } }), Carousel] : []),
     ],
     content: defaultValue ?? "",

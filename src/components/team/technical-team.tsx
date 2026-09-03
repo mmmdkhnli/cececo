@@ -31,7 +31,7 @@ export function TechnicalTeam({
   scheme: string;
 }) {
   return (
-    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} badge-alt`}>
+    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme}`}>
       <div className="container">
         <div className="mx-auto mb-12 max-w-lg text-center md:mb-18 lg:mb-20">
           <p className="mb-3 font-semibold md:mb-4">{section.eyebrow}</p>

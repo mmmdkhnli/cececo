@@ -17,7 +17,7 @@ export function BlogList({
   scheme: string;
 }) {
   return (
-    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} badge-alt alternate logo-alt`}>
+    <section className={`px-[5%] py-20 md:py-24 lg:py-28 ${scheme} alternate logo-alt`}>
       <div className="container">
         <div className="mb-12 md:mb-18 lg:mb-20">
           <div className="w-full max-w-lg">
