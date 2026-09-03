@@ -25,6 +25,12 @@ export const Carousel = Node.create({
         parseHTML: (element) => parseImages(element.getAttribute("data-images")),
         renderHTML: (attributes) => ({ "data-images": JSON.stringify(attributes.images ?? []) }),
       },
+      // Percentage of the content column's width; "100" reads as edge-to-edge.
+      width: {
+        default: "100",
+        parseHTML: (element) => element.getAttribute("data-width") || "100",
+        renderHTML: (attributes) => ({ "data-width": attributes.width }),
+      },
     };
   },
 
@@ -34,9 +40,10 @@ export const Carousel = Node.create({
 
   renderHTML({ HTMLAttributes, node }) {
     const images: string[] = node.attrs.images ?? [];
+    const width: string = node.attrs.width ?? "100";
     return [
       "div",
-      mergeAttributes(HTMLAttributes, { class: "content-carousel" }),
+      mergeAttributes(HTMLAttributes, { class: "content-carousel", style: `--carousel-width: ${width}%` }),
       ...images.map((src) => ["img", { src, alt: "" }] as const),
     ];
   },

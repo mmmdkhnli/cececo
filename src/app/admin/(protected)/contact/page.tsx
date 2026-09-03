@@ -17,7 +17,9 @@ export default async function AdminContactPage() {
     <div>
       <h1 className="text-3xl font-bold">Contact</h1>
       <p className="mt-1 text-muted-foreground">
-        The &quot;Get in touch&quot; section on the Home page (email/phone/address).
+        The &quot;Get in touch&quot; section on the Home page (email/phone/address). Email opens a mail app and phone
+        dials by default; an office address links to a Google Maps search for it unless you set a link of its own
+        here.
       </p>
 
       <div className="mt-8 flex flex-col gap-4">
@@ -28,10 +30,15 @@ export default async function AdminContactPage() {
               className="flex flex-1 flex-col gap-4 md:flex-row md:items-end"
             >
               <div className="w-24 shrink-0 text-sm font-semibold text-muted-foreground">{method.type}</div>
-              <div className="grid flex-1 grid-cols-1 gap-3 md:grid-cols-3">
+              <div className="grid flex-1 grid-cols-1 gap-3 md:grid-cols-4">
                 <Input name="title" defaultValue={method.title} required placeholder="Title" />
                 <Input name="description" defaultValue={method.description} required placeholder="Description" />
                 <Input name="value" defaultValue={method.value} required placeholder="Value" />
+                <Input
+                  name="link"
+                  defaultValue={method.link ?? ""}
+                  placeholder={method.type === "office" ? "Map link (optional)" : "Link (optional)"}
+                />
               </div>
               <SubmitButton>Save</SubmitButton>
             </form>
@@ -61,6 +68,7 @@ export default async function AdminContactPage() {
               <Input name="title" required placeholder="Title" />
               <Input name="description" required placeholder="Description" />
               <Input name="value" required placeholder="Value" />
+              <Input name="link" placeholder="Link (optional)" />
               <Input name="order" type="number" defaultValue={methods.length + 1} className="md:w-20" />
               <SubmitButton pendingText="Adding...">Add</SubmitButton>
             </form>

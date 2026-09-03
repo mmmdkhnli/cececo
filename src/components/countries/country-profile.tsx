@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { RichText } from "@/components/shared/rich-text";
 import {
   CalendarToday,
   Home,
@@ -26,35 +27,25 @@ export function CountryProfile({ country }: { country: MemberStateRow }) {
 
   return (
     <main>
-      <section className="scheme-2 px-[5%] py-20 md:py-24 lg:py-28">
-        <div className="container">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <img
-                src={country.flagImage}
-                alt={`${country.name} flag`}
-                className="mb-6 h-16 w-auto rounded-image object-cover"
-              />
-              <h1 className="mb-5 text-h1 font-bold">{country.name}</h1>
-              {country.description && (
-                <p className="text-medium text-scheme-text-muted">
-                  {country.description}
-                </p>
-              )}
-            </div>
-            {country.heroImage && (
-              <img
-                src={country.heroImage}
-                alt={country.name}
-                className="aspect-video w-full rounded-image object-cover"
-              />
-            )}
-          </div>
+      <section className="relative px-[5%] py-20 md:py-24 lg:py-28 scheme-4">
+        <div className="relative z-10 container max-w-lg text-center">
+          <img
+            src={country.flagImage}
+            alt={`${country.name} flag`}
+            className="mx-auto mb-6 h-16 w-auto rounded-image object-cover"
+          />
+          <h1 className="text-h1 font-bold text-white">{country.name}</h1>
+        </div>
+        <div className="absolute inset-0 z-0">
+          {country.heroImage && (
+            <img src={country.heroImage} alt="" className="size-full object-cover" />
+          )}
+          <div className="absolute inset-0 bg-neutral-darkest/50" />
         </div>
       </section>
 
       {facts.length > 0 && (
-        <section className="scheme-2 px-[5%] pb-16 md:pb-24 lg:pb-28">
+        <section className="scheme-2 px-[5%] pt-16 pb-0 md:pt-24 lg:pt-28">
           <div className="container">
             <Card className="p-6 md:p-8">
               <h2 className="mb-6 text-h5 font-bold">Key Facts</h2>
@@ -77,6 +68,14 @@ export function CountryProfile({ country }: { country: MemberStateRow }) {
                 ))}
               </div>
             </Card>
+          </div>
+        </section>
+      )}
+
+      {country.description && (
+        <section className="scheme-2 px-[5%] py-16 md:py-24 lg:py-28">
+          <div className="container max-w-3xl">
+            <RichText html={country.description} className="text-medium" />
           </div>
         </section>
       )}

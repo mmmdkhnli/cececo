@@ -728,7 +728,8 @@
   & .content-carousel {
     position: relative;
     z-index: 0;
-    margin: 1.5em 0;
+    width: var(--carousel-width, 100%);
+    margin: 1.5em auto;
   }
   & .content-carousel-track {
     display: flex;

@@ -1,10 +1,10 @@
 import { ImageUpload } from "@/components/admin/image-upload";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { Checkbox } from "@/components/admin/ui/checkbox";
 import { FormField } from "@/components/admin/ui/form-field";
 import { Input } from "@/components/admin/ui/input";
 import { Label } from "@/components/admin/ui/label";
-import { Textarea } from "@/components/admin/ui/textarea";
 import type { MemberStateRow } from "@/db/schema";
 
 export function MemberStateForm({
@@ -43,9 +43,7 @@ export function MemberStateForm({
               <code className="text-xs text-muted-foreground">/countries/{defaultValues.slug}</code>
             ) : null}
           </Label>
-          <FormField label="Description (optional)">
-            <Textarea name="description" defaultValue={defaultValues?.description ?? ""} rows={4} />
-          </FormField>
+          <RichTextEditor name="description" defaultValue={defaultValues?.description} label="Description (optional)" />
           <ImageUpload name="heroImage" defaultValue={defaultValues?.heroImage ?? ""} label="Hero background image" />
 
           <h3 className="mt-2 text-sm font-bold">Key Facts</h3>

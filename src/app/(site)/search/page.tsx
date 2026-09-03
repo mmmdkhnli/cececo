@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { SimpleHero } from "@/components/shared/simple-hero";
-import { searchSite, SEARCH_TYPE_LABEL, type SearchResultType } from "@/db/queries/search";
+import { searchSite, SEARCH_MIN_LENGTH, SEARCH_TYPE_LABEL, type SearchResultType } from "@/db/queries/search";
 
 export const metadata = {
   title: "Search — CECECO",
@@ -34,6 +34,10 @@ export default async function SearchPage({
         <div className="container max-w-3xl">
           {!query ? (
             <p className="text-center text-medium text-neutral">Enter a search term above to get started.</p>
+          ) : query.length < SEARCH_MIN_LENGTH ? (
+            <p className="text-center text-medium text-neutral">
+              Enter at least {SEARCH_MIN_LENGTH} characters to search.
+            </p>
           ) : grouped.length === 0 ? (
             <p className="text-center text-medium text-neutral">
               No results found for &quot;{query}&quot;. Try a different search term.

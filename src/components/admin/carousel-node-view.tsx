@@ -6,8 +6,15 @@ import { ImageIcon, Loader2, XIcon } from "lucide-react";
 import { uploadImage } from "@/app/admin/upload-action";
 import { MAX_IMAGE_SIZE_BYTES, formatFileSize } from "@/lib/upload-limits";
 
+const WIDTH_OPTIONS = [
+  { value: "50", label: "50%" },
+  { value: "75", label: "75%" },
+  { value: "100", label: "Full width" },
+] as const;
+
 export function CarouselNodeView({ node, updateAttributes }: NodeViewProps) {
   const images: string[] = node.attrs.images ?? [];
+  const width: string = node.attrs.width ?? "100";
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -51,19 +58,35 @@ export function CarouselNodeView({ node, updateAttributes }: NodeViewProps) {
   return (
     <NodeViewWrapper className="content-carousel-editor" contentEditable={false}>
       <div className="rounded-lg border border-dashed border-input p-3">
-        <div className="mb-2 flex items-center justify-between">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <p className="text-xs font-semibold text-muted-foreground">
             Carousel · {images.length} image{images.length === 1 ? "" : "s"}
           </p>
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={pending}
-            className="flex items-center gap-1.5 rounded-md border border-input px-2 py-1 text-xs font-medium hover:bg-muted disabled:opacity-50"
-          >
-            {pending ? <Loader2 className="size-3.5 animate-spin" /> : <ImageIcon className="size-3.5" />}
-            Add images
-          </button>
+          <div className="flex items-center gap-2">
+            <div className="flex overflow-hidden rounded-md border border-input">
+              {WIDTH_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => updateAttributes({ width: opt.value })}
+                  className={`px-2 py-1 text-xs font-medium ${
+                    width === opt.value ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={pending}
+              className="flex items-center gap-1.5 rounded-md border border-input px-2 py-1 text-xs font-medium hover:bg-muted disabled:opacity-50"
+            >
+              {pending ? <Loader2 className="size-3.5 animate-spin" /> : <ImageIcon className="size-3.5" />}
+              Add images
+            </button>
+          </div>
           <input
             ref={inputRef}
             type="file"

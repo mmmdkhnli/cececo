@@ -1,0 +1,1 @@
+ALTER TABLE `contact_method` ADD `link` varchar(1000);

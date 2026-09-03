@@ -5,9 +5,11 @@ import type { SectionRow, ContactMethodRow } from "@/db/schema";
 const ICONS = { email: Mail, phone: Call, office: LocationOn } as const;
 
 function hrefFor(method: ContactMethodRow) {
+  if (method.link) return method.link;
   if (method.type === "email") return `mailto:${method.value}`;
   if (method.type === "phone") return `tel:${method.value.replace(/\s+/g, "")}`;
-  return "#";
+  // office, with no link of its own: default to a Google Maps search for the address.
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(method.value)}`;
 }
 
 export function ContactMethods({
@@ -30,6 +32,8 @@ export function ContactMethods({
         <div className="grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 md:grid-cols-3 md:gap-y-16">
           {methods.map((method) => {
             const Icon = ICONS[method.type];
+            const href = hrefFor(method);
+            const external = href.startsWith("http");
             return (
               <div key={method.id}>
                 <div className="mb-5 lg:mb-6">
@@ -37,7 +41,11 @@ export function ContactMethods({
                 </div>
                 <h3 className="mb-3 text-h4 font-bold lg:mb-4">{method.title}</h3>
                 <p className="mb-5 md:mb-6">{method.description}</p>
-                <a className="underline" href={hrefFor(method)}>
+                <a
+                  className="underline"
+                  href={href}
+                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                >
                   {method.value}
                 </a>
               </div>

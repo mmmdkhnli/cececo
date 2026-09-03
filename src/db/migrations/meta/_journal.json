@@ -64,6 +64,20 @@
       "when": 1788435118043,
       "tag": "0008_red_logan",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1788456198352,
+      "tag": "0009_nasty_sebastian_shaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1788456259374,
+      "tag": "0010_fluffy_psylocke",
+      "breakpoints": true
     }
   ]
 }

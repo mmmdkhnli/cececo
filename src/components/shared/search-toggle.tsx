@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Close, Search } from "relume-icons";
-import { SEARCH_TYPE_LABEL, type SearchResult } from "@/lib/search-types";
+import { SEARCH_MIN_LENGTH, SEARCH_TYPE_LABEL, type SearchResult } from "@/lib/search-types";
 
 const DEBOUNCE_MS = 250;
 
@@ -36,9 +36,10 @@ export function SearchToggle() {
 
   useEffect(() => {
     const q = query.trim();
-    if (!q) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- unsticking loading when a pending debounce gets cancelled by clearing the input, not derivable from render
+    if (q.length < SEARCH_MIN_LENGTH) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- unsticking loading/stale results when the query drops below the minimum, not derivable from render
       setLoading(false);
+      setResults([]);
       return;
     }
     setLoading(true);
@@ -157,6 +158,10 @@ export function SearchToggle() {
                         <p className="px-5 py-8 text-center text-small text-neutral">
                           Start typing to search news, events, projects,
                           opportunities, and publications.
+                        </p>
+                      ) : query.trim().length < SEARCH_MIN_LENGTH ? (
+                        <p className="px-5 py-8 text-center text-small text-neutral">
+                          Keep typing — at least {SEARCH_MIN_LENGTH} characters to search.
                         </p>
                       ) : loading ? (
                         <p className="px-5 py-8 text-center text-small text-neutral">

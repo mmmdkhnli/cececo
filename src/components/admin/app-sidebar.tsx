@@ -31,7 +31,7 @@ export const NAV_MAIN: NavMainItem[] = [
       { title: "Home page", url: "/admin/pages/home" },
       { title: "About", url: "/admin/pages/about" },
       { title: "Team", url: "/admin/pages/team" },
-      { title: "Our Work", url: "/admin/pages/our-work" },
+      { title: "News", url: "/admin/pages/news" },
       { title: "Partners", url: "/admin/pages/partners" },
       { title: "Vision and Mission", url: "/admin/pages/vision-and-mission" },
       { title: "Signatory Countries", url: "/admin/pages/signatory-countries" },
@@ -56,10 +56,7 @@ export const NAV_MAIN: NavMainItem[] = [
     title: "Resources",
     url: "/admin/publications",
     icon: <LibraryIcon />,
-    items: [
-      { title: "Publications", url: "/admin/publications" },
-      { title: "Media", url: "/admin/media" },
-    ],
+    items: [{ title: "Publications", url: "/admin/publications" }],
   },
 ];
 

@@ -20,6 +20,7 @@ export async function updateContactMethod(id: number, formData: FormData) {
       title: String(formData.get("title") ?? "").trim(),
       description: String(formData.get("description") ?? "").trim(),
       value: String(formData.get("value") ?? "").trim(),
+      link: String(formData.get("link") ?? "").trim() || null,
     })
     .where(eq(contactMethod.id, id));
   revalidatePath("/admin/contact");
@@ -33,6 +34,7 @@ export async function createContactMethod(formData: FormData) {
     title: String(formData.get("title") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim(),
     value: String(formData.get("value") ?? "").trim(),
+    link: String(formData.get("link") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),
   });
   revalidatePath("/admin/contact");

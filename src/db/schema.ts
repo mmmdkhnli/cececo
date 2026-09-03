@@ -187,6 +187,7 @@ export const contactMethod = mysqlTable("contact_method", {
   title: varchar("title", { length: 120 }).notNull(),
   description: varchar("description", { length: 255 }).notNull(),
   value: varchar("value", { length: 255 }).notNull(),
+  link: varchar("link", { length: 1000 }),
   order: int("order").notNull().default(0),
   ...timestamps,
 });
@@ -375,50 +376,6 @@ export const miscResource = mysqlTable("misc_resource", {
   ...timestamps,
 });
 
-export const MEDIA_TYPE_VALUES = ["photo_gallery", "video", "press"] as const;
-export type MediaType = (typeof MEDIA_TYPE_VALUES)[number];
-
-export const mediaItem = mysqlTable("media_item", {
-  id: int("id").primaryKey().autoincrement(),
-  slug: varchar("slug", { length: 200 }).notNull().unique(),
-  title: varchar("title", { length: 255 }).notNull(),
-  type: mysqlEnum("type", MEDIA_TYPE_VALUES).notNull(),
-  description: varchar("description", { length: 500 }),
-  thumbnail: varchar("thumbnail", { length: 512 }).notNull(),
-  eventDate: nullableTimestamp("event_date"),
-  videoUrl: varchar("video_url", { length: 512 }),
-  status: mysqlEnum("status", ["draft", "published"])
-    .notNull()
-    .default("draft"),
-  order: int("order").notNull().default(0),
-  ...timestamps,
-});
-
-export const mediaGalleryImage = mysqlTable(
-  "media_gallery_image",
-  {
-    id: int("id").primaryKey().autoincrement(),
-    mediaItemId: int("media_item_id").notNull(),
-    image: varchar("image", { length: 512 }).notNull(),
-    order: int("order").notNull().default(0),
-    ...timestamps,
-  },
-  (t) => [index("media_gallery_image_media_idx").on(t.mediaItemId, t.order)],
-);
-
-export const mediaItemRelations = relations(mediaItem, ({ many }) => ({
-  galleryImages: many(mediaGalleryImage),
-}));
-
-export const mediaGalleryImageRelations = relations(
-  mediaGalleryImage,
-  ({ one }) => ({
-    mediaItem: one(mediaItem, {
-      fields: [mediaGalleryImage.mediaItemId],
-      references: [mediaItem.id],
-    }),
-  }),
-);
 export const pageRelations = relations(page, ({ many }) => ({
   sections: many(section),
 }));
@@ -480,8 +437,6 @@ export type PartnerRow = typeof partner.$inferSelect;
 export type OpportunityRow = typeof opportunity.$inferSelect;
 export type PublicationRow = typeof publication.$inferSelect;
 export type MiscResourceRow = typeof miscResource.$inferSelect;
-export type MediaItemRow = typeof mediaItem.$inferSelect;
-export type MediaGalleryImageRow = typeof mediaGalleryImage.$inferSelect;
 export type ProjectRow = typeof project.$inferSelect;
 export type ProjectObjectiveRow = typeof projectObjective.$inferSelect;
 export type ContactMessageRow = typeof contactMessage.$inferSelect;

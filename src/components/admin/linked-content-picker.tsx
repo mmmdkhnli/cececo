@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/admin/ui/input";
 import { Button } from "@/components/admin/ui/button";
-import { SEARCH_TYPE_LABEL, type SearchResult } from "@/lib/search-types";
+import { SEARCH_MIN_LENGTH, SEARCH_TYPE_LABEL, type SearchResult } from "@/lib/search-types";
 
 const DEBOUNCE_MS = 250;
 
@@ -34,8 +34,8 @@ export function LinkedContentPicker({
 
   useEffect(() => {
     const q = query.trim();
-    if (!q) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- clearing stale results when the query is emptied, not derivable from render
+    if (q.length < SEARCH_MIN_LENGTH) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clearing stale results when the query drops below the minimum, not derivable from render
       setResults([]);
       return;
     }
@@ -96,7 +96,11 @@ export function LinkedContentPicker({
                 dropUp ? "bottom-full mb-1" : "top-full mt-1"
               }`}
             >
-              {results.length === 0 ? (
+              {query.trim().length < SEARCH_MIN_LENGTH ? (
+                <p className="p-3 text-sm text-muted-foreground">
+                  Keep typing — at least {SEARCH_MIN_LENGTH} characters to search.
+                </p>
+              ) : results.length === 0 ? (
                 <p className="p-3 text-sm text-muted-foreground">No matches.</p>
               ) : (
                 results.map((item) => (
