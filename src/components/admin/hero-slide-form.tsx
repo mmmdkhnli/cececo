@@ -5,7 +5,6 @@ import { ImageUpload } from "@/components/admin/image-upload";
 import { LinkedContentPicker } from "@/components/admin/linked-content-picker";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SubmitButton } from "@/components/admin/submit-button";
-import { Card } from "@/components/admin/ui/card";
 import { Checkbox } from "@/components/admin/ui/checkbox";
 import { FormField } from "@/components/admin/ui/form-field";
 import { Input } from "@/components/admin/ui/input";
@@ -47,7 +46,9 @@ export function HeroSlideForm({
       </Label>
 
       {seeMoreEnabled && (
-        <Card className="flex flex-col gap-4 p-4">
+        // A plain div, not <Card> — Card has overflow-hidden, which would clip the
+        // LinkedContentPicker's results dropdown instead of letting it float over the form.
+        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4">
           <RadioGroup
             name="seeMoreMode"
             value={seeMoreMode}
@@ -79,7 +80,7 @@ export function HeroSlideForm({
               <RichTextEditor name="pageBody" defaultValue={defaultValues?.pageBody} label="Page text" />
             </>
           )}
-        </Card>
+        </div>
       )}
 
       <div className="mt-2">
