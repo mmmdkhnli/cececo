@@ -8,7 +8,7 @@ export const metadata = {
   title: "Search — CECECO",
 };
 
-const TYPE_ORDER: SearchResultType[] = ["news", "event", "project", "work-with-us", "publication"];
+const TYPE_ORDER: SearchResultType[] = ["news", "event", "project", "work-with-us", "publication", "country"];
 
 export default async function SearchPage({
   searchParams,

@@ -1,7 +1,7 @@
 import "server-only";
-import { sql, eq, and, desc } from "drizzle-orm";
+import { sql, eq, and, desc, isNotNull, like } from "drizzle-orm";
 import { db } from "@/db";
-import { blogPost, opportunity, project, publication } from "@/db/schema";
+import { blogPost, opportunity, project, publication, memberState } from "@/db/schema";
 import type { SearchResult } from "@/lib/search-types";
 
 export { SEARCH_TYPE_LABEL, type SearchResultType, type SearchResult } from "@/lib/search-types";
@@ -16,7 +16,7 @@ export async function searchSite(query: string, limitPerType = 10): Promise<Sear
   const q = query.trim();
   if (!q) return [];
 
-  const [newsRows, workRows, projectRows, pubRows] = await Promise.all([
+  const [newsRows, workRows, projectRows, pubRows, countryRows] = await Promise.all([
     db
       .select()
       .from(blogPost)
@@ -51,6 +51,11 @@ export async function searchSite(query: string, limitPerType = 10): Promise<Sear
           sql`MATCH(${publication.title}, ${publication.excerpt}, ${publication.body}) AGAINST (${q} IN NATURAL LANGUAGE MODE)`,
         ),
       )
+      .limit(limitPerType),
+    db
+      .select()
+      .from(memberState)
+      .where(and(isNotNull(memberState.slug), like(memberState.name, `%${q}%`)))
       .limit(limitPerType),
   ]);
 
@@ -90,6 +95,15 @@ export async function searchSite(query: string, limitPerType = 10): Promise<Sear
       excerpt: row.excerpt,
       href: `${publicationBasePath(row.category)}/${row.slug}`,
       date: row.publishedAt,
+    });
+  }
+  for (const row of countryRows) {
+    results.push({
+      type: "country",
+      title: row.name,
+      excerpt: row.description ?? "",
+      href: `/countries/${row.slug}`,
+      date: null,
     });
   }
 

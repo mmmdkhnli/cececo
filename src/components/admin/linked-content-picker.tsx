@@ -20,7 +20,17 @@ export function LinkedContentPicker({
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const DROPDOWN_MAX_HEIGHT = 288; // matches max-h-72 below
+
+  useEffect(() => {
+    if (!open || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    setDropUp(spaceBelow < DROPDOWN_MAX_HEIGHT && spaceAbove > spaceBelow);
+  }, [open]);
 
   useEffect(() => {
     const q = query.trim();
@@ -81,7 +91,11 @@ export function LinkedContentPicker({
             placeholder="Search news, projects, opportunities, publications..."
           />
           {open && query.trim() && (
-            <div className="absolute z-10 mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-border bg-popover shadow-md">
+            <div
+              className={`absolute z-10 max-h-72 w-full overflow-y-auto rounded-md border border-border bg-popover shadow-md ${
+                dropUp ? "bottom-full mb-1" : "top-full mt-1"
+              }`}
+            >
               {results.length === 0 ? (
                 <p className="p-3 text-sm text-muted-foreground">No matches.</p>
               ) : (
