@@ -67,9 +67,9 @@ export function NavbarClient({ links, logo }: { links: NavLink[]; logo: string }
   const nav = useNavbarState();
 
   return (
-    <section className="navbar-hack fixed inset-0 bottom-auto z-999 mx-auto mt-0 mb-8 flex w-full items-center justify-center bg-transparent! px-0 lg:mt-6 lg:mx-[2%] lg:w-auto scheme-4 badge-alt alternate">
+    <section className="navbar-hack fixed inset-0 bottom-auto z-999 mx-auto mt-0 mb-8 flex w-full items-center justify-center bg-transparent! px-0 lg:mt-6 lg:mx-[2%] lg:w-auto scheme-2 badge-alt alternate">
       <Card
-        className={`relative flex min-h-16 w-full items-center justify-between gap-4 overflow-visible rounded-none shadow-lg shadow-neutral-darkest/10 px-5 md:min-h-18 md:px-8 lg:w-auto lg:px-6 lg:rounded-card ${GLASS_PANEL}`}
+        className={`relative flex min-h-16 w-full items-center justify-between gap-4 overflow-visible rounded-none shadow-lg shadow-neutral-darkest/20 px-5 md:min-h-18 md:px-8 lg:w-auto lg:px-6 lg:rounded-card ${GLASS_PANEL}`}
       >
         <Link href="/" className="shrink-0">
           <img src={logo} alt="CECECO" className="h-8 w-auto md:h-9" />
@@ -96,7 +96,7 @@ export function NavbarClient({ links, logo }: { links: NavLink[]; logo: string }
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
               style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
-              className={`absolute inset-x-0 top-full flex max-h-[70vh] flex-col overflow-y-auto border-t-0 p-5 lg:hidden ${DROPDOWN_PANEL}`}
+              className={`absolute inset-x-0 top-full flex max-h-[70vh] flex-col overflow-y-auto border-t-0 p-5 lg:hidden scheme-4 ${DROPDOWN_PANEL}`}
             >
               {links.map((link) =>
                 link.children.length === 0 ? (
@@ -192,7 +192,7 @@ function DesktopDropdown({ dropdown }: { dropdown: NavLink }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.2 }}
-            className={`absolute mt-1 flex min-w-full flex-col whitespace-nowrap rounded-card p-2 ${DROPDOWN_PANEL}`}
+            className={`absolute mt-1 flex min-w-full flex-col whitespace-nowrap rounded-card p-2 scheme-4 ${DROPDOWN_PANEL}`}
           >
             {dropdown.children.map((child) => (
               <a key={child.id} href={child.href} className="px-4 py-2 text-left">

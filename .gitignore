@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# claude code local settings
+/.claude/
+
 # admin-uploaded content — lives on the VPS disk, not in git
 /public/uploads/*
 !/public/uploads/.gitkeep
