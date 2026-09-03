@@ -38,6 +38,13 @@ export function ResourceDetail({ item }: { item: PublicationRow }) {
           )}
         </div>
         <h1 className="mb-6 text-h1 font-bold">{item.title}</h1>
+        {item.coverImage && (
+          <img
+            src={item.coverImage}
+            alt=""
+            className="mb-10 aspect-[16/9] w-full rounded-image object-cover"
+          />
+        )}
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_320px]">
           <div>

@@ -4,6 +4,23 @@ import { DribbbleLogo, LinkedinLogo, XLogo } from "relume-icons";
 import { RichText } from "@/components/shared/rich-text";
 import type { SectionRow, TeamMemberRow } from "@/db/schema";
 
+function TeamMemberLink({
+  href,
+  className,
+  children,
+}: {
+  href: string | null;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (!href) return <div className={className}>{children}</div>;
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export function TechnicalTeam({
   section,
   members,
@@ -22,41 +39,46 @@ export function TechnicalTeam({
           <RichText html={section.subtitle} className="text-medium" />
         </div>
         <div className="grid grid-cols-1 items-start justify-center gap-x-8 gap-y-12 md:grid-cols-3 md:gap-x-8 md:gap-y-16 lg:gap-x-12">
-          {members.map((member) => (
-            <div key={member.id} className="flex flex-col text-center">
-              <div className="mb-5 flex flex-col flex-nowrap text-center md:mb-6">
-                <div className="mx-auto w-full">
-                  <img
-                    src={member.photo ?? "/logo/logo-dark.png"}
-                    alt=""
-                    className="aspect-square size-full rounded-image object-cover"
-                  />
+          {members.map((member) => {
+            const detailHref = member.hasDetailPage && member.slug ? `/team/${member.slug}` : null;
+            return (
+              <div key={member.id} className="flex flex-col text-center">
+                <TeamMemberLink href={detailHref} className="mb-5 flex flex-col flex-nowrap text-center md:mb-6">
+                  <div className="mx-auto w-full">
+                    <img
+                      src={member.photo ?? "/logo/logo-dark.png"}
+                      alt=""
+                      className="aspect-square size-full rounded-image object-cover"
+                    />
+                  </div>
+                </TeamMemberLink>
+                <div className="mb-3 md:mb-4">
+                  <TeamMemberLink href={detailHref}>
+                    <h5 className="text-large font-semibold">{member.name}</h5>
+                  </TeamMemberLink>
+                  <h6 className="text-medium">{member.role}</h6>
+                </div>
+                <p>{member.bio}</p>
+                <div className="mt-5 grid grid-flow-col grid-cols-[max-content] gap-3.5 self-center md:mt-6">
+                  {member.linkedinUrl && (
+                    <a href={member.linkedinUrl}>
+                      <LinkedinLogo className="size-6 text-scheme-text" />
+                    </a>
+                  )}
+                  {member.xUrl && (
+                    <a href={member.xUrl}>
+                      <XLogo className="size-6 p-0.5 text-scheme-text" />
+                    </a>
+                  )}
+                  {member.dribbbleUrl && (
+                    <a href={member.dribbbleUrl}>
+                      <DribbbleLogo className="size-6 text-scheme-text" />
+                    </a>
+                  )}
                 </div>
               </div>
-              <div className="mb-3 md:mb-4">
-                <h5 className="text-large font-semibold">{member.name}</h5>
-                <h6 className="text-medium">{member.role}</h6>
-              </div>
-              <p>{member.bio}</p>
-              <div className="mt-5 grid grid-flow-col grid-cols-[max-content] gap-3.5 self-center md:mt-6">
-                {member.linkedinUrl && (
-                  <a href={member.linkedinUrl}>
-                    <LinkedinLogo className="size-6 text-scheme-text" />
-                  </a>
-                )}
-                {member.xUrl && (
-                  <a href={member.xUrl}>
-                    <XLogo className="size-6 p-0.5 text-scheme-text" />
-                  </a>
-                )}
-                {member.dribbbleUrl && (
-                  <a href={member.dribbbleUrl}>
-                    <DribbbleLogo className="size-6 text-scheme-text" />
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         {section.secondaryHeading && (
           <div className="mx-auto mt-14 w-full max-w-md text-center md:mt-20 lg:mt-24">

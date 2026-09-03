@@ -205,9 +205,12 @@ export const teamMember = mysqlTable(
   "team_member",
   {
     id: int("id").primaryKey().autoincrement(),
+    slug: varchar("slug", { length: 200 }).unique(),
     name: varchar("name", { length: 160 }).notNull(),
     role: varchar("role", { length: 160 }).notNull(),
     bio: text("bio"),
+    hasDetailPage: boolean("has_detail_page").notNull().default(false),
+    detailBody: text("detail_body"),
     photo: varchar("photo", { length: 512 }),
     email: varchar("email", { length: 255 }),
     linkedinUrl: varchar("linkedin_url", { length: 512 }),
@@ -238,6 +241,7 @@ export const blogPost = mysqlTable("blog_post", {
   isEvent: boolean("is_event").notNull().default(false),
   eventDate: nullableTimestamp("event_date"),
   eventLocation: varchar("event_location", { length: 255 }),
+  viewCount: int("view_count").notNull().default(0),
   ...timestamps,
 });
 

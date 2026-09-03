@@ -5,13 +5,14 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { useEffect, useRef, useState } from "react";
-import { Bold, Eraser, ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, Loader2 } from "lucide-react";
+import { Bold, Eraser, GalleryHorizontal, ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, Loader2 } from "lucide-react";
 
 import { uploadImage } from "@/app/admin/upload-action";
 import { MAX_IMAGE_SIZE_BYTES, formatFileSize, UPLOAD_NETWORK_ERROR } from "@/lib/upload-limits";
 import { FormField } from "@/components/admin/ui/form-field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
 import { Toggle } from "@/components/admin/ui/toggle";
+import { Carousel } from "@/components/admin/carousel-extension";
 
 const HEADING_LEVELS = [1, 2, 3, 4, 5, 6] as const;
 
@@ -104,6 +105,15 @@ function Toolbar({
           {imagePending ? <Loader2 className="size-4 animate-spin" /> : <ImageIcon className="size-4" />}
         </Toggle>
       )}
+      {allowImage && (
+        <Toggle
+          size="sm"
+          aria-label="Insert carousel"
+          onPressedChange={() => editor.chain().focus().insertContent({ type: "carousel", attrs: { images: [] } }).run()}
+        >
+          <GalleryHorizontal className="size-4" />
+        </Toggle>
+      )}
       <Toggle
         size="sm"
         aria-label="Clear formatting"
@@ -138,7 +148,7 @@ export function RichTextEditor({
         heading: { levels: [1, 2, 3, 4, 5, 6] },
       }),
       Link.configure({ openOnClick: false, autolink: true }),
-      ...(allowImage ? [Image.configure({ HTMLAttributes: { class: "rounded-image w-full h-auto" } })] : []),
+      ...(allowImage ? [Image.configure({ HTMLAttributes: { class: "rounded-image w-full h-auto" } }), Carousel] : []),
     ],
     content: defaultValue ?? "",
     immediatelyRender: false,

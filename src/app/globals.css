@@ -724,6 +724,109 @@
     border-radius: var(--radius-image);
     margin: 1.5em 0;
   }
+
+  & .content-carousel {
+    position: relative;
+    z-index: 0;
+    margin: 1.5em 0;
+  }
+  & .content-carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    border-radius: var(--radius-image);
+    scrollbar-width: none;
+  }
+  & .content-carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+  & .content-carousel-track img {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    cursor: zoom-in;
+    margin: 0;
+    border-radius: var(--radius-image);
+  }
+  & .content-carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: rgb(0 0 0 / 50%);
+    color: white;
+    font-size: 1.5rem;
+    line-height: 1;
+    border: none;
+    cursor: pointer;
+    z-index: 5;
+  }
+  & .content-carousel-prev {
+    left: 0.75rem;
+  }
+  & .content-carousel-next {
+    right: 0.75rem;
+  }
+}
+
+body.has-lightbox-open .content-carousel-nav {
+  visibility: hidden;
+}
+
+.content-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgb(0 0 0 / 90%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5%;
+}
+.content-lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-image);
+}
+.content-lightbox-close,
+.content-lightbox-nav {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 10%);
+  color: white;
+  line-height: 1;
+  border: none;
+  cursor: pointer;
+}
+.content-lightbox-close {
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.75rem;
+}
+.content-lightbox-nav {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  font-size: 2rem;
+}
+.content-lightbox-prev {
+  left: 1.5rem;
+}
+.content-lightbox-next {
+  right: 1.5rem;
 }
 
 @utility hero-rich-text {

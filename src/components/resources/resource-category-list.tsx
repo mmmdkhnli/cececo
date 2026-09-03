@@ -57,21 +57,30 @@ export function ResourceCategoryList({
             <Link
               key={item.id}
               href={`${basePath}/${item.slug}`}
-              className="flex flex-col gap-3 p-5 transition-colors hover:bg-scheme-hover sm:flex-row sm:items-center sm:justify-between md:p-6"
+              className="flex flex-col gap-4 p-5 transition-colors hover:bg-scheme-hover sm:flex-row sm:items-center sm:justify-between md:p-6"
             >
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Badge>{item.category}</Badge>
-                  {item.publishedAt && (
-                    <p className="text-small text-scheme-text-muted">
-                      {new Date(item.publishedAt).toLocaleDateString("en-US")}
-                    </p>
-                  )}
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                {item.coverImage && (
+                  <img
+                    src={item.coverImage}
+                    alt=""
+                    className="size-20 shrink-0 rounded-image object-cover"
+                  />
+                )}
+                <div className="flex flex-col gap-2">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge>{item.category}</Badge>
+                    {item.publishedAt && (
+                      <p className="text-small text-scheme-text-muted">
+                        {new Date(item.publishedAt).toLocaleDateString("en-US")}
+                      </p>
+                    )}
+                  </div>
+                  <h2 className="text-medium font-bold text-scheme-text">
+                    {item.title}
+                  </h2>
+                  <p className="text-small text-scheme-text-muted">{item.excerpt}</p>
                 </div>
-                <h2 className="text-medium font-bold text-scheme-text">
-                  {item.title}
-                </h2>
-                <p className="text-small text-scheme-text-muted">{item.excerpt}</p>
               </div>
               <div className="flex shrink-0 items-center gap-3 text-small text-scheme-text-muted sm:flex-col sm:items-end sm:gap-1">
                 {(item.fileFormat || formatSize(item.fileSizeBytes)) && (
