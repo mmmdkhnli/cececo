@@ -9,7 +9,7 @@ export async function generateMetadata() {
   const data = await getPageBySlug("news");
   const hero = data?.sections.find((s) => s.componentKey === "page-hero");
   return {
-    title: `${hero?.heading ?? "News"} — CECECO`,
+    title: hero?.heading ?? "News",
     description: stripHtml(hero?.subtitle) || undefined,
   };
 }

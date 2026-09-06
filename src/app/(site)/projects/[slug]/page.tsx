@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = await getProjectBySlug(slug);
   if (!item) return {};
-  return { title: `${item.title} — CECECO`, description: item.shortDescription };
+  return { title: item.title, description: item.shortDescription };
 }
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {

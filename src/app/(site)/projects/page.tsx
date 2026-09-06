@@ -3,7 +3,7 @@ import { ProjectsList } from "@/components/projects/projects-list";
 import { getProjects } from "@/db/queries/projects";
 
 export const metadata = {
-  title: "Projects — CECECO",
+  title: "Projects",
   description: "Regional initiatives and projects CECECO implements and supports across the ECO region.",
 };
 

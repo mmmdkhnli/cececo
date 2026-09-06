@@ -5,7 +5,7 @@ import { SimpleHero } from "@/components/shared/simple-hero";
 import { searchSite, SEARCH_MIN_LENGTH, SEARCH_TYPE_LABEL, type SearchResultType } from "@/db/queries/search";
 
 export const metadata = {
-  title: "Search — CECECO",
+  title: "Search",
 };
 
 const TYPE_ORDER: SearchResultType[] = ["news", "event", "project", "work-with-us", "publication", "country"];

@@ -5,7 +5,7 @@ import { getSiteSettings } from "@/db/queries/site";
 import { getPageBySlug } from "@/db/queries/pages";
 
 export const metadata = {
-  title: "Contact — CECECO",
+  title: "Contact",
   description: "We are here to answer your questions and explore opportunities for collaboration.",
 };
 

@@ -7,7 +7,7 @@ import { SimpleHero } from "@/components/shared/simple-hero";
 import { getEvents } from "@/db/queries/blog";
 
 export const metadata = {
-  title: "Events — CECECO",
+  title: "Events",
   description: "Upcoming and past events hosted or supported by CECECO across the ECO region.",
 };
 

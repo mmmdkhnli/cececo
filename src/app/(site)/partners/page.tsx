@@ -7,7 +7,7 @@ import { PartnersGrid } from "@/components/partners/partners-grid";
 import { MemberStatesGrid } from "@/components/partners/member-states-grid";
 
 export const metadata = {
-  title: "Partners — CECECO",
+  title: "Partners",
   description:
     "CECECO's impact is built on strong partnerships — with international organisations and technical institutions working toward a shared clean energy future.",
 };

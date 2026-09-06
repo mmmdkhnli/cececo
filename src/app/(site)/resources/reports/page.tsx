@@ -3,7 +3,7 @@ import { ResourceCategoryList } from "@/components/resources/resource-category-l
 import { getPublishedPublicationsByCategory } from "@/db/queries/resources";
 
 export const metadata = {
-  title: "Reports — CECECO",
+  title: "Reports",
   description: "Reports published by CECECO on clean energy and regional cooperation.",
 };
 

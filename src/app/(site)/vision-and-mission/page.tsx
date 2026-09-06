@@ -4,7 +4,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { ContentBlock } from "@/components/shared/content-block";
 
 export const metadata = {
-  title: "Vision and Mission — CECECO",
+  title: "Vision and Mission",
   description: "The principles and long-term goals guiding CECECO's work across the ECO region.",
 };
 

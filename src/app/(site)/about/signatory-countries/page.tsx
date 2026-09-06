@@ -6,7 +6,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { MemberStatesGrid } from "@/components/partners/member-states-grid";
 
 export const metadata = {
-  title: "Signatory Countries — CECECO",
+  title: "Signatory Countries",
   description: "The founding signatory states driving CECECO's mandate across the ECO region.",
 };
 

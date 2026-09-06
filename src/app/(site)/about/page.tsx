@@ -8,7 +8,7 @@ import { Purpose } from "@/components/about/purpose";
 import { ObjectivesTabs } from "@/components/about/objectives-tabs";
 
 export const metadata = {
-  title: "About — CECECO",
+  title: "About",
   description:
     "Clean energy catalyst driving sustainable transformation across the Economic Cooperation Organisation region.",
 };

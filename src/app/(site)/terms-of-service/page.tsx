@@ -4,7 +4,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { LegalContent } from "@/components/shared/legal-content";
 
 export const metadata = {
-  title: "Terms of Service — CECECO",
+  title: "Terms of Service",
   description: "The terms and conditions governing use of the CECECO website.",
 };
 

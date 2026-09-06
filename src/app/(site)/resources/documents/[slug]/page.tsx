@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = await getPublicationBySlug(slug);
   if (!item) return {};
-  return { title: `${item.title} — CECECO`, description: item.excerpt };
+  return { title: item.title, description: item.excerpt };
 }
 
 export default async function DocumentDetailPage({ params }: { params: Promise<{ slug: string }> }) {

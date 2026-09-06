@@ -7,7 +7,7 @@ import { SimpleHero } from "@/components/shared/simple-hero";
 import { getOpportunities } from "@/db/queries/resources";
 
 export const metadata = {
-  title: "Work With Us — CECECO",
+  title: "Work With Us",
   description: "Internships, vacancies, and the Young Professional Programme at CECECO.",
 };
 

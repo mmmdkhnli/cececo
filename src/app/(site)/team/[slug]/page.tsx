@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const member = await getTeamMemberBySlug(slug);
   if (!member) return {};
-  return { title: `${member.name} — CECECO` };
+  return { title: member.name };
 }
 
 export default async function TeamMemberPage({ params }: { params: Promise<{ slug: string }> }) {

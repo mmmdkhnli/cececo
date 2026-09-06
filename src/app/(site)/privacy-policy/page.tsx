@@ -4,7 +4,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { LegalContent } from "@/components/shared/legal-content";
 
 export const metadata = {
-  title: "Privacy Policy — CECECO",
+  title: "Privacy Policy",
   description:
     "How CECECO collects, uses, and protects information on this website.",
 };

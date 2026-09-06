@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
   if (!post) return {};
-  return { title: `${post.title} — CECECO`, description: post.excerpt };
+  return { title: post.title, description: post.excerpt };
 }
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {

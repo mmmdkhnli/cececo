@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const slide = await getHeroSlideBySlug(slug);
   if (!slide || !slide.seeMoreEnabled) return {};
-  return { title: `${slide.pageTitle || slide.title} — CECECO` };
+  return { title: slide.pageTitle || slide.title };
 }
 
 export default async function HighlightPage({ params }: { params: Promise<{ slug: string }> }) {

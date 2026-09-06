@@ -4,7 +4,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { LegalContent } from "@/components/shared/legal-content";
 
 export const metadata = {
-  title: "Cookie Settings — CECECO",
+  title: "Cookie Settings",
   description:
     "How CECECO uses cookies on this website and how to manage your preferences.",
 };

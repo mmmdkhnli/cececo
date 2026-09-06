@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = await getOpportunityBySlug(slug);
   if (!item) return {};
-  return { title: `${item.title} — CECECO`, description: item.excerpt ?? undefined };
+  return { title: item.title, description: item.excerpt ?? undefined };
 }
 
 export default async function WorkWithUsDetailPage({ params }: { params: Promise<{ slug: string }> }) {

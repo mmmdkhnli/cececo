@@ -7,7 +7,7 @@ import { LeadershipTeam } from "@/components/team/leadership-team";
 import { TechnicalTeam } from "@/components/team/technical-team";
 
 export const metadata = {
-  title: "Team — CECECO",
+  title: "Team",
   description: "Our team leads the transformation of regional energy landscapes with expertise and commitment.",
 };
 

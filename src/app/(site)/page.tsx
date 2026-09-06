@@ -19,8 +19,23 @@ export default async function HomePage() {
 
   if (!data) notFound();
 
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "CECECO — Clean Energy Centre for the ECO Region",
+    alternateName: "CECECO",
+    url: "https://cececo.org",
+    logo: "https://cececo.org/cececo-ico.png",
+    description:
+      "CECECO supports and implements renewable energy and energy efficiency projects across ECO Member States.",
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       <HeroCarousel slides={slides} />
       {data.sections.map((s) => {
         switch (s.componentKey) {

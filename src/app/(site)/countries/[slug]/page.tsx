@@ -11,7 +11,7 @@ export async function generateMetadata({
   const country = await getCountryBySlug(slug);
   if (!country) return {};
   return {
-    title: `${country.name} — CECECO`,
+    title: country.name,
     description:
       country.description ??
       `${country.name}'s clean energy profile within the ECO region.`,
