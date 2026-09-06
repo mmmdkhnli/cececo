@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
     return [
       { source: "/resources/opportunities", destination: "/work-with-us", permanent: true },
       { source: "/resources/opportunities/:slug", destination: "/work-with-us/:slug", permanent: true },
-      { source: "/resources/misc", destination: "/resources/media", permanent: true },
     ];
   },
   allowedDevOrigins: ['192.168.1.69'],
@@ -14,8 +13,8 @@ const nextConfig: NextConfig = {
       allowedOrigins: [
         '192.168.1.65:3000',
         '213.136.92.177',
-        'mmmdkhnli.site',
-        'www.mmmdkhnli.site',
+        'cececo.org',
+        'www.cececo.org',
       ],
       bodySizeLimit: '35mb',
     },
