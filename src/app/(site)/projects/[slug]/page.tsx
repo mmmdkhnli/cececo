@@ -26,7 +26,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     item.periodStart || item.periodEnd
       ? [item.periodStart, item.periodEnd]
           .filter((d): d is Date => Boolean(d))
-          .map((d) => new Date(d).toLocaleDateString("en-US", { month: "short", year: "numeric" }))
+          .map((d) => new Date(d).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" }))
           .join(" – ")
       : null;
 

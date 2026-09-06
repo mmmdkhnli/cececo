@@ -16,7 +16,8 @@ const STATUS_LABEL: Record<string, string> = {
 const FILTERS = ["All", "Ongoing", "Upcoming", "Completed"] as const;
 
 function formatPeriod(start: Date | string | null, end: Date | string | null) {
-  const fmt = (d: Date | string) => new Date(d).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  const fmt = (d: Date | string) =>
+    new Date(d).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
   if (start && end) return `${fmt(start)} – ${fmt(end)}`;
   if (start) return fmt(start);
   if (end) return fmt(end);
