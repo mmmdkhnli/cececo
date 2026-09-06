@@ -8,38 +8,66 @@ import { Button } from "@/components/admin/ui/button";
 import { Calendar } from "@/components/admin/ui/calendar";
 import { Input } from "@/components/admin/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/admin/ui/popover";
-import { cn } from "@/lib/utils";
+
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+function parseTypedDate(value: string): Date | undefined {
+  if (!DATE_PATTERN.test(value)) return undefined;
+  const parsed = new Date(`${value}T00:00:00`);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+}
 
 export function DatePicker({
   name,
   defaultValue,
-  placeholder = "Pick a date",
+  placeholder = "YYYY-MM-DD",
 }: {
   name: string;
   defaultValue?: string | null;
   placeholder?: string;
 }) {
-  const [date, setDate] = useState<Date | undefined>(defaultValue ? new Date(defaultValue) : undefined);
+  const initial = defaultValue ? new Date(defaultValue) : undefined;
+  const [date, setDate] = useState<Date | undefined>(initial);
+  const [text, setText] = useState(initial ? format(initial, "yyyy-MM-dd") : "");
+  const [open, setOpen] = useState(false);
+
+  function handleTextChange(value: string) {
+    setText(value);
+    if (!value) {
+      setDate(undefined);
+      return;
+    }
+    const parsed = parseTypedDate(value);
+    if (parsed) setDate(parsed);
+  }
+
+  function handleCalendarSelect(next: Date | undefined) {
+    setDate(next);
+    setText(next ? format(next, "yyyy-MM-dd") : "");
+    setOpen(false);
+  }
 
   return (
-    <>
+    <div className="flex gap-2">
       <input type="hidden" name={name} value={date ? format(date, "yyyy-MM-dd") : ""} />
-      <Popover>
+      <Input
+        value={text}
+        onChange={(e) => handleTextChange(e.target.value)}
+        placeholder={placeholder}
+        className="flex-1"
+        inputMode="numeric"
+      />
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            className={cn("w-full justify-start font-normal", !date && "text-muted-foreground")}
-          >
+          <Button type="button" variant="outline" size="icon" aria-label="Pick a date from the calendar">
             <CalendarIcon className="size-4" />
-            {date ? format(date, "PPP") : placeholder}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar mode="single" selected={date} onSelect={setDate} autoFocus />
+        <PopoverContent className="w-auto p-0" align="end">
+          <Calendar mode="single" selected={date} onSelect={handleCalendarSelect} autoFocus />
         </PopoverContent>
       </Popover>
-    </>
+    </div>
   );
 }
 
@@ -52,25 +80,46 @@ export function DateTimePicker({
 }) {
   const initial = defaultValue ? new Date(defaultValue) : new Date();
   const [date, setDate] = useState<Date>(initial);
+  const [dateText, setDateText] = useState(format(initial, "yyyy-MM-dd"));
   const [time, setTime] = useState(format(initial, "HH:mm:ss"));
+  const [open, setOpen] = useState(false);
 
   const [h, m, s] = time.split(":").map((v) => Number(v) || 0);
   const combined = new Date(date);
   combined.setHours(h, m, s, 0);
 
+  function handleDateTextChange(value: string) {
+    setDateText(value);
+    const parsed = parseTypedDate(value);
+    if (parsed) setDate(parsed);
+  }
+
+  function handleCalendarSelect(next: Date | undefined) {
+    if (!next) return;
+    setDate(next);
+    setDateText(format(next, "yyyy-MM-dd"));
+    setOpen(false);
+  }
+
   return (
     <>
       <input type="hidden" name={name} value={format(combined, "yyyy-MM-dd'T'HH:mm:ss")} />
       <div className="flex gap-2">
-        <Popover>
+        <Input
+          value={dateText}
+          onChange={(e) => handleDateTextChange(e.target.value)}
+          placeholder="YYYY-MM-DD"
+          className="flex-1"
+          inputMode="numeric"
+        />
+        <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button type="button" variant="outline" className="flex-1 justify-start font-normal">
+            <Button type="button" variant="outline" size="icon" aria-label="Pick a date from the calendar">
               <CalendarIcon className="size-4" />
-              {format(date, "PPP")}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar mode="single" selected={date} onSelect={(d) => d && setDate(d)} autoFocus />
+          <PopoverContent className="w-auto p-0" align="end">
+            <Calendar mode="single" selected={date} onSelect={handleCalendarSelect} autoFocus />
           </PopoverContent>
         </Popover>
         <Input

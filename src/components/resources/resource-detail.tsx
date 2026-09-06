@@ -38,7 +38,7 @@ export function ResourceDetail({ item }: { item: PublicationRow }) {
           )}
         </div>
         <h1 className="mb-6 text-h1 font-bold">{item.title}</h1>
-        {item.coverImage && (
+        {item.coverImage && item.showCoverInDetail && (
           <img
             src={item.coverImage}
             alt=""

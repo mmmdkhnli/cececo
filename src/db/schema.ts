@@ -353,6 +353,7 @@ export const publication = mysqlTable("publication", {
   excerpt: varchar("excerpt", { length: 500 }).notNull(),
   body: text("body"),
   coverImage: varchar("cover_image", { length: 512 }).notNull(),
+  showCoverInDetail: boolean("show_cover_in_detail").notNull().default(true),
   category: varchar("category", { length: 80 }).notNull(),
   status: mysqlEnum("status", ["draft", "published"])
     .notNull()

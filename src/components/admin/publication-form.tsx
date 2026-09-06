@@ -3,8 +3,10 @@ import { DocumentUpload } from "@/components/admin/document-upload";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { PublishDateField } from "@/components/admin/publish-date-field";
 import { SubmitButton } from "@/components/admin/submit-button";
+import { Checkbox } from "@/components/admin/ui/checkbox";
 import { FormField } from "@/components/admin/ui/form-field";
 import { Input } from "@/components/admin/ui/input";
+import { Label } from "@/components/admin/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
 import { Textarea } from "@/components/admin/ui/textarea";
 import type { PublicationRow } from "@/db/schema";
@@ -44,6 +46,10 @@ export function PublicationForm({
         <Textarea name="excerpt" defaultValue={defaultValues?.excerpt} rows={2} required />
       </FormField>
       <ImageUpload name="coverImage" defaultValue={defaultValues?.coverImage} label="Cover image" />
+      <Label className="flex items-center gap-2 font-normal">
+        <Checkbox name="showCoverInDetail" defaultChecked={defaultValues?.showCoverInDetail ?? true} />
+        Also show the cover image on the detail page
+      </Label>
       <FormField label="Category">
         <Select name="category" defaultValue={defaultValues?.category ?? "Publication"}>
           <SelectTrigger className="w-full">

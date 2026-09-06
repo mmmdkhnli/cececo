@@ -60,6 +60,7 @@ export const SECTION_FIELD_CONFIG: Record<string, SectionFieldConfig> = {
     fields: ["eyebrow", "heading", "subtitle", "backgroundImage"],
   },
   "legal-content": { fields: ["subtitle"] },
+  "contact-scheme": { fields: [] },
   "rich-content": {
     fields: ["eyebrow", "heading", "subtitle", "backgroundImage"],
   },
@@ -85,5 +86,6 @@ export const SECTION_LABELS: Record<string, string> = {
   "partners-grid": "Partners",
   "content-block": "Content block",
   "legal-content": "Legal text",
+  "contact-scheme": "Color scheme",
   "rich-content": "Rich content",
 };

@@ -32,6 +32,7 @@ export const NAV_MAIN: NavMainItem[] = [
       { title: "About", url: "/admin/pages/about" },
       { title: "Team", url: "/admin/pages/team" },
       { title: "News", url: "/admin/pages/news" },
+      { title: "Contact Us", url: "/admin/pages/contact" },
       { title: "Partners", url: "/admin/pages/partners" },
       { title: "Vision and Mission", url: "/admin/pages/vision-and-mission" },
       { title: "Signatory Countries", url: "/admin/pages/signatory-countries" },

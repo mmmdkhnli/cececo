@@ -1,6 +1,8 @@
+import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { WriteUsForm } from "@/components/contact/write-us-form";
 import { getSiteSettings } from "@/db/queries/site";
+import { getPageBySlug } from "@/db/queries/pages";
 
 export const metadata = {
   title: "Contact — CECECO",
@@ -8,15 +10,17 @@ export const metadata = {
 };
 
 export default async function ContactPage() {
-  const settings = await getSiteSettings();
+  const [settings, data] = await Promise.all([getSiteSettings(), getPageBySlug("contact")]);
+  if (!data) notFound();
+  const scheme = data.sections[0]?.scheme ?? "scheme-2";
 
   return (
     <main>
-      <section className="scheme-2 px-[5%] py-20 md:py-24 lg:py-28">
+      <section className={`${scheme} px-[5%] py-20 md:py-24 lg:py-28`}>
         <div className="container">
           <div className="mb-10 max-w-2xl">
             <h1 className="text-h1 font-bold">Contact Us</h1>
-            <p className="mt-3 text-medium text-neutral">
+            <p className="mt-3 text-medium text-scheme-text-muted">
               We are here to answer your questions and explore opportunities for collaboration.
             </p>
           </div>
@@ -27,7 +31,7 @@ export default async function ContactPage() {
               <div className="flex flex-col gap-5">
                 {settings?.contactEmail && (
                   <ContactRow label="Email Address">
-                    <a href={`mailto:${settings.contactEmail}`} className="text-mountain-meadow-dark hover:underline">
+                    <a href={`mailto:${settings.contactEmail}`} className="text-scheme-accent hover:underline">
                       {settings.contactEmail}
                     </a>
                   </ContactRow>
@@ -67,7 +71,7 @@ function ContactRow({ label, children }: { label: string; children: React.ReactN
   return (
     <div>
       <p className="text-small font-semibold text-scheme-text">{label}</p>
-      <p className="mt-0.5 text-small text-neutral">{children}</p>
+      <p className="mt-0.5 text-small text-scheme-text-muted">{children}</p>
     </div>
   );
 }

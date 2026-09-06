@@ -28,6 +28,7 @@ function fromForm(formData: FormData) {
     excerpt: String(formData.get("excerpt") ?? "").trim(),
     body: String(formData.get("body") ?? "").trim() || null,
     coverImage: String(formData.get("coverImage") ?? "").trim(),
+    showCoverInDetail: formData.get("showCoverInDetail") === "on",
     category: String(formData.get("category") ?? "").trim(),
     status: String(formData.get("status") ?? "draft") as "draft" | "published",
     publishedAt: resolvePublishedAt(formData),

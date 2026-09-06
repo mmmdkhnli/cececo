@@ -1,0 +1,1 @@
+ALTER TABLE `publication` ADD `show_cover_in_detail` boolean DEFAULT true NOT NULL;
