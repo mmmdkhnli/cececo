@@ -5,6 +5,7 @@ import { getTeamMembersByGroup } from "@/db/queries/team";
 import { getSignatoryStates } from "@/db/queries/partners";
 import { getOpportunities, getPublishedPublications } from "@/db/queries/resources";
 import { getHeroSlides } from "@/db/queries/hero";
+import { getPublishedCustomPages } from "@/db/queries/pages";
 
 const BASE_URL = "https://cececo.org";
 
@@ -15,7 +16,7 @@ const RESOURCE_CATEGORY_PATH: Record<string, string> = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, posts, leadership, technical, countries, opportunities, publications, heroSlides] =
+  const [projects, posts, leadership, technical, countries, opportunities, publications, heroSlides, customPages] =
     await Promise.all([
       getProjects(),
       getAllPublishedBlogPosts(),
@@ -25,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       getOpportunities(),
       getPublishedPublications(),
       getHeroSlides(),
+      getPublishedCustomPages(),
     ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -103,8 +105,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     }));
 
+  const customPageRoutes: MetadataRoute.Sitemap = customPages.map((p) => ({
+    url: `${BASE_URL}/${p.slug}`,
+    lastModified: p.updatedAt,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
   return [
     ...staticRoutes,
+    ...customPageRoutes,
     ...projectRoutes,
     ...newsRoutes,
     ...teamRoutes,

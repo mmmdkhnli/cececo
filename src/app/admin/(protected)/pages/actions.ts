@@ -1,10 +1,11 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq, inArray, ne } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { section, sectionImage, sectionTab, sectionBullet, SCHEME_VALUES, type SchemeKey } from "@/db/schema";
+import { page, section, sectionImage, sectionTab, sectionBullet, SCHEME_VALUES, type SchemeKey } from "@/db/schema";
+import { CUSTOM_SECTION_TYPES, isCustomPage, isReservedSlug, slugify, type CustomSectionType } from "@/lib/custom-pages";
 import { getSession } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
 
@@ -149,4 +150,121 @@ export async function deleteSectionTab(id: number, pageSlug: string) {
     await deleteUploadedFile(existing.image);
   }
   revalidateForPage(pageSlug);
+}
+
+export type PageSettingsState = { error?: string; success?: boolean };
+
+async function validatePageFields(formData: FormData, currentId?: number) {
+  const title = str(formData, "title");
+  if (!title) return { error: "Title is required." } as const;
+  const slug = slugify(str(formData, "slug") ?? title);
+  if (!slug) return { error: "The address must contain at least one letter or number." } as const;
+  if (isReservedSlug(slug)) return { error: `"/${slug}" is already used by the site — choose another address.` } as const;
+  const [clash] = await db
+    .select({ id: page.id })
+    .from(page)
+    .where(currentId ? and(eq(page.slug, slug), ne(page.id, currentId)) : eq(page.slug, slug));
+  if (clash) return { error: `A page at "/${slug}" already exists.` } as const;
+  const status = str(formData, "status") === "published" ? "published" : "draft";
+  return { values: { title, slug, metaDescription: str(formData, "metaDescription"), status } } as const;
+}
+
+export async function createPage(_prevState: PageSettingsState, formData: FormData): Promise<PageSettingsState> {
+  await requireAdmin();
+  const result = await validatePageFields(formData);
+  if ("error" in result) return { error: result.error };
+
+  const [inserted] = await db.insert(page).values(result.values).$returningId();
+  await db.insert(section).values([
+    { pageId: inserted.id, componentKey: "page-hero", scheme: "scheme-1", order: 0, heading: result.values.title },
+    { pageId: inserted.id, componentKey: "rich-content", scheme: "scheme-2", order: 1 },
+  ]);
+
+  revalidateForPage(result.values.slug);
+  revalidatePath("/admin/pages");
+  redirect(`/admin/pages/${result.values.slug}`);
+}
+
+export async function updatePageSettings(
+  id: number,
+  _prevState: PageSettingsState,
+  formData: FormData,
+): Promise<PageSettingsState> {
+  await requireAdmin();
+  const [existing] = await db.select().from(page).where(eq(page.id, id));
+  if (!existing || !isCustomPage(existing.slug)) return { error: "This page can't be edited here." };
+
+  const result = await validatePageFields(formData, id);
+  if ("error" in result) return { error: result.error };
+
+  await db.update(page).set(result.values).where(eq(page.id, id));
+  revalidateForPage(existing.slug);
+  revalidatePath("/admin/pages");
+  if (result.values.slug !== existing.slug) {
+    revalidateForPage(result.values.slug);
+    redirect(`/admin/pages/${result.values.slug}`);
+  }
+  return { success: true };
+}
+
+async function deleteSectionRows(sectionIds: number[]) {
+  if (sectionIds.length === 0) return;
+  const [rows, images, tabs] = await Promise.all([
+    db.select().from(section).where(inArray(section.id, sectionIds)),
+    db.select().from(sectionImage).where(inArray(sectionImage.sectionId, sectionIds)),
+    db.select().from(sectionTab).where(inArray(sectionTab.sectionId, sectionIds)),
+  ]);
+  await db.delete(sectionImage).where(inArray(sectionImage.sectionId, sectionIds));
+  await db.delete(sectionTab).where(inArray(sectionTab.sectionId, sectionIds));
+  await db.delete(sectionBullet).where(inArray(sectionBullet.sectionId, sectionIds));
+  await db.delete(section).where(inArray(section.id, sectionIds));
+  for (const r of rows) {
+    await deleteUploadedFile(r.backgroundImage);
+    await deleteUploadedFile(r.icon);
+  }
+  for (const img of images) await deleteUploadedFile(img.url);
+  for (const t of tabs) {
+    await deleteUploadedFile(t.icon);
+    await deleteUploadedFile(t.image);
+  }
+}
+
+export async function deletePage(id: number) {
+  await requireAdmin();
+  const [existing] = await db.select().from(page).where(eq(page.id, id));
+  if (!existing || !isCustomPage(existing.slug)) return;
+  const sectionRows = await db.select({ id: section.id }).from(section).where(eq(section.pageId, id));
+  await deleteSectionRows(sectionRows.map((r) => r.id));
+  await db.delete(page).where(eq(page.id, id));
+  revalidateForPage(existing.slug);
+  revalidatePath("/admin/pages");
+  redirect("/admin/pages");
+}
+
+export async function addPageSection(pageId: number, formData: FormData) {
+  await requireAdmin();
+  const [existing] = await db.select().from(page).where(eq(page.id, pageId));
+  if (!existing || !isCustomPage(existing.slug)) return;
+  const componentKey = String(formData.get("componentKey") ?? "");
+  if (!CUSTOM_SECTION_TYPES.includes(componentKey as CustomSectionType)) return;
+
+  const siblings = await db.select({ order: section.order }).from(section).where(eq(section.pageId, pageId));
+  const order = siblings.reduce((max, s) => Math.max(max, s.order), -1) + 1;
+  const [inserted] = await db
+    .insert(section)
+    .values({ pageId, componentKey, scheme: componentKey === "page-hero" ? "scheme-1" : "scheme-2", order })
+    .$returningId();
+
+  revalidateForPage(existing.slug);
+  redirect(`/admin/pages/${existing.slug}/${inserted.id}`);
+}
+
+export async function deletePageSection(sectionId: number) {
+  await requireAdmin();
+  const [row] = await db.select().from(section).where(eq(section.id, sectionId));
+  if (!row) return;
+  const [owner] = await db.select().from(page).where(eq(page.id, row.pageId));
+  if (!owner || !isCustomPage(owner.slug)) return;
+  await deleteSectionRows([sectionId]);
+  revalidateForPage(owner.slug);
 }

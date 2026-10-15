@@ -423,6 +423,7 @@ export const projectObjectiveRelations = relations(
   }),
 );
 
+export type PageRow = typeof page.$inferSelect;
 export type SectionRow = typeof section.$inferSelect;
 export type SectionImageRow = typeof sectionImage.$inferSelect;
 export type SectionTabRow = typeof sectionTab.$inferSelect;

@@ -1,6 +1,7 @@
 import "server-only";
-import { asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray, notInArray } from "drizzle-orm";
 import { db } from "@/db";
+import { SYSTEM_PAGE_SLUGS } from "@/lib/custom-pages";
 import {
   page,
   section,
@@ -48,4 +49,12 @@ export async function getPageBySlug(slug: string) {
   }));
 
   return { page: pageRow, sections };
+}
+
+export async function getPublishedCustomPages() {
+  const rows = await db
+    .select({ slug: page.slug, updatedAt: page.updatedAt })
+    .from(page)
+    .where(and(eq(page.status, "published"), notInArray(page.slug, [...SYSTEM_PAGE_SLUGS])));
+  return rows;
 }
