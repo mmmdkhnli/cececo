@@ -30,6 +30,7 @@ export const NAV_MAIN: NavMainItem[] = [
     items: [
       { title: "Home page", url: "/admin/pages/home" },
       { title: "About", url: "/admin/pages/about" },
+      { title: "Structure", url: "/admin/pages/structure" },
       { title: "Team", url: "/admin/pages/team" },
       { title: "News", url: "/admin/pages/news" },
       { title: "Contact Us", url: "/admin/pages/contact" },
