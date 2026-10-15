@@ -85,6 +85,13 @@
       "when": 1788710344091,
       "tag": "0011_aberrant_rage",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1792056603332,
+      "tag": "0012_glorious_shadowcat",
+      "breakpoints": true
     }
   ]
 }

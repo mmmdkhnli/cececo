@@ -1,0 +1,1 @@
+ALTER TABLE `nav_item` ADD `hidden` boolean DEFAULT false NOT NULL;
