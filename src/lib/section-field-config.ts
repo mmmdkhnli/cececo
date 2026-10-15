@@ -9,7 +9,8 @@ export type SectionFieldKey =
   | "secondary"
   | "closingCta"
   | "disclaimer"
-  | "imagePosition";
+  | "imagePosition"
+  | "listHeading";
 
 export type SectionRepeater = "images" | "tabs" | "bullets";
 
@@ -64,6 +65,28 @@ export const SECTION_FIELD_CONFIG: Record<string, SectionFieldConfig> = {
   "rich-content": {
     fields: ["eyebrow", "heading", "subtitle", "backgroundImage"],
   },
+  "governance-overview": { fields: ["eyebrow", "heading", "subtitle"] },
+  "governance-body": { fields: ["heading", "eyebrow", "disclaimer", "subtitle"] },
+  "governance-meeting": {
+    fields: ["eyebrow", "heading", "subtitle", "listHeading", "disclaimer"],
+    repeater: "bullets",
+  },
+};
+
+/** Per-component wording for generic fields whose default label would be misleading. */
+export const SECTION_FIELD_LABELS: Record<string, Partial<Record<SectionFieldKey, string>>> = {
+  "governance-overview": { subtitle: "Introduction" },
+  "governance-body": {
+    eyebrow: "Source reference (e.g. Charter, Article IV, paragraph 1)",
+    disclaimer: "Short summary (shown on the overview card)",
+    subtitle: "Mandate, composition and meetings",
+  },
+  "governance-meeting": {
+    eyebrow: "Meeting details (date, format)",
+    subtitle: "Summary",
+    listHeading: "List heading (shown above the list items below)",
+    disclaimer: "Source note (e.g. based on the draft report)",
+  },
 };
 
 export type TabStyle = "icon-objective" | "media-tab";
@@ -88,4 +111,7 @@ export const SECTION_LABELS: Record<string, string> = {
   "legal-content": "Legal text",
   "contact-scheme": "Color scheme",
   "rich-content": "Rich content",
+  "governance-overview": "Governance introduction",
+  "governance-body": "Governance body",
+  "governance-meeting": "Meeting summary",
 };

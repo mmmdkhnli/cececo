@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import type { SectionRow } from "@/db/schema";
 import { updateSection, type UpdateSectionState } from "@/app/admin/(protected)/pages/actions";
-import { SECTION_FIELD_CONFIG, type SectionFieldKey } from "@/lib/section-field-config";
+import { SECTION_FIELD_CONFIG, SECTION_FIELD_LABELS, type SectionFieldKey } from "@/lib/section-field-config";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SchemePicker } from "@/components/admin/scheme-picker";
@@ -16,25 +16,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const initialState: UpdateSectionState = {};
 
 function FieldBlock({ field, section }: { field: SectionFieldKey; section: SectionRow }) {
+  const label = (fallback: string) => SECTION_FIELD_LABELS[section.componentKey]?.[field] ?? fallback;
   switch (field) {
     case "eyebrow":
       return (
-        <FormField label="Eyebrow">
+        <FormField label={label("Eyebrow")}>
           <Input name="eyebrow" defaultValue={section.eyebrow ?? ""} />
         </FormField>
       );
     case "heading":
       return (
-        <FormField label="Heading">
+        <FormField label={label("Heading")}>
           <Input name="heading" defaultValue={section.heading ?? ""} />
         </FormField>
       );
     case "subtitle":
-      return <RichTextEditor name="subtitle" defaultValue={section.subtitle} label="Subtitle" />;
+      return <RichTextEditor name="subtitle" defaultValue={section.subtitle} label={label("Subtitle")} />;
     case "backgroundImage":
       return <ImageUpload name="backgroundImage" defaultValue={section.backgroundImage} label="Background image" />;
     case "icon":
       return <ImageUpload name="icon" defaultValue={section.icon} label="Icon" />;
+    case "listHeading":
+      return (
+        <FormField label={label("List heading")}>
+          <Input name="secondaryHeading" defaultValue={section.secondaryHeading ?? ""} />
+        </FormField>
+      );
     case "imagePosition":
       return (
         <FormField label="Image position">
@@ -51,7 +58,7 @@ function FieldBlock({ field, section }: { field: SectionFieldKey; section: Secti
       );
     case "disclaimer":
       return (
-        <FormField label="Disclaimer">
+        <FormField label={label("Disclaimer")}>
           <Input name="disclaimer" defaultValue={section.disclaimer ?? ""} />
         </FormField>
       );

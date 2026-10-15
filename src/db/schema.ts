@@ -61,6 +61,7 @@ export const navItem = mysqlTable(
     icon: varchar("icon", { length: 60 }),
     parentId: int("parent_id"),
     order: int("order").notNull().default(0),
+    hidden: boolean("hidden").notNull().default(false),
     ...timestamps,
   },
   (t) => [index("nav_item_location_idx").on(t.location, t.group)],

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { navItem } from "@/db/schema";
 import { getSession } from "@/lib/session";
+import { isLockedNavHref } from "@/lib/custom-pages";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -48,6 +49,14 @@ export async function updateNavItem(id: number, formData: FormData) {
 
 export async function deleteNavItem(id: number) {
   await requireAdmin();
+  const [existing] = await db.select().from(navItem).where(eq(navItem.id, id));
+  if (!existing || isLockedNavHref(existing.href)) return;
   await db.delete(navItem).where(eq(navItem.id, id));
+  revalidateNav();
+}
+
+export async function setNavItemHidden(id: number, hidden: boolean) {
+  await requireAdmin();
+  await db.update(navItem).set({ hidden }).where(eq(navItem.id, id));
   revalidateNav();
 }

@@ -5,7 +5,7 @@ import { getTeamMembersByGroup } from "@/db/queries/team";
 import { getSignatoryStates } from "@/db/queries/partners";
 import { getOpportunities, getPublishedPublications } from "@/db/queries/resources";
 import { getHeroSlides } from "@/db/queries/hero";
-import { getPublishedCustomPages } from "@/db/queries/pages";
+import { getPageStatus, getPublishedCustomPages } from "@/db/queries/pages";
 
 const BASE_URL = "https://cececo.org";
 
@@ -16,7 +16,7 @@ const RESOURCE_CATEGORY_PATH: Record<string, string> = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, posts, leadership, technical, countries, opportunities, publications, heroSlides, customPages] =
+  const [projects, posts, leadership, technical, countries, opportunities, publications, heroSlides, customPages, structurePage] =
     await Promise.all([
       getProjects(),
       getAllPublishedBlogPosts(),
@@ -27,12 +27,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       getPublishedPublications(),
       getHeroSlides(),
       getPublishedCustomPages(),
+      getPageStatus("structure"),
     ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/`, changeFrequency: "weekly", priority: 1 },
     { url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/vision-and-mission`, changeFrequency: "yearly", priority: 0.6 },
+    ...(structurePage?.status === "published"
+      ? [{ url: `${BASE_URL}/structure`, lastModified: structurePage.updatedAt, changeFrequency: "yearly" as const, priority: 0.6 }]
+      : []),
     { url: `${BASE_URL}/about/signatory-countries`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/projects`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/news`, changeFrequency: "daily", priority: 0.9 },

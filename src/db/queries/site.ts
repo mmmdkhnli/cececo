@@ -1,5 +1,5 @@
 import "server-only";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { navItem, siteSettings } from "@/db/schema";
 
@@ -20,7 +20,7 @@ export async function getNavbarLinks(): Promise<NavLink[]> {
   const rows = await db
     .select()
     .from(navItem)
-    .where(eq(navItem.location, "navbar"))
+    .where(and(eq(navItem.location, "navbar"), eq(navItem.hidden, false)))
     .orderBy(asc(navItem.order));
 
   const byId = new Map<number, NavLink>();
@@ -31,8 +31,9 @@ export async function getNavbarLinks(): Promise<NavLink[]> {
   }
   for (const row of rows) {
     const node = byId.get(row.id)!;
-    if (row.parentId && byId.has(row.parentId)) {
-      byId.get(row.parentId)!.children.push(node);
+    if (row.parentId) {
+      // A child of a hidden (filtered-out) parent stays hidden with it.
+      byId.get(row.parentId)?.children.push(node);
     } else {
       roots.push(node);
     }
@@ -49,7 +50,7 @@ export async function getFooterGroups(): Promise<FooterGroup[]> {
   const rows = await db
     .select()
     .from(navItem)
-    .where(eq(navItem.location, "footer"))
+    .where(and(eq(navItem.location, "footer"), eq(navItem.hidden, false)))
     .orderBy(asc(navItem.order));
 
   const groups = new Map<string, FooterGroup>();

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { page, section, sectionImage, sectionTab, sectionBullet, SCHEME_VALUES, type SchemeKey } from "@/db/schema";
-import { CUSTOM_SECTION_TYPES, isCustomPage, isReservedSlug, slugify, type CustomSectionType } from "@/lib/custom-pages";
+import { addableSectionTypes, hasEditableStatus, isCustomPage, isReservedSlug, slugify } from "@/lib/custom-pages";
 import { getSession } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
 
@@ -207,6 +207,15 @@ export async function updatePageSettings(
   return { success: true };
 }
 
+export async function setPageStatus(id: number, status: "draft" | "published") {
+  await requireAdmin();
+  const [existing] = await db.select().from(page).where(eq(page.id, id));
+  if (!existing || !hasEditableStatus(existing.slug)) return;
+  await db.update(page).set({ status }).where(eq(page.id, id));
+  revalidateForPage(existing.slug);
+  revalidatePath("/admin/pages");
+}
+
 async function deleteSectionRows(sectionIds: number[]) {
   if (sectionIds.length === 0) return;
   const [rows, images, tabs] = await Promise.all([
@@ -244,9 +253,9 @@ export async function deletePage(id: number) {
 export async function addPageSection(pageId: number, formData: FormData) {
   await requireAdmin();
   const [existing] = await db.select().from(page).where(eq(page.id, pageId));
-  if (!existing || !isCustomPage(existing.slug)) return;
+  if (!existing) return;
   const componentKey = String(formData.get("componentKey") ?? "");
-  if (!CUSTOM_SECTION_TYPES.includes(componentKey as CustomSectionType)) return;
+  if (!addableSectionTypes(existing.slug).includes(componentKey)) return;
 
   const siblings = await db.select({ order: section.order }).from(section).where(eq(section.pageId, pageId));
   const order = siblings.reduce((max, s) => Math.max(max, s.order), -1) + 1;
@@ -264,7 +273,7 @@ export async function deletePageSection(sectionId: number) {
   const [row] = await db.select().from(section).where(eq(section.id, sectionId));
   if (!row) return;
   const [owner] = await db.select().from(page).where(eq(page.id, row.pageId));
-  if (!owner || !isCustomPage(owner.slug)) return;
+  if (!owner || !addableSectionTypes(owner.slug).includes(row.componentKey)) return;
   await deleteSectionRows([sectionId]);
   revalidateForPage(owner.slug);
 }

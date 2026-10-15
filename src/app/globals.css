@@ -572,6 +572,9 @@
 @utility border-scheme-border {
   border-color: var(--color-scheme-border);
 }
+@utility border-scheme-accent {
+  border-color: var(--color-scheme-accent);
+}
 
 @layer base {
   h1,

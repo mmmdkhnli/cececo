@@ -6,12 +6,12 @@ import { page, section } from "@/db/schema";
 import { SECTION_LABELS } from "@/lib/section-field-config";
 import { Badge } from "@/components/admin/ui/badge";
 import { Card } from "@/components/admin/ui/card";
-import { CUSTOM_SECTION_TYPES, isCustomPage } from "@/lib/custom-pages";
+import { addableSectionTypes, hasEditableStatus, isCustomPage } from "@/lib/custom-pages";
 import { PageSettingsForm } from "@/components/admin/page-settings-form";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
-import { addPageSection, deletePage, deletePageSection, updatePageSettings } from "../actions";
+import { addPageSection, deletePage, deletePageSection, setPageStatus, updatePageSettings } from "../actions";
 
 export default async function AdminPageSectionsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -25,6 +25,7 @@ export default async function AdminPageSectionsPage({ params }: { params: Promis
     .orderBy(asc(section.order));
 
   const custom = isCustomPage(slug);
+  const addable = addableSectionTypes(slug);
 
   return (
     <div>
@@ -45,6 +46,23 @@ export default async function AdminPageSectionsPage({ params }: { params: Promis
           </div>
         )}
       </div>
+      {!custom && hasEditableStatus(slug) && (
+        <Card className="mt-6 flex flex-row items-center justify-between gap-4 p-5">
+          <div>
+            <p className="font-semibold">
+              Status: {pageRow.status === "published" ? "Published" : "Draft (only visible to admins)"}
+            </p>
+            <a href={`/${slug}`} target="_blank" rel="noreferrer" className="text-sm font-medium text-primary">
+              View page ↗
+            </a>
+          </div>
+          <form action={setPageStatus.bind(null, pageRow.id, pageRow.status === "published" ? "draft" : "published")}>
+            <SubmitButton variant={pageRow.status === "published" ? "outline" : "default"} pendingText="Saving...">
+              {pageRow.status === "published" ? "Unpublish" : "Publish"}
+            </SubmitButton>
+          </form>
+        </Card>
+      )}
       {custom && (
         <Card className="mt-6 p-5">
           <p className="mb-4 font-semibold">Page settings</p>
@@ -78,20 +96,20 @@ export default async function AdminPageSectionsPage({ params }: { params: Promis
                 <Badge variant="secondary">{s.scheme}</Badge>
               </Card>
             </Link>
-            {custom && <DeleteButton action={deletePageSection.bind(null, s.id)} />}
+            {addable.includes(s.componentKey) && <DeleteButton action={deletePageSection.bind(null, s.id)} />}
           </div>
         ))}
       </div>
 
-      {custom && (
+      {addable.length > 0 && (
         <form action={addPageSection.bind(null, pageRow.id)} className="mt-6 flex max-w-md items-end gap-3">
           <div className="flex-1">
-            <Select name="componentKey" defaultValue="rich-content">
+            <Select name="componentKey" defaultValue={addable[0]}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {CUSTOM_SECTION_TYPES.map((key) => (
+                {addable.map((key) => (
                   <SelectItem key={key} value={key}>
                     {SECTION_LABELS[key] ?? key}
                   </SelectItem>

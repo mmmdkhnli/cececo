@@ -51,6 +51,11 @@ export async function getPageBySlug(slug: string) {
   return { page: pageRow, sections };
 }
 
+export async function getPageStatus(slug: string) {
+  const [row] = await db.select({ status: page.status, updatedAt: page.updatedAt }).from(page).where(eq(page.slug, slug));
+  return row ?? null;
+}
+
 export async function getPublishedCustomPages() {
   const rows = await db
     .select({ slug: page.slug, updatedAt: page.updatedAt })
